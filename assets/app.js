@@ -74,7 +74,7 @@ const translations = {
     "Find the number of days between dates.":"Find the number of days between dates.","Turn text or a URL into a downloadable QR code.":"Turn text or a URL into a downloadable QR code.",
     "A simple focus timer and stopwatch.":"A simple focus timer and stopwatch.","Generate a random integer between two values.":"Generate a random integer between two values.",
     "Convert text to upper, lower, title or sentence case.":"Convert text to upper, lower, title or sentence case.","Pick a color and copy HEX or RGB values.":"Pick a color and copy HEX or RGB values.",
-    "Calculator":"Calculator","Unit Converter":"Unit Converter","Currency Converter":"Currency Converter","Age Calculator":"Age Calculator",
+    "JSON Formatter":"JSON Formatter","Base64 Encoder":"Base64 Encoder","UUID Generator":"UUID Generator","Lorem Ipsum":"Lorem Ipsum","Format":"Format","Minify":"Minify","Validate":"Validate","Clear":"Clear","Status":"Status","Valid JSON":"Valid JSON","Invalid JSON":"Invalid JSON","Encoded":"Encoded","Decoded":"Decoded","Click generate":"Click generate","Quantity":"Quantity","Generate UUIDs":"Generate UUIDs","Copy results":"Copy results","Type":"Type","Paragraphs":"Paragraphs","Sentences":"Sentences","Words":"Words","Generate":"Generate","Generated text will appear here...":"Generated text will appear here...","Type or paste text...":"Type or paste text...","Paste JSON here...":"Paste JSON here...","Result":"Result","Copy result":"Copy result","Calculator":"Calculator","Unit Converter":"Unit Converter","Currency Converter":"Currency Converter","Age Calculator":"Age Calculator",
     "Password Generator":"Password Generator","Text Counter":"Text Counter","Percentage Calculator":"Percentage Calculator","BMI Calculator":"BMI Calculator",
     "Date Difference":"Date Difference","QR Code Generator":"QR Code Generator","Timer & Stopwatch":"Timer & Stopwatch","Random Number":"Random Number",
     "Case Converter":"Case Converter","Color Picker":"Color Picker","Copy":"Copy","Category":"Category","Strong password":"Strong password",
@@ -119,7 +119,7 @@ const translations = {
     "Find the number of days between dates.":"İki tarih arasındaki gün sayısını bulun.","Turn text or a URL into a downloadable QR code.":"Metin veya URL'yi indirilebilir QR koduna dönüştürün.",
     "A simple focus timer and stopwatch.":"Basit bir odak sayacı ve kronometre.","Generate a random integer between two values.":"İki değer arasında rastgele tam sayı üretin.",
     "Convert text to upper, lower, title or sentence case.":"Metni büyük, küçük, başlık veya cümle biçimine dönüştürün.","Pick a color and copy HEX or RGB values.":"Bir renk seçin ve HEX veya RGB değerlerini kopyalayın.",
-    "Calculator":"Hesap Makinesi","Unit Converter":"Birim Dönüştürücü","Currency Converter":"Para Birimi Dönüştürücü","Age Calculator":"Yaş Hesaplama",
+    "JSON Formatter":"JSON Biçimlendirici","Base64 Encoder":"Base64 Kodlayıcı","UUID Generator":"UUID Oluşturucu","Lorem Ipsum":"Lorem Ipsum","Format":"Biçimlendir","Minify":"Küçült","Validate":"Doğrula","Clear":"Temizle","Status":"Durum","Valid JSON":"Geçerli JSON","Invalid JSON":"Geçersiz JSON","Encoded":"Kodlandı","Decoded":"Çözüldü","Click generate":"Oluşturmak için tıklayın","Quantity":"Adet","Generate UUIDs":"UUID Oluştur","Copy results":"Sonuçları kopyala","Type":"Tür","Paragraphs":"Paragraf","Sentences":"Cümle","Words":"Kelime","Generated text will appear here...":"Oluşturulan metin burada görünecek...","Type or paste text...":"Metin yazın veya yapıştırın...","Paste JSON here...":"JSON verisini buraya yapıştırın...","Result":"Sonuç","Copy result":"Sonucu kopyala","Calculator":"Hesap Makinesi","Unit Converter":"Birim Dönüştürücü","Currency Converter":"Para Birimi Dönüştürücü","Age Calculator":"Yaş Hesaplama",
     "Password Generator":"Şifre Oluşturucu","Text Counter":"Metin Sayacı","Percentage Calculator":"Yüzde Hesaplama","BMI Calculator":"VKİ Hesaplama",
     "Date Difference":"Tarih Farkı","QR Code Generator":"QR Kod Oluşturucu","Timer & Stopwatch":"Sayaç ve Kronometre","Random Number":"Rastgele Sayı",
     "Case Converter":"Büyük/Küçük Harf Dönüştürücü","Color Picker":"Renk Seçici","Copy":"Kopyala","Category":"Kategori","Strong password":"Güçlü şifre",
@@ -176,7 +176,7 @@ $('#languageSelect').addEventListener('change',e=>setLanguage(e.target.value));
 translateRoot(document);
 
 const toolTemplates = {
-  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',
+  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',
   password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',bmi:'bmiTemplate',
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
@@ -204,6 +204,10 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape' && !modal.hidd
 
 function bindTool(name){
   if(name==='calculator') bindCalculator();
+  if(name==='json') bindJSON();
+  if(name==='base64') bindBase64();
+  if(name==='uuid') bindUUID();
+  if(name==='lorem') bindLorem();
   if(name==='unit') bindUnit();
   if(name==='currency') bindCurrency();
   if(name==='age') bindAge();
@@ -217,6 +221,71 @@ function bindTool(name){
   if(name==='random') bindRandom();
   if(name==='case') bindCase();
   if(name==='color') bindColor();
+}
+
+
+function bindJSON(){
+  const input=$('#jsonInput'),output=$('#jsonOutput'),status=$('#jsonStatus');
+  const run=(action)=>{
+    try{
+      if(action==='clear'){input.value='';output.value='';status.textContent='—';return;}
+      const data=JSON.parse(input.value);
+      if(action==='format') output.value=JSON.stringify(data,null,2);
+      if(action==='minify') output.value=JSON.stringify(data);
+      if(action==='validate'){output.value=input.value;status.textContent=t('Valid JSON');return;}
+      status.textContent=t('Valid JSON');
+    }catch(e){output.value='';status.textContent=t('Invalid JSON')+' — '+(e.message||'');}
+  };
+  $('[data-json-action]').forEach(b=>b.addEventListener('click',()=>run(b.dataset.jsonAction)));
+  $('#copyJson').addEventListener('click',()=>copyText(output.value,t('Result copied')));
+}
+
+function bindBase64(){
+  const input=$('#base64Input'),output=$('#base64Output');
+  const encode=()=>{
+    try{output.value=btoa(unescape(encodeURIComponent(input.value)));}catch{output.value='';}
+  };
+  const decode=()=>{
+    try{output.value=decodeURIComponent(escape(atob(input.value.trim())));}catch{output.value='Invalid Base64';}
+  };
+  $('[data-base64-action]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.base64Action==='encode') encode();
+    else if(b.dataset.base64Action==='decode') decode();
+    else {input.value='';output.value='';}
+  }));
+  $('#copyBase64').addEventListener('click',()=>copyText(output.value,t('Result copied')));
+}
+
+function makeUUID(){
+  if(crypto.randomUUID) return crypto.randomUUID();
+  const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);
+  bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;
+  return [...bytes].map((b,i)=>[4,6,8,10].includes(i)?'-'+b.toString(16).padStart(2,'0'):b.toString(16).padStart(2,'0')).join('');
+}
+function bindUUID(){
+  const out=$('#uuidResult');
+  const generate=()=>{
+    const n=Number($('#uuidCount').value)||1;
+    out.textContent=Array.from({length:n},makeUUID).join('\n');
+  };
+  $('#generateUUID').addEventListener('click',generate);
+  $('#copyUUID').addEventListener('click',()=>copyText(out.textContent,t('Result copied')));
+  generate();
+}
+
+function bindLorem(){
+  const output=$('#loremOutput');
+  const words=('lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip ex ea commodo consequat').split(' ');
+  const sentence=()=>Array.from({length:12},()=>words[Math.floor(Math.random()*words.length)]).join(' ').replace(/^./,x=>x.toUpperCase())+'.';
+  const generate=()=>{
+    const type=$('#loremType').value,n=Math.min(50,Math.max(1,Number($('#loremCount').value)||1));
+    if(type==='words') output.value=Array.from({length:n},()=>words[Math.floor(Math.random()*words.length)]).join(' ');
+    else if(type==='sentences') output.value=Array.from({length:n},sentence).join(' ');
+    else output.value=Array.from({length:n},()=>Array.from({length:4},sentence).join(' ')).join('\n\n');
+  };
+  $('#generateLorem').addEventListener('click',generate);
+  $('#copyLorem').addEventListener('click',()=>copyText(output.value,t('Result copied')));
+  generate();
 }
 
 function bindCalculator(){
