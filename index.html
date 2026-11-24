@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <title>Brain Rush — Free Everyday Tools</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="assets/styles.css?v=20261125-6">
+<link rel="stylesheet" href="assets/styles.css?v=20261125-7">
 </head>
 <body>
 <div class="bg-orb orb-one"></div><div class="bg-orb orb-two"></div>
@@ -93,7 +93,12 @@
 <button class="game-card" data-game="math"><span class="game-icon">➕</span><span><b data-i18n="Quick Math">Quick Math</b><small data-i18n="Solve as many calculations as you can in 30 seconds.">Solve as many calculations as you can in 30 seconds.</small></span><i>→</i></button>
 <button class="game-card" data-game="hangman"><span class="game-icon">🔤</span><span><b data-i18n="Word Guess">Word Guess</b><small data-i18n="Guess the hidden word before you run out of tries.">Guess the hidden word before you run out of tries.</small></span><i>→</i></button>
 <button class="game-card" data-game="sudoku"><span class="game-icon">🔢</span><span><b data-i18n="Mini Sudoku">Mini Sudoku</b><small data-i18n="Complete the 4×4 number puzzle.">Complete the 4×4 number puzzle.</small></span><i>→</i></button>
-<button class="game-card" data-game="sequence"><span class="game-icon">🧩</span><span><b data-i18n="Sequence">Sequence</b><small data-i18n="Remember the sequence and repeat it correctly.">Remember the sequence and repeat it correctly.</small></span><i>→</i></button></div></section><section class="container feature-strip"><div><strong>⚡ Fast</strong><span><span data-i18n="Built for instant results.">Built for instant results.</span></span></div><div><strong>🔒 Private</strong><span><span data-i18n="Most tools run in your browser.">Most tools run in your browser.</span></span></div><div><strong>📱 Responsive</strong><span><span data-i18n="Works on phones and desktops.">Works on phones and desktops.</span></span></div><div><strong>🌍 Free</strong><span><span data-i18n="No account required.">No account required.</span></span></div></section>
+<button class="game-card" data-game="sequence"><span class="game-icon">🧩</span><span><b data-i18n="Sequence">Sequence</b><small data-i18n="Remember the sequence and repeat it correctly.">Remember the sequence and repeat it correctly.</small></span><i>→</i></button></div></section><section class="container section size-games-section" id="sizeGames">
+  <div class="section-heading"><div><span class="eyebrow">OYUNLAR</span><h2 data-i18n="Size Guessing Games">Boyut Tahmin Oyunları</h2></div><p data-i18n="Compare real-world objects and resize the red object until its scale is correct.">Gerçek hayattaki nesneleri karşılaştırın ve kırmızı nesneyi doğru ölçüye getirin.</p></div>
+  <div class="game-grid">
+    <button class="game-card size-game-card" data-game="sizeitup"><span class="game-icon">📏</span><span><b data-i18n="Size It Up">Boyutunu Tahmin Et</b><small data-i18n="Use a reference object to match the real-world size of another object.">Referans nesneyi kullanarak başka bir nesnenin gerçek boyutunu tahmin edin.</small></span><i>→</i></button>
+  </div>
+</section><section class="container feature-strip"><div><strong>⚡ Fast</strong><span><span data-i18n="Built for instant results.">Built for instant results.</span></span></div><div><strong>🔒 Private</strong><span><span data-i18n="Most tools run in your browser.">Most tools run in your browser.</span></span></div><div><strong>📱 Responsive</strong><span><span data-i18n="Works on phones and desktops.">Works on phones and desktops.</span></span></div><div><strong>🌍 Free</strong><span><span data-i18n="No account required.">No account required.</span></span></div></section>
 <section class="container section" id="about"><div class="about-card"><span class="eyebrow">WHY BRAIN RUSH?</span><h2><span data-i18n="Useful beats complicated.">Useful beats complicated.</span></h2><p>Brain Rush brings small tools together so you do not have to search the web for a different calculator every time. The interface is intentionally simple, fast and mobile-friendly.</p><div class="about-points"><span>✓ No sign-up</span><span>✓ Browser-first</span><span>✓ Responsive</span><span>✓ Free to use</span></div></div></section>
 <section class="container section" id="privacy"><div class="section-heading"><div><span class="eyebrow"><span data-i18n="PRIVACY">PRIVACY</span></span><h2><span data-i18n="Simple by design.">Simple by design.</span></h2></div></div><div class="privacy-card"><p>Common calculations happen locally in your browser and no account is required. The Currency tool contacts a public exchange-rate service when you request a rate.</p><p>As Brain Rush grows, this section can be expanded with the final privacy policy, analytics disclosure and advertising information.</p></div></section>
 </main>
@@ -151,7 +156,7 @@
 <template id="caseTemplate"><div class="tool-head"><span class="tool-icon sky">Aa</span><div><h3>Case Converter</h3><p>Convert text to upper, lower, title or sentence case.</p></div></div><textarea id="caseInput" class="large-text" placeholder="Type your text..."></textarea><div class="case-actions"><button data-case="upper">UPPERCASE</button><button data-case="lower">lowercase</button><button data-case="title">Title Case</button><button data-case="sentence">Sentence case</button></div><textarea id="caseOutput" class="large-text" readonly placeholder="Result"></textarea><button class="btn ghost full" id="copyCase">Copy result</button></template>
 
 <template id="colorTemplate"><div class="tool-head"><span class="tool-icon rainbow">●</span><div><h3>Color Picker</h3><p>Pick a color and copy HEX or RGB values.</p></div></div><div class="color-picker-wrap"><input id="colorInput" type="color" value="#6c63ff"><div id="colorPreview"></div></div><div class="color-values"><button id="copyHex"><b id="hexValue">#6C63FF</b><small>HEX</small></button><button id="copyRgb"><b id="rgbValue">rgb(108, 99, 255)</b><small>RGB</small></button></div></template>
-<script src="assets/app.js?v=20261125-8" defer></script>
+<script src="assets/app.js?v=20261125-9" defer></script>
 <template id="loanTemplate"><div class="tool-head"><span class="tool-icon blue">₺</span><div><h3 data-i18n="Loan Calculator">Loan Calculator</h3><p data-i18n="Estimate monthly loan payments">Estimate monthly loan payments</p></div></div><div class="form-grid"><label data-i18n="Principal">Principal<input id="loanAmount" type="number" value="100000"></label><label data-i18n="Annual rate">Annual rate %<input id="loanRate" type="number" value="3.5" step="0.1"></label><label data-i18n="Months">Months<input id="loanMonths" type="number" value="24"></label></div><div class="result-box"><small data-i18n="Monthly payment">Monthly payment</small><strong id="loanPayment">—</strong><span><span data-i18n="Total payment">Total payment</span>: <b id="loanTotal">—</b></span><span><span data-i18n="Total interest">Total interest</span>: <b id="loanInterest">—</b></span></div></template>
 <template id="compoundTemplate"><div class="tool-head"><span class="tool-icon green">↗</span><div><h3 data-i18n="Compound Interest">Compound Interest</h3><p data-i18n="Calculate growth with compound interest">Calculate growth with compound interest</p></div></div><div class="form-grid"><label data-i18n="Principal">Principal<input id="compoundPrincipal" type="number" value="10000"></label><label data-i18n="Annual rate">Annual rate %<input id="compoundRate" type="number" value="10" step="0.1"></label><label data-i18n="Years">Years<input id="compoundYears" type="number" value="5"></label><label data-i18n="Compounds per year">Compounds per year<input id="compoundPeriods" type="number" value="12"></label></div><div class="result-box"><small data-i18n="Total">Total</small><strong id="compoundTotal">—</strong><span><span data-i18n="Interest earned">Interest earned</span>: <b id="compoundGain">—</b></span></div></template>
 <template id="baseTemplate"><div class="tool-head"><span class="tool-icon violet">01</span><div><h3 data-i18n="Number Base Converter">Number Base Converter</h3><p data-i18n="Convert binary, decimal and hex">Convert binary, decimal and hex</p></div></div><div class="form-grid"><label data-i18n="Input number">Input number<input id="baseInput" value="255"></label><label data-i18n="From base">From base<select id="baseFrom"><option value="2">2 — Binary</option><option value="8">8 — Octal</option><option value="10" selected>10 — Decimal</option><option value="16">16 — Hex</option></select></label><label data-i18n="To base">To base<select id="baseTo"><option value="2">2 — Binary</option><option value="8">8 — Octal</option><option value="10">10 — Decimal</option><option value="16" selected>16 — Hex</option></select></label></div><label class="single-label"><span data-i18n="Result">Result</span><input id="baseResult" readonly></label></template>
@@ -212,4 +217,29 @@
     </div>
   </div>
 </div>
+</template><template id="sizeitupGameTemplate">
+  <div class="size-game-shell">
+    <div class="size-game-top">
+      <div class="game-head"><span class="game-icon size-game-badge">📏</span><div><h3 data-i18n="Size It Up">Boyutunu Tahmin Et</h3><p data-i18n="Match the red object to its real-world size using the blue reference.">Mavi referansı kullanarak kırmızı nesneyi gerçek boyutuna getirin.</p></div></div>
+      <div class="size-game-stats"><span><small data-i18n="ROUND">TUR</small><b id="sizeRound">1 / 5</b></span><span><small data-i18n="SCORE">SKOR</small><b id="sizeScore">0</b></span></div>
+    </div>
+    <div class="size-game-info"><div><span data-i18n="Reference">Referans</span><strong id="sizeReferenceName">—</strong><small id="sizeReferenceLength">—</small></div><div><span data-i18n="Target">Hedef</span><strong id="sizeTargetName">—</strong><small data-i18n="Drag the handle to resize">Boyutu değiştirmek için tutamacı sürükleyin</small></div></div>
+    <div class="size-stage-wrap">
+      <div class="size-stage" id="sizeStage">
+        <div class="size-grid"></div>
+        <div class="size-ground"></div>
+        <div class="size-object size-reference-object" id="sizeReferenceObject"></div>
+        <div class="size-object size-target-object" id="sizeTargetObject"><button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button></div>
+        <div class="size-scale-label" id="sizeScaleLabel">1 m</div>
+        <div class="size-zoom"><button id="sizeZoomIn" type="button">＋</button><button id="sizeZoomOut" type="button">−</button></div>
+      </div>
+    </div>
+    <div class="size-controls">
+      <div class="size-readout"><span data-i18n="Your estimate">Tahmininiz</span><strong id="sizeEstimate">—</strong><small id="sizeError">—</small></div>
+      <div class="size-slider-wrap"><input id="sizeSlider" type="range" min="0.35" max="1.65" step="0.001" value="1"><div><span data-i18n="Smaller">Küçült</span><span data-i18n="Larger">Büyüt</span></div></div>
+      <button class="btn primary size-lock" id="sizeLock" type="button" data-i18n="Lock In">Kilitle</button>
+    </div>
+    <div class="size-result" id="sizeResult" hidden><div class="size-result-icon" id="sizeResultIcon">✓</div><div><strong id="sizeResultTitle">—</strong><p id="sizeResultText">—</p></div><button class="btn primary" id="sizeNext" type="button" data-i18n="Next Round">Sonraki Tur</button></div>
+    <div class="size-game-footer"><span data-i18n="5 rounds • closer estimates earn more points">5 tur • doğruya ne kadar yakınsanız o kadar çok puan</span><button class="btn secondary" id="sizeRestart" type="button" data-i18n="Restart Game">Oyunu Yeniden Başlat</button></div>
+  </div>
 </template></body></html>
