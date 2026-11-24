@@ -263,6 +263,7 @@ function translateRoot(root=document){
   const nodes=[];
   while(walker.nextNode()) nodes.push(walker.currentNode);
   nodes.forEach(node=>{
+    if(node.parentElement?.closest('[data-i18n]')) return;
     if(!originalTextNodes.has(node)) originalTextNodes.set(node,node.nodeValue);
     const original=originalTextNodes.get(node);
     const key=original.trim();
