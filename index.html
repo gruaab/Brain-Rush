@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Brain Rush is a free collection of fast, private and useful online tools for everyday tasks.">
+  <meta name="keywords" content="online tools, calculator, unit converter, currency converter, password generator, QR code, percentage calculator, BMI calculator">
+  <meta property="og:title" content="Brain Rush — Everyday Tools">
+  <meta property="og:description" content="Free, fast and useful online tools for everyday tasks.">
+  <meta property="og:type" content="website">
+  <title>Brain Rush — Free Online Tools</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Brain Rush home">
+      <span class="brand-mark">⚡</span>
+      <span>Brain<span>Rush</span></span>
+    </a>
+    <nav>
+      <a href="#tools">Tools</a>
+      <a href="#about">About</a>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">☾</button>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">FREE • FAST • PRIVATE</div>
+        <h1>Everyday tools.<br><span>One smart place.</span></h1>
+        <p>Useful calculators, converters, generators and mini tools — designed to be simple enough for everyone.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#tools">Explore tools →</a>
+          <a class="btn ghost" href="#about">How it works</a>
+        </div>
+      </div>
+      <div class="hero-orbit" aria-hidden="true">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="core">⚡</div>
+        <span class="float f1">123</span><span class="float f2">%</span><span class="float f3">QR</span><span class="float f4">kg</span>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div><strong id="toolCount">12</strong><span>tools</span></div>
+      <div><strong>0</strong><span>sign-ups</span></div>
+      <div><strong>100%</strong><span>browser-first</span></div>
+      <div><strong>24/7</strong><span>available</span></div>
+    </section>
+
+    <section id="tools" class="section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">THE TOOLBOX</div>
+          <h2>Pick a tool and get it done.</h2>
+        </div>
+        <div class="search-wrap"><span>⌕</span><input id="toolSearch" type="search" placeholder="Search tools..." aria-label="Search tools"></div>
+      </div>
+      <div id="toolGrid" class="tool-grid"></div>
+    </section>
+
+    <section id="toolPanel" class="tool-panel hidden">
+      <div class="panel-head">
+        <div><div class="eyebrow" id="panelCategory">TOOL</div><h2 id="panelTitle">Calculator</h2><p id="panelDesc"></p></div>
+        <button id="closeTool" class="close-btn" aria-label="Close tool">×</button>
+      </div>
+      <div id="toolBody"></div>
+    </section>
+
+    <section id="about" class="section about">
+      <div>
+        <div class="eyebrow">WHY BRAIN RUSH</div>
+        <h2>Less searching.<br>More doing.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Brain Rush brings common everyday utilities into one clean, distraction-free place. Most tools run directly in your browser, so you can get a result without creating an account.</p>
+        <div class="feature-list">
+          <div><b>⚡ Fast</b><span>Instant results for everyday calculations.</span></div>
+          <div><b>🔒 Private</b><span>Your input stays in your browser whenever possible.</span></div>
+          <div><b>📱 Responsive</b><span>Works comfortably on phones, tablets and desktops.</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand small"><span class="brand-mark">⚡</span><span>Brain<span>Rush</span></span></div>
+    <p>Free tools for everyday life.</p>
+    <p>© <span id="year"></span> Brain Rush</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
