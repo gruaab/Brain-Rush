@@ -355,6 +355,11 @@ function bindTool(name){
   if(name==='random') bindRandom();
   if(name==='case') bindCase();
   if(name==='color') bindColor();
+  if(name==='loan') bindLoan();
+  if(name==='compound') bindCompound();
+  if(name==='base') bindBase();
+  if(name==='reverse') bindReverse();
+  if(name==='timezone') bindTimezone();
 }
 
 
@@ -745,30 +750,32 @@ function openGame(name){
 
 function bindMemoryGame(){
   const symbols=['🍎','🚀','🎵','⭐','🐼','⚽'];
-  let cards=[...symbols,...symbols].sort(()=>Math.random()-.5),open=[],matched=0,moves=0;
-  const board=$('#memoryBoard');
+  let cards=[...symbols,...symbols].sort(()=>Math.random()-0.5),open=[],matched=0,moves=0,locked=false;
+  const board=$('#memoryBoard'),movesEl=$('#memoryMoves'),pairsEl=$('#memoryPairs');
   const render=()=>{
-    board.innerHTML=cards.map((x,i)=>'<button class="memory-card" data-i="'+i+'"><span>'+x+'</span></button>').join('');
+    board.innerHTML=cards.map((x,i)=>'<button type="button" class="memory-card" data-i="'+i+'"><span>'+x+'</span></button>').join('');
     $('.memory-card',board).forEach(btn=>btn.addEventListener('click',()=>flip(Number(btn.dataset.i))));
+    movesEl.textContent='0';pairsEl.textContent='0/6';
   };
+  const reset=()=>{cards=[...symbols,...symbols].sort(()=>Math.random()-0.5);open=[];matched=0;moves=0;locked=false;render();};
   const flip=(i)=>{
+    if(locked)return;
     const btn=$('.memory-card',board)[i];
-    if(!btn||btn.classList.contains('matched')||btn.classList.contains('flipped')||open.length===2)return;
+    if(!btn||btn.classList.contains('matched')||btn.classList.contains('flipped'))return;
     btn.classList.add('flipped');open.push(i);
-    if(open.length===2){
-      moves++;$('#memoryMoves').textContent=moves;
-      const [a,b]=open;
-      if(cards[a]===cards[b]){
-        $('.memory-card',board)[a].classList.add('matched');
-        $('.memory-card',board)[b].classList.add('matched');
-        matched++;$('#memoryPairs').textContent=matched+'/6';open=[];
-        if(matched===6)setTimeout(()=>alert(t('Correct')+' 🎉'),250);
-      }else{
-        setTimeout(()=>{ $('.memory-card',board)[a]?.classList.remove('flipped'); $('.memory-card',board)[b]?.classList.remove('flipped'); open=[]; },650);
-      }
+    if(open.length!==2)return;
+    moves++;movesEl.textContent=String(moves);
+    const [a,b]=open;
+    if(cards[a]===cards[b]){
+      $('.memory-card',board)[a].classList.add('matched');$('.memory-card',board)[b].classList.add('matched');
+      matched++;pairsEl.textContent=matched+'/6';open=[];
+      if(matched===6)$('#memoryMessage')?.replaceChildren(document.createTextNode(t('Correct')+' 🎉'));
+    }else{
+      locked=true;
+      setTimeout(()=>{$('.memory-card',board)[a]?.classList.remove('flipped');$('.memory-card',board)[b]?.classList.remove('flipped');open=[];locked=false;},650);
     }
   };
-  $('#memoryReset').addEventListener('click',bindMemoryGame);
+  $('#memoryReset').addEventListener('click',reset);
   render();
 }
 
@@ -801,21 +808,22 @@ function bindNumberGame(){
 }
 
 function bindRPSGame(){
-  let wins=0,losses=0,choices=0;
+  let wins=0,losses=0,draws=0;
   const moves=['rock','paper','scissors'];
-  $('.rps-actions button').forEach(btn=>btn.addEventListener('click',()=>{
-    const player=btn.dataset.rps,computer=moves[Math.floor(Math.random()*3)];
-    choices++;
+  const resultEl=$('#rpsResult'),choicesEl=$('#rpsChoices'),scoreEl=$('#rpsScore');
+  const names={rock:t('Rock'),paper:t('Paper'),scissors:t('Scissors')};
+  const play=(player)=>{
+    const computer=moves[Math.floor(Math.random()*3)];
     let result='Draw!';
     if(player!==computer){
       const win=(player==='rock'&&computer==='scissors')||(player==='paper'&&computer==='rock')||(player==='scissors'&&computer==='paper');
       if(win){wins++;result='You win!';}else{losses++;result='You lose!';}
-    }
-    const names={rock:t('Rock'),paper:t('Paper'),scissors:t('Scissors')};
-    $('#rpsChoices').textContent=names[player]+' 🆚 '+names[computer];
-    $('#rpsResult').textContent=t(result);
-    $('#rpsScore').textContent=wins+' - '+losses;
-  }));
+    }else draws++;
+    choicesEl.textContent=names[player]+' 🆚 '+names[computer];
+    resultEl.textContent=t(result);
+    scoreEl.textContent=wins+' - '+losses+' - '+draws;
+  };
+  $('.rps-actions button').forEach(btn=>btn.addEventListener('click',()=>play(btn.dataset.rps)));
 }
 
 function bindMathGame(){
@@ -827,37 +835,55 @@ function bindMathGame(){
   input.addEventListener('keydown',e=>{if(e.key==='Enter')$('#mathCheck').click();}); start();
 }
 function bindHangmanGame(){
-  const words=['BRAIN','RUSH','PUZZLE','MEMORY','PLANET','CODING','GARDEN','SCHOOL'];
-  let word=words[Math.floor(Math.random()*words.length)],guessed=[],lives=6;
+  const words=['BRAIN','RUSH','PUZZLE','MEMORY','PLANET','CODING','GARDEN','SCHOOL','COMPUTER','KELIME'];
+  let word=words[Math.floor(Math.random()*words.length)],guessed=[],lives=6,finished=false;
+  const input=$('#hangmanInput'),button=$('#hangmanGuess');
   const render=()=>{$('#hangmanWord').textContent=word.split('').map(c=>guessed.includes(c)?c:'_').join(' ');$('#hangmanLives').textContent=lives;};
-  $('#hangmanGuess').addEventListener('click',()=>{
-    const c=$('#hangmanInput').value.toUpperCase();$('#hangmanInput').value='';
+  const guess=()=>{
+    if(finished)return;
+    const c=input.value.trim().toUpperCase();input.value='';
     if(!/^[A-ZÇĞİÖŞÜ]$/.test(c)||guessed.includes(c))return;
-    guessed.push(c);if(!word.includes(c))lives--;
-    render();
-    if(word.split('').every(x=>guessed.includes(x))){$('#hangmanMessage').textContent=t('Correct')+' 🎉';$('#hangmanGuess').disabled=true;}
-    else if(lives<=0){$('#hangmanMessage').textContent=t('Game over')+' — '+word;$('#hangmanGuess').disabled=true;}
-  });
-  $('#hangmanInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('#hangmanGuess').click();});render();
+    guessed.push(c);if(!word.includes(c))lives--;render();
+    if(word.split('').every(x=>guessed.includes(x))){finished=true;$('#hangmanMessage').textContent=t('Correct')+' 🎉';button.disabled=true;input.disabled=true;}
+    else if(lives<=0){finished=true;$('#hangmanMessage').textContent=t('Game over')+' — '+word;button.disabled=true;input.disabled=true;}
+  };
+  button.addEventListener('click',guess);input.addEventListener('keydown',e=>{if(e.key==='Enter')guess();});render();
 }
 function bindSudokuGame(){
   const solution=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
   const puzzle=[[1,0,3,0],[0,4,0,2],[2,0,4,0],[0,3,0,1]];
-  const grid=$('#sudokuGrid');
-  grid.innerHTML=puzzle.flatMap((row,r)=>row.map((v,c)=>'<input type="number" min="1" max="4" value="'+(v||'')+'" '+(v?'disabled':'')+' data-r="'+r+'" data-c="'+c+'"></input>')).join('');
+  const grid=$('#sudokuGrid'),message=$('#sudokuMessage');
+  grid.innerHTML='';
+  puzzle.forEach((row,r)=>row.forEach((v,col)=>{
+    const input=document.createElement('input');input.type='number';input.min='1';input.max='4';input.inputMode='numeric';input.dataset.r=r;input.dataset.c=col;
+    if(v){input.value=v;input.disabled=true;} grid.appendChild(input);
+  }));
   $('#sudokuCheck').addEventListener('click',()=>{
-    let ok=true; $('.sudoku-grid input').forEach(i=>{if(Number(i.value)!==solution[Number(i.dataset.r)][Number(i.dataset.c)])ok=false;});
-    $('#sudokuMessage').textContent=ok?t('Correct')+' 🎉':t('Try again');
+    let complete=true,correct=true;
+    $('#sudokuGrid input').forEach(input=>{
+      const value=Number(input.value);
+      if(!value){complete=false;return;}
+      if(value!==solution[Number(input.dataset.r)][Number(input.dataset.c)])correct=false;
+    });
+    message.textContent=!complete?t('Fill all cells'):correct?t('Correct')+' 🎉':t('Try again');
   });
 }
 function bindSequenceGame(){
-  let sequence=[],user=[],level=0;
-  const colors=['1','2','3','4'];
-  const start=()=>{sequence=[];user=[];level=0;$('#sequenceMessage').textContent='';$('#sequenceButtons').innerHTML=colors.map(c=>'<button class="sequence-btn" data-v="'+c+'">'+c+'</button>').join('');add();};
-  const add=()=>{sequence.push(colors[Math.floor(Math.random()*4)]);user=[];$('#sequenceDisplay').textContent=sequence.join(' • ');setTimeout(()=>$('#sequenceDisplay').textContent='?',700);};
-  const check=()=>{user.push(this.dataset.v);const i=user.length-1;if(user[i]!==sequence[i]){$('#sequenceMessage').textContent=t('Game over');return;}if(user.length===sequence.length){level++;$('#sequenceMessage').textContent=t('Correct')+'! '+t('Level')+' '+level;setTimeout(add,600);}};
+  let sequence=[],user=[],level=0,accepting=false;
+  const colors=['1','2','3','4'],display=$('#sequenceDisplay'),buttons=$('#sequenceButtons'),message=$('#sequenceMessage');
+  const add=()=>{
+    sequence.push(colors[Math.floor(Math.random()*colors.length)]);user=[];accepting=false;
+    display.textContent=sequence.join(' • ');
+    setTimeout(()=>{display.textContent='?';accepting=true;},Math.max(700,900-sequence.length*20));
+  };
+  const start=()=>{sequence=[];user=[];level=0;message.textContent='';buttons.innerHTML=colors.map(c=>'<button type="button" class="sequence-btn" data-v="'+c+'">'+c+'</button>').join('');add();};
   $('#sequenceStart').addEventListener('click',start);
-  $('#sequenceButtons').addEventListener('click',e=>{if(e.target.matches('.sequence-btn'))check.call(e.target);});
+  buttons.addEventListener('click',e=>{
+    const btn=e.target.closest('.sequence-btn');if(!btn||!accepting)return;
+    user.push(btn.dataset.v);const i=user.length-1;
+    if(user[i]!==sequence[i]){accepting=false;message.textContent=t('Game over')+' — '+t('Level')+' '+level;return;}
+    if(user.length===sequence.length){accepting=false;level++;message.textContent=t('Correct')+'! '+t('Level')+' '+level;setTimeout(add,650);}
+  });
   start();
 }
 
