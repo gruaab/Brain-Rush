@@ -80,7 +80,7 @@ const translations = {
     "Case Converter":"Case Converter","Color Picker":"Color Picker","Copy":"Copy","Category":"Category","Strong password":"Strong password",
     "Your age":"Your age","Current rate":"Current rate","Underweight":"Underweight","Normal range":"Normal range","Overweight":"Overweight","Obesity":"Obesity",
     "Timer finished!":"Timer finished!","Generate a QR code first.":"Generate a QR code first.","QR renderer could not be loaded.":"QR renderer could not be loaded.",
-    "Result copied":"Result copied","HEX copied":"HEX copied","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter.","Loading rate…":"Loading rate…","Unable to load rate":"Unable to load rate","Check your connection and try again.":"Check your connection and try again."
+    "Result copied":"Result copied","HEX copied":"HEX copied","Add VAT":"Add VAT","Remove VAT":"Remove VAT","Total with VAT":"Total with VAT","Price without VAT":"Price without VAT","Bill amount":"Bill amount","Tip %":"Tip %","People":"People","Total":"Total","You pay":"You pay","Original price":"Original price","Discount %":"Discount %","You save":"You save","Current time":"Current time","Timestamp → Date":"Timestamp → Date","Date → Timestamp":"Date → Timestamp","Unix timestamp":"Unix timestamp","Date and time":"Date and time","SHA-256":"SHA-256","SHA-1":"SHA-1","Algorithm":"Algorithm","Invalid text":"Invalid text","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter.","Loading rate…":"Loading rate…","Unable to load rate":"Unable to load rate","Check your connection and try again.":"Check your connection and try again."
   },
   tr: {
     "Tools":"Araçlar","About":"Hakkında","Privacy":"Gizlilik","Search tools...":"Araçlarda ara...",
@@ -125,7 +125,7 @@ const translations = {
     "Case Converter":"Büyük/Küçük Harf Dönüştürücü","Color Picker":"Renk Seçici","Copy":"Kopyala","Category":"Kategori","Strong password":"Güçlü şifre",
     "Current rate":"Güncel kur","Underweight":"Zayıf","Normal range":"Normal aralık","Overweight":"Fazla kilolu","Obesity":"Obezite",
     "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR oluşturucu yüklenemedi.",
-    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Meter":"Metre","Kilometer":"Kilometre","Centimeter":"Santimetre","Millimeter":"Milimetre","Mile":"Mil","Yard":"Yarda","Foot":"Fit","Inch":"İnç","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Miligram","Pound":"Pound","Ounce":"Ons","Celsius":"Santigrat","Fahrenheit":"Fahrenhayt","Kelvin":"Kelvin","Enter a valid amount":"Geçerli bir miktar girin","Same currency":"Aynı para birimi","Rate supplied by Frankfurter.":"Kur bilgisi Frankfurter tarafından sağlanıyor.","Loading rate…":"Kur yükleniyor…","Unable to load rate":"Kur alınamadı","Check your connection and try again.":"Bağlantınızı kontrol edip tekrar deneyin."
+    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","Add VAT":"KDV ekle","Remove VAT":"KDV çıkar","Total with VAT":"KDV dahil toplam","Price without VAT":"KDV hariç fiyat","Bill amount":"Hesap tutarı","Tip %":"Bahşiş %","People":"Kişi","Total":"Toplam","You pay":"Ödenecek","Original price":"Orijinal fiyat","Discount %":"İndirim %","You save":"Tasarruf","Current time":"Şu an","Timestamp → Date":"Zaman damgası → Tarih","Date → Timestamp":"Tarih → Zaman damgası","Unix timestamp":"Unix zaman damgası","Date and time":"Tarih ve saat","Algorithm":"Algoritma","Invalid text":"Geçersiz metin","RGB copied":"RGB kopyalandı","Meter":"Metre","Kilometer":"Kilometre","Centimeter":"Santimetre","Millimeter":"Milimetre","Mile":"Mil","Yard":"Yarda","Foot":"Fit","Inch":"İnç","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Miligram","Pound":"Pound","Ounce":"Ons","Celsius":"Santigrat","Fahrenheit":"Fahrenhayt","Kelvin":"Kelvin","Enter a valid amount":"Geçerli bir miktar girin","Same currency":"Aynı para birimi","Rate supplied by Frankfurter.":"Kur bilgisi Frankfurter tarafından sağlanıyor.","Loading rate…":"Kur yükleniyor…","Unable to load rate":"Kur alınamadı","Check your connection and try again.":"Bağlantınızı kontrol edip tekrar deneyin."
   }
 };
 
@@ -177,7 +177,7 @@ translateRoot(document);
 
 const toolTemplates = {
   calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',
-  password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',bmi:'bmiTemplate',
+  password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',tip:'tipTemplate',discount:'discountTemplate',vat:'vatTemplate',timestamp:'timestampTemplate',url:'urlTemplate',hash:'hashTemplate',bmi:'bmiTemplate',
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
 
@@ -214,6 +214,7 @@ function bindTool(name){
   if(name==='password') bindPassword();
   if(name==='text') bindText();
   if(name==='percentage') bindPercentage();
+  if(name==='tip') bindTip(); if(name==='discount') bindDiscount(); if(name==='vat') bindVAT(); if(name==='timestamp') bindTimestamp(); if(name==='url') bindURL(); if(name==='hash') bindHash();
   if(name==='bmi') bindBMI();
   if(name==='date') bindDate();
   if(name==='qr') bindQR();
@@ -223,6 +224,38 @@ function bindTool(name){
   if(name==='color') bindColor();
 }
 
+
+function bindTip(){
+  const calc=()=>{const b=Number($('#tipBill').value)||0,p=Number($('#tipPercent').value)||0,n=Math.max(1,Number($('#tipPeople').value)||1),tip=b*p/100,total=b+tip;$('#tipTotal').textContent=total.toFixed(2);$('#tipPerPerson').textContent=(total/n).toFixed(2)+' '+(n===1?'per person':'per person × '+n);};
+  ['tipBill','tipPercent','tipPeople'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
+}
+function bindDiscount(){
+  const calc=()=>{const p=Number($('#discountPrice').value)||0,r=Number($('#discountRate').value)||0,s=p*r/100;$('#discountFinal').textContent=(p-s).toFixed(2);$('#discountSaved').textContent='You save '+s.toFixed(2);};
+  ['discountPrice','discountRate'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
+}
+function bindVAT(){
+  let mode='add';
+  const calc=()=>{const p=Number($('#vatPrice').value)||0,r=Number($('#vatRate').value)||0;if(mode==='add'){const tax=p*r/100;$('#vatLabel').textContent=t('Total with VAT');$('#vatResult').textContent=(p+tax).toFixed(2);$('#vatTax').textContent='VAT: '+tax.toFixed(2);}else{const net=p/(1+r/100),tax=p-net;$('#vatLabel').textContent=t('Price without VAT');$('#vatResult').textContent=net.toFixed(2);$('#vatTax').textContent='VAT: '+tax.toFixed(2);}};
+  $('[data-vat-mode]').forEach(b=>b.addEventListener('click',()=>{$('[data-vat-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.vatMode;calc();}));
+  ['vatPrice','vatRate'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
+}
+function bindTimestamp(){
+  const now=()=>{const d=new Date(),ts=Math.floor(d.getTime()/1000);$('#tsCurrent').textContent=ts;$('#tsCurrentDate').textContent=d.toLocaleString();};
+  $('[data-ts-mode]').forEach(b=>b.addEventListener('click',()=>{$('[data-ts-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#tsNow').hidden=b.dataset.tsMode!=='now';$('#tsToDate').hidden=b.dataset.tsMode!=='toDate';$('#tsToTs').hidden=b.dataset.tsMode!=='toTs';}));
+  $('#tsInput').addEventListener('input',()=>{const n=Number($('#tsInput').value);$('#tsDateResult').textContent=Number.isFinite(n)?new Date(n*1000).toLocaleString():'—';});
+  $('#dateTimeInput').addEventListener('input',()=>{const d=new Date($('#dateTimeInput').value);$('#tsResult').textContent=Number.isFinite(d.getTime())?Math.floor(d.getTime()/1000):'—';});
+  now();
+}
+function bindURL(){
+  const i=$('#urlInput'),o=$('#urlOutput');
+  $('[data-url-action]').forEach(b=>b.addEventListener('click',()=>{try{if(b.dataset.urlAction==='encode')o.value=encodeURIComponent(i.value);else if(b.dataset.urlAction==='decode')o.value=decodeURIComponent(i.value);else{o.value='';i.value='';}}catch{o.value=t('Invalid text');}}));
+  $('#copyURL').addEventListener('click',()=>copyText(o.value,t('Result copied')));
+}
+async function bindHash(){
+  const i=$('#hashInput'),o=$('#hashResult');
+  $('#generateHash').addEventListener('click',async()=>{const data=new TextEncoder().encode(i.value),buf=await crypto.subtle.digest($('#hashAlgorithm').value,data);o.textContent=Array.from(new Uint8Array(buf),b=>b.toString(16).padStart(2,'0')).join('');});
+  $('#copyHash').addEventListener('click',()=>copyText(o.textContent,t('Result copied')));
+}
 
 function bindJSON(){
   const input=$('#jsonInput'),output=$('#jsonOutput'),status=$('#jsonStatus');
@@ -422,14 +455,32 @@ function bindText(){
 }
 
 function bindPercentage(){
-  const update=()=>{
-    const a=Number($('#pctA').value),b=Number($('#pctB').value),c=Number($('#pctC').value),d=Number($('#pctD').value);
-    $('#pctResult').textContent=Number.isFinite(a*b/100)?(a*b/100).toLocaleString():'—';
-    $('#pctResult2').textContent=d?((c/d)*100).toFixed(2)+'%':'—';
+  const updateOf=()=>{
+    const a=Number($('#pctA').value),b=Number($('#pctB').value);
+    const v=b*a/100;
+    $('#pctResult').textContent=Number.isFinite(v)?v.toLocaleString():'—';
+    $('#pctExplain').textContent=a+'% of '+b+' = '+(Number.isFinite(v)?v:'—');
   };
-  $$('#modal input').forEach(x=>x.addEventListener('input',update));update();
+  const updateChange=()=>{
+    const a=Number($('#pctC').value),b=Number($('#pctD').value);
+    const v=a!==0?((b-a)/Math.abs(a))*100:0;
+    $('#pctResult2').textContent=Number.isFinite(v)?v.toFixed(2)+'%':'—';
+    $('#pctChangeExplain').textContent=v>=0?'It increased by '+Math.abs(v).toFixed(2)+'%.':'It decreased by '+Math.abs(v).toFixed(2)+'%.';
+  };
+  const updateDiscount=()=>{
+    const p=Number($('#pctPrice').value),d=Number($('#pctDiscount').value),save=p*d/100;
+    $('#pctDiscountResult').textContent=(p-save).toLocaleString();
+    $('#pctSaveResult').textContent='You save '+save.toLocaleString();
+  };
+  $$('.percent-tabs [data-pct-mode]').forEach(btn=>btn.addEventListener('click',()=>{
+    $$('.percent-tabs [data-pct-mode]').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+    $('#pctOfPanel').hidden=btn.dataset.pctMode!=='of';$('#pctChangePanel').hidden=btn.dataset.pctMode!=='change';$('#pctDiscountPanel').hidden=btn.dataset.pctMode!=='discount';
+  }));
+  ['pctA','pctB'].forEach(id=>$('#'+id).addEventListener('input',updateOf));
+  ['pctC','pctD'].forEach(id=>$('#'+id).addEventListener('input',updateChange));
+  ['pctPrice','pctDiscount'].forEach(id=>$('#'+id).addEventListener('input',updateDiscount));
+  updateOf();updateChange();updateDiscount();
 }
-
 function bindBMI(){
   const update=()=>{
     const w=Number($('#bmiWeight').value),h=Number($('#bmiHeight').value)/100;
@@ -539,6 +590,14 @@ async function copyText(value,message){
   try{await navigator.clipboard.writeText(value);alert(message);}
   catch{alert(value);}
 }
+
+
+$('.category-pill').forEach(p=>p.addEventListener('click',()=>{
+  $('.category-pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');
+  const cat=p.dataset.category;
+  $('.tool-card').forEach(card=>card.hidden=cat!=='all'&&card.dataset.category!==cat);
+  $('#noResults').hidden=true;
+}));
 
 $('#toolSearch').addEventListener('input',e=>{
   const q=e.target.value.toLowerCase().trim();let visible=0;
