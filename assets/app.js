@@ -260,22 +260,16 @@ const originalTextNodes = new WeakMap();
 function translateRoot(root=document){
   const lang=localStorage.getItem('brainrush-language')||'en';
   const dict=translations[lang]||translations.en;
-  $('[data-i18n]',root).forEach(el=>{
+  const scope=root||document;
+
+  // Use only explicit i18n markers here. This avoids TreeWalker/NodeFilter
+  // compatibility issues and prevents runtime errors from disabling all buttons.
+  scope.querySelectorAll?.('[data-i18n]').forEach(el=>{
     const key=el.getAttribute('data-i18n');
-    if(dict[key]) el.textContent=dict[key];
+    if(Object.prototype.hasOwnProperty.call(dict,key)) el.textContent=dict[key];
   });
-  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-  const nodes=[];
-  while(walker.nextNode()) nodes.push(walker.currentNode);
-  nodes.forEach(node=>{
-    if(node.parentElement?.closest('[data-i18n]')) return;
-    if(!originalTextNodes.has(node)) originalTextNodes.set(node,node.nodeValue);
-    const original=originalTextNodes.get(node);
-    const key=original.trim();
-    if(dict[key] && original.trim()===key) node.nodeValue=original.replace(key,dict[key]);
-    else node.nodeValue=original;
-  });
-  $$('input[placeholder], textarea[placeholder]',root).forEach(el=>{
+
+  scope.querySelectorAll?.('input[placeholder], textarea[placeholder]').forEach(el=>{
     if(!el.dataset.originalPlaceholder) el.dataset.originalPlaceholder=el.getAttribute('placeholder')||'';
     const key=el.dataset.originalPlaceholder;
     el.setAttribute('placeholder',dict[key]||key);
@@ -283,33 +277,29 @@ function translateRoot(root=document){
 }
 
 function setLanguage(lang){
-  localStorage.setItem('brainrush-language',lang);
-  document.documentElement.lang=lang;
-  document.title=lang==='tr'?'Brain Rush — Ücretsiz Günlük Araçlar':'Brain Rush — Free Everyday Tools';
+  const safeLang=translations[lang]?lang:'en';
+  localStorage.setItem('brainrush-language',safeLang);
+  document.documentElement.lang=safeLang;
+  document.title=safeLang==='tr'?'Brain Rush — Ücretsiz Günlük Araçlar':'Brain Rush — Free Everyday Tools';
   const desc=document.querySelector('meta[name="description"]');
-  if(desc) desc.content=lang==='tr'
+  if(desc) desc.content=safeLang==='tr'
     ?'Brain Rush; hesaplama, dönüştürme, metin, tarih, şifre, QR kod ve günlük işler için ücretsiz çevrimiçi araçlar sunar.'
     :'Brain Rush is a free collection of fast online tools for calculations, conversions, text, dates, passwords, QR codes and everyday tasks.';
-  const dict=translations[lang]||translations.en;
   const languageSelect=$('#languageSelect');
-  if(languageSelect) languageSelect.value=lang;
+  if(languageSelect) languageSelect.value=safeLang;
   translateRoot(document);
-  // Second pass for cards/templates added dynamically or restored by the browser.
-  $('[data-i18n]').forEach(el=>{
-    const key=el.getAttribute('data-i18n');
-    if(dict[key]) el.textContent=dict[key];
-  });
-  if(!modal.hidden) translateRoot(modalBody);
+  if(modal && !modal.hidden) translateRoot(modalBody);
 }
 
 const initialLanguage=localStorage.getItem('brainrush-language')||'en';
-document.documentElement.lang=initialLanguage;
+document.documentElement.lang=translations[initialLanguage]?initialLanguage:'en';
 const langSelect=$('#languageSelect');
 if(langSelect){
-  langSelect.value=initialLanguage;
+  langSelect.value=document.documentElement.lang;
   langSelect.addEventListener('change',e=>setLanguage(e.target.value));
 }
-translateRoot(document);
+try{translateRoot(document);}catch(e){console.warn('Brain Rush translation skipped:',e);}
+
 
 const toolTemplates = {
   calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',
@@ -317,8 +307,13 @@ const toolTemplates = {
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
 
-$('.tool-card').forEach(card => card.addEventListener('click', () => openTool(card.dataset.tool)));
-$('.game-card').forEach(card => card.addEventListener('click',()=>openGame(card.dataset.game)));
+// Delegated clicks keep the interface working even if cards are re-rendered.
+document.addEventListener('click',e=>{
+  const tool=e.target.closest?.('.tool-card');
+  if(tool){e.preventDefault();openTool(tool.dataset.tool);return;}
+  const game=e.target.closest?.('.game-card');
+  if(game){e.preventDefault();openGame(game.dataset.game);}
+});
 
 function openTool(name){
   const template = document.getElementById(toolTemplates[name]);
@@ -335,8 +330,9 @@ function closeModal(){
   document.body.style.overflow = '';
   if(activeTimer){clearInterval(activeTimer);activeTimer=null;}
 }
-$('#modalClose').addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+const modalClose=$('#modalClose');
+if(modalClose) modalClose.addEventListener('click', closeModal);
+if(modal) modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape' && !modal.hidden) closeModal(); });
 
 function bindTool(name){
