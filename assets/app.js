@@ -203,7 +203,7 @@ const translations = {
     "Total":"Toplam","You save":"Tasarrufunuz","per person":"kişi başı","Current rate":"Güncel kur","Result copied":"Sonuç kopyalandı",
     "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR kod oluşturucu yüklenemedi.",
     "HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Choose a valid date":"Geçerli bir tarih seçin","years":"yıl","months":"ay","days":"gün","days lived (approximately)":"yaklaşık yaşanan gün",
-    "Error":"Hata","Copy":"Kopyala","Close":"Kapat","Result":"Sonuç"
+    "Error":"Hata","min":"dk","Select at least one option":"En az bir seçenek seçin","Password copied":"Şifre kopyalandı","Choose a valid date":"Geçerli bir tarih seçin","Copy":"Kopyala","Close":"Kapat","Result":"Sonuç"
     ,"Tip: You can search by what you want to do, like “discount”, “loan”, “QR”, or “password”.":"İpucu: “indirim”, “kredi”, “QR” veya “şifre” gibi yapmak istediğiniz işlemi yazarak arayabilirsiniz.",
     "Enter your bill, choose a tip and split it between people.":"Hesap tutarını girin, bahşiş oranını seçin ve kişi sayısını belirleyin.",
     "See the sale price and exactly how much you save.":"İndirimli fiyatı ve tam olarak ne kadar tasarruf ettiğinizi görün.",
@@ -332,11 +332,11 @@ function bindTool(name){
 
 
 function bindTip(){
-  const calc=()=>{const b=Number($('#tipBill').value)||0,p=Number($('#tipPercent').value)||0,n=Math.max(1,Number($('#tipPeople').value)||1),tip=b*p/100,total=b+tip;$('#tipTotal').textContent=total.toFixed(2);$('#tipPerPerson').textContent=(total/n).toFixed(2)+' '+(n===1?'per person':'per person × '+n);};
+  const calc=()=>{const b=Number($('#tipBill').value)||0,p=Number($('#tipPercent').value)||0,n=Math.max(1,Number($('#tipPeople').value)||1),tip=b*p/100,total=b+tip;$('#tipTotal').textContent=total.toFixed(2);$('#tipPerPerson').textContent=(total/n).toFixed(2)+' '+t('per person')+(n===1?'':' × '+n);};
   ['tipBill','tipPercent','tipPeople'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
 }
 function bindDiscount(){
-  const calc=()=>{const p=Number($('#discountPrice').value)||0,r=Number($('#discountRate').value)||0,s=p*r/100;$('#discountFinal').textContent=(p-s).toFixed(2);$('#discountSaved').textContent='You save '+s.toFixed(2);};
+  const calc=()=>{const p=Number($('#discountPrice').value)||0,r=Number($('#discountRate').value)||0,s=p*r/100;$('#discountFinal').textContent=(p-s).toFixed(2);$('#discountSaved').textContent=t('You save')+' '+s.toFixed(2);};
   ['discountPrice','discountRate'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
 }
 function bindVAT(){
@@ -514,13 +514,13 @@ function bindAge(){
   input.value='1990-01-01';
   $('#ageCalculate').addEventListener('click',()=>{
     const birth=new Date(input.value+'T00:00:00');
-    if(!input.value||birth>now){$('#ageResult').textContent='Choose a valid date';return;}
+    if(!input.value||birth>now){$('#ageResult').textContent=t('Choose a valid date');return;}
     let y=now.getFullYear()-birth.getFullYear(),m=now.getMonth()-birth.getMonth(),d=now.getDate()-birth.getDate();
     if(d<0){m--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate();}
     if(m<0){y--;m+=12;}
     const days=Math.floor((now-birth)/86400000);
-    $('#ageResult').textContent=y+' years, '+m+' months, '+d+' days';
-    $('#ageDays').textContent=days.toLocaleString()+' days lived (approximately)';
+    $('#ageResult').textContent=y+' '+t('years')+', '+m+' '+t('months')+', '+d+' '+t('days');
+    $('#ageDays').textContent=days.toLocaleString()+' '+t('days lived (approximately)');
   });
 }
 
@@ -533,7 +533,7 @@ function bindPassword(){
     if($('#passLower').checked) sets.push('abcdefghijkmnopqrstuvwxyz');
     if($('#passNumbers').checked) sets.push('23456789');
     if($('#passSymbols').checked) sets.push('!@#$%^&*_-+=?');
-    if(!sets.length){out.value='Select at least one option';return;}
+    if(!sets.length){out.value=t('Select at least one option');return;}
     const all=sets.join('');
     const bytes=new Uint32Array(Number(length.value));crypto.getRandomValues(bytes);
     let result='';
@@ -543,7 +543,7 @@ function bindPassword(){
   };
   length.addEventListener('input',()=>$('#passwordLengthOut').textContent=length.value);
   $('#generatePassword').addEventListener('click',generate);
-  $('#copyPassword').addEventListener('click',()=>copyText(out.value,'Password copied'));
+  $('#copyPassword').addEventListener('click',()=>copyText(out.value,t('Password copied')));
   generate();
 }
 
@@ -555,7 +555,7 @@ function bindText(){
     $('#wordCount').textContent=words.toLocaleString();
     $('#charCount').textContent=text.length.toLocaleString();
     $('#lineCount').textContent=text?text.split(/\n/).length:0;
-    $('#readTime').textContent=(words?Math.max(1,Math.ceil(words/200)):0)+' min';
+    $('#readTime').textContent=(words?Math.max(1,Math.ceil(words/200)):0)+' '+t('min');
   };
   input.addEventListener('input',update);update();
 }
@@ -571,7 +571,7 @@ function bindPercentage(){
     const a=Number($('#pctC').value),b=Number($('#pctD').value);
     const v=a!==0?((b-a)/Math.abs(a))*100:0;
     $('#pctResult2').textContent=Number.isFinite(v)?v.toFixed(2)+'%':'—';
-    $('#pctChangeExplain').textContent=v>=0?'It increased by '+Math.abs(v).toFixed(2)+'%.':'It decreased by '+Math.abs(v).toFixed(2)+'%.';
+    $('#pctChangeExplain').textContent=v>=0?t('It increased by')+' '+Math.abs(v).toFixed(2)+'%.':t('It decreased by')+' '+Math.abs(v).toFixed(2)+'%.';
   };
   const updateDiscount=()=>{
     const p=Number($('#pctPrice').value),d=Number($('#pctDiscount').value),save=p*d/100;
@@ -604,7 +604,7 @@ function bindDate(){
   $('#dateCalculate').addEventListener('click',()=>{
     const a=new Date(s.value+'T00:00:00'),b=new Date(e.value+'T00:00:00');
     const days=Math.abs(Math.round((b-a)/86400000));
-    $('#dateResult').textContent=days.toLocaleString()+' days';
+    $('#dateResult').textContent=days.toLocaleString()+' '+t('days');
   });
 }
 
