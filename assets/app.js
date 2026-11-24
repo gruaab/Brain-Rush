@@ -292,13 +292,21 @@ function setLanguage(lang){
     :'Brain Rush is a free collection of fast online tools for calculations, conversions, text, dates, passwords, QR codes and everyday tasks.';
   $('#languageSelect').value=lang;
   translateRoot(document);
+  // Second pass for cards/templates added dynamically or restored by the browser.
+  $('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(dict[key]) el.textContent=dict[key];
+  });
   if(!modal.hidden) translateRoot(modalBody);
 }
 
 const initialLanguage=localStorage.getItem('brainrush-language')||'en';
 document.documentElement.lang=initialLanguage;
-$('#languageSelect').value=initialLanguage;
-$('#languageSelect').addEventListener('change',e=>setLanguage(e.target.value));
+const langSelect=$('#languageSelect');
+if(langSelect){
+  langSelect.value=initialLanguage;
+  langSelect.addEventListener('change',e=>setLanguage(e.target.value));
+}
 translateRoot(document);
 
 const toolTemplates = {
