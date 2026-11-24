@@ -80,7 +80,7 @@ const translations = {
     "Case Converter":"Case Converter","Color Picker":"Color Picker","Copy":"Copy","Category":"Category","Strong password":"Strong password",
     "Your age":"Your age","Current rate":"Current rate","Underweight":"Underweight","Normal range":"Normal range","Overweight":"Overweight","Obesity":"Obesity",
     "Timer finished!":"Timer finished!","Generate a QR code first.":"Generate a QR code first.","QR renderer could not be loaded.":"QR renderer could not be loaded.",
-    "Result copied":"Result copied","HEX copied":"HEX copied","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter."
+    "Result copied":"Result copied","HEX copied":"HEX copied","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter.","Loading rate…":"Loading rate…","Unable to load rate":"Unable to load rate","Check your connection and try again.":"Check your connection and try again."
   },
   tr: {
     "Tools":"Araçlar","About":"Hakkında","Privacy":"Gizlilik","Search tools...":"Araçlarda ara...",
@@ -125,7 +125,7 @@ const translations = {
     "Case Converter":"Büyük/Küçük Harf Dönüştürücü","Color Picker":"Renk Seçici","Copy":"Kopyala","Category":"Kategori","Strong password":"Güçlü şifre",
     "Current rate":"Güncel kur","Underweight":"Zayıf","Normal range":"Normal aralık","Overweight":"Fazla kilolu","Obesity":"Obezite",
     "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR oluşturucu yüklenemedi.",
-    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Meter":"Metre","Kilometer":"Kilometre","Centimeter":"Santimetre","Millimeter":"Milimetre","Mile":"Mil","Yard":"Yarda","Foot":"Fit","Inch":"İnç","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Miligram","Pound":"Pound","Ounce":"Ons","Celsius":"Santigrat","Fahrenheit":"Fahrenhayt","Kelvin":"Kelvin","Enter a valid amount":"Geçerli bir miktar girin","Same currency":"Aynı para birimi","Rate supplied by Frankfurter.":"Kur bilgisi Frankfurter tarafından sağlanıyor."
+    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Meter":"Metre","Kilometer":"Kilometre","Centimeter":"Santimetre","Millimeter":"Milimetre","Mile":"Mil","Yard":"Yarda","Foot":"Fit","Inch":"İnç","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Miligram","Pound":"Pound","Ounce":"Ons","Celsius":"Santigrat","Fahrenheit":"Fahrenhayt","Kelvin":"Kelvin","Enter a valid amount":"Geçerli bir miktar girin","Same currency":"Aynı para birimi","Rate supplied by Frankfurter.":"Kur bilgisi Frankfurter tarafından sağlanıyor.","Loading rate…":"Kur yükleniyor…","Unable to load rate":"Kur alınamadı","Check your connection and try again.":"Bağlantınızı kontrol edip tekrar deneyin."
   }
 };
 
@@ -346,20 +346,29 @@ function bindUnit(){
 
 function bindCurrency(){
   const from=$('#currencyFrom'),to=$('#currencyTo'),amount=$('#currencyAmount'),result=$('#currencyResult'),status=$('#currencyStatus');
-  $('#currencyConvert').addEventListener('click',async()=>{
-    const n=Number(amount.value); if(!Number.isFinite(n)||n<0){result.textContent=t('Enter a valid amount');return;}
-    if(from.value===to.value){result.textContent=n.toFixed(2)+' '+to.value;status.textContent=t('Same currency');return;}
-    result.textContent='Loading…';status.textContent='';
+  const convert=async()=>{
+    const n=Number(amount.value);
+    if(!Number.isFinite(n)||n<0){result.textContent=t('Enter a valid amount');status.textContent='';return;}
+    if(from.value===to.value){result.textContent=n.toLocaleString(undefined,{maximumFractionDigits:2})+' '+to.value;status.textContent=t('Same currency');return;}
+    result.textContent='…';status.textContent=t('Loading rate…');
     try{
-      const res=await fetch('https://api.frankfurter.app/latest?amount='+encodeURIComponent(n)+'&from='+from.value+'&to='+to.value);
-      if(!res.ok) throw new Error();
+      const res=await fetch('https://api.frankfurter.app/latest?amount='+encodeURIComponent(n)+'&from='+encodeURIComponent(from.value)+'&to='+encodeURIComponent(to.value),{cache:'no-store'});
+      if(!res.ok) throw new Error('rate');
       const data=await res.json();
-      result.textContent=Number(data.rates[to.value]).toLocaleString(undefined,{maximumFractionDigits:4})+' '+to.value;
-      status.textContent=t('Rate supplied by Frankfurter.');
-    }catch{result.textContent='Unable to load rate';status.textContent='Check your connection and try again.';}
-  });
+      const rate=Number(data.rates?.[to.value]);
+      if(!Number.isFinite(rate)) throw new Error('rate');
+      result.textContent=rate.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:4})+' '+to.value;
+      status.textContent=t('Rate supplied by Frankfurter.')+' • '+new Date(data.date).toLocaleDateString();
+    }catch{
+      result.textContent=t('Unable to load rate');
+      status.textContent=t('Check your connection and try again.');
+    }
+  };
+  $('#currencyConvert').addEventListener('click',convert);
+  [from,to,amount].forEach(el=>el.addEventListener('change',()=>{if(amount.value) convert();}));
+  amount.addEventListener('keydown',e=>{if(e.key==='Enter') convert();});
+  convert();
 }
-
 function bindAge(){
   const input=$('#birthDate'),now=new Date();
   input.max=now.toISOString().slice(0,10);
