@@ -46,3 +46,24 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 .category-strip::-webkit-scrollbar{display:none}
 .category-pill{white-space:nowrap;border-color:var(--line);background:var(--surface)}
 .tool-tip{color:var(--muted);font-size:12px;margin:14px 2px 0}
+
+/* Brain games */
+.games-section{padding-top:45px}
+.section-subtitle{color:var(--muted);max-width:420px;margin:0}
+.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.game-card{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:18px;display:flex;align-items:center;text-align:left;gap:14px;color:var(--text);transition:.2s}
+.game-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:0 16px 35px rgba(0,0,0,.07)}
+.game-card>span:nth-child(2){flex:1}.game-card b{display:block;font-size:16px}.game-card small{display:block;color:var(--muted);margin-top:2px}.game-card i{font-style:normal;color:var(--muted)}
+.game-icon{display:grid;place-items:center;flex:0 0 50px;width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 15%,var(--surface-2)),var(--surface-2));font-size:25px}
+.game-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}.game-head h3{font-size:27px;letter-spacing:-1px;margin:0}.game-head p{margin:2px 0;color:var(--muted)}
+.memory-board{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-width:440px;margin:0 auto 18px}
+.memory-card{height:78px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:14px;font-size:29px;position:relative;transform-style:preserve-3d;transition:transform .2s,background .2s}
+.memory-card span{opacity:0;transition:opacity .15s}.memory-card.flipped,.memory-card.matched{background:color-mix(in srgb,var(--accent) 12%,var(--surface-2));border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.memory-card.flipped span,.memory-card.matched span{opacity:1}.memory-card.matched{box-shadow:0 0 0 2px color-mix(in srgb,#4ade80 35%,transparent)}
+.game-score{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.game-score span{background:var(--surface-2);border-radius:13px;padding:12px;text-align:center}.game-score b,.game-score small{display:block}.game-score b{font-size:21px}.game-score small{color:var(--muted);font-size:11px}
+.reaction-box{width:100%;height:250px;border:0;border-radius:20px;background:var(--surface-2);color:var(--text);font-size:27px;font-weight:900;transition:.15s}.reaction-box.ready{background:#22c55e;color:#052e16}.reaction-box.too-early{background:#ef4444;color:white}
+.number-hunt{text-align:center}.number-hunt .big-random{margin:10px 0 22px}.number-hunt input{width:100%;border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:12px;padding:13px;text-align:center;font-size:20px;outline:0}.game-message{min-height:28px;font-weight:800;color:var(--accent)}
+.rps-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.rps-actions button{border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:14px;padding:18px 8px;font-weight:800;font-size:14px}.rps-actions button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.founder-credit{color:var(--text);font-weight:800;margin-left:6px}
+@media(max-width:820px){.game-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.memory-board{gap:7px}.memory-card{height:68px}.game-head h3{font-size:23px}.reaction-box{height:210px}.rps-actions{grid-template-columns:1fr}}
