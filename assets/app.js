@@ -38,6 +38,7 @@ if(window.matchMedia){
 
 const translations = {
   en: {
+    "Image Size Checker":"Image Size Checker","Find the exact dimensions and technical details of an image":"Find the exact dimensions and technical details of an image","Drop an image here":"Drop an image here","or click to choose a file • processed in your browser":"or click to choose a file • processed in your browser","Choose Image":"Choose Image","JPG, PNG, WebP, GIF, AVIF and other browser-supported formats":"JPG, PNG, WebP, GIF, AVIF and other browser-supported formats","Analyzing image...":"Analyzing image...","Local browser analysis":"Local browser analysis","Actual dimensions":"Actual dimensions","Aspect ratio":"Aspect ratio","Megapixels":"Megapixels","File size":"File size","Format":"Format","Orientation":"Orientation","DPI / PPI":"DPI / PPI","Estimated print size":"Estimated print size","Physical size depends on DPI/PPI":"Physical size depends on DPI/PPI","DPI":"DPI","Custom":"Custom","Copy summary":"Copy summary","Check another image":"Check another image","Landscape":"Landscape","Portrait":"Portrait","Square":"Square","Not saved":"Not saved","DPI not saved":"DPI not saved","Copied!":"Copied!","Görsel Boyutu Bulucu":"Görsel Boyutu Bulucu","Piksel, oran, dosya boyutu ve baskı ölçüsünü bulun":"Piksel, oran, dosya boyutu ve baskı ölçüsünü bulun","Bir görselin gerçek boyutunu ve teknik detaylarını bulun":"Bir görselin gerçek boyutunu ve teknik detaylarını bulun",
     "Fuel Cost":"Fuel Cost","Trip fuel and cost calculator":"Trip fuel and cost calculator","Salary Calculator":"Salary Calculator","Convert salary to hourly and daily pay":"Convert salary to hourly and daily pay","Savings Goal":"Savings Goal","Plan how much to save each month":"Plan how much to save each month","Aspect Ratio Calculator":"Aspect Ratio Calculator","Resize images and videos proportionally":"Resize images and videos proportionally","Speed Converter":"Speed Converter","Convert km/h, mph and m/s":"Convert km/h, mph and m/s","Slug Generator":"Slug Generator","Create clean SEO-friendly slugs":"Create clean SEO-friendly slugs","Regex Tester":"Regex Tester","Test regular expressions safely":"Test regular expressions safely","Random Picker":"Random Picker","Pick one item from a list":"Pick one item from a list",
     "Heads":"Heads","Tails":"Tails","Team":"Team","Enter at least one item":"Enter at least one item",
     "ACTIVITIES":"ACTIVITIES","Do something fun.":"Do something fun.","Quick activities for decisions, breaks and group fun.":"Quick activities for decisions, breaks and group fun.","Coin Flip":"Coin Flip","Flip a virtual coin for a quick decision.":"Flip a virtual coin for a quick decision.","Dice Roller":"Dice Roller","Roll one or more dice instantly.":"Roll one or more dice instantly.","Team Generator":"Team Generator","Split a list of people into random teams.":"Split a list of people into random teams.","Decision Maker":"Decision Maker","Let Brain Rush choose between your options.":"Let Brain Rush choose between your options.",
@@ -87,6 +88,7 @@ const translations = {
     "Result copied":"Result copied","HEX copied":"HEX copied","Add VAT":"Add VAT","Remove VAT":"Remove VAT","Total with VAT":"Total with VAT","Price without VAT":"Price without VAT","Bill amount":"Bill amount","Tip %":"Tip %","People":"People","Total":"Total","You pay":"You pay","Original price":"Original price","Discount %":"Discount %","You save":"You save","Current time":"Current time","Timestamp → Date":"Timestamp → Date","Date → Timestamp":"Date → Timestamp","Unix timestamp":"Unix timestamp","Date and time":"Date and time","SHA-256":"SHA-256","SHA-1":"SHA-1","Algorithm":"Algorithm","Invalid text":"Invalid text","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter.","Loading rate…":"Loading rate…","Unable to load rate":"Unable to load rate","Check your connection and try again.":"Check your connection and try again.","Loan Calculator":"Loan Calculator","Estimate monthly loan payments":"Estimate monthly loan payments","Compound Interest":"Compound Interest","Calculate growth with compound interest":"Calculate growth with compound interest","Number Base Converter":"Number Base Converter","Convert binary, decimal and hex":"Convert binary, decimal and hex","Text Reverser":"Text Reverser","Reverse any text instantly":"Reverse any text instantly","Time Zone Converter":"Time Zone Converter","See a date and time in another zone":"See a date and time in another zone","Compound Interest":"Compound Interest","Number Base Converter":"Number Base Converter","Text Reverser":"Text Reverser","Time Zone Converter":"Time Zone Converter","Monthly payment":"Monthly payment","Total payment":"Total payment","Total interest":"Total interest","Principal":"Principal","Annual rate":"Annual rate","Months":"Months","Interest earned":"Interest earned","Years":"Years","Compounds per year":"Compounds per year","Input number":"Input number","From base":"From base","To base":"To base","Reversed text":"Reversed text","Date and time":"Date and time","Time zone":"Time zone"
   },
   tr: {
+    "Image Size Checker":"Görsel Boyutu Bulucu","Find the exact dimensions and technical details of an image":"Bir görselin gerçek boyutunu ve teknik detaylarını bulun","Drop an image here":"Görseli buraya bırakın","or click to choose a file • processed in your browser":"veya dosya seçin • görseliniz tarayıcınızda işlenir","Choose Image":"Görsel Seç","JPG, PNG, WebP, GIF, AVIF and other browser-supported formats":"JPG, PNG, WebP, GIF, AVIF ve tarayıcının desteklediği diğer formatlar","Analyzing image...":"Görsel analiz ediliyor...","Local browser analysis":"Tarayıcıda yerel analiz","Actual dimensions":"Gerçek boyut","Aspect ratio":"En-boy oranı","Megapixels":"Megapiksel","File size":"Dosya boyutu","Format":"Format","Orientation":"Yön","DPI / PPI":"DPI / PPI","Estimated print size":"Tahmini baskı boyutu","Physical size depends on DPI/PPI":"Fiziksel boyut DPI/PPI değerine bağlıdır","DPI":"DPI","Custom":"Özel","Copy summary":"Özeti Kopyala","Check another image":"Başka Görsel Kontrol Et","Landscape":"Yatay","Portrait":"Dikey","Square":"Kare","Not saved":"Kayıtlı değil","DPI not saved":"DPI bilgisi kayıtlı değil","Copied!":"Kopyalandı!","Görsel Boyutu Bulucu":"Görsel Boyutu Bulucu","Piksel, oran, dosya boyutu ve baskı ölçüsünü bulun":"Piksel, oran, dosya boyutu ve baskı ölçüsünü bulun","Bir görselin gerçek boyutunu ve teknik detaylarını bulun":"Bir görselin gerçek boyutunu ve teknik detaylarını bulun",
     "Fuel Cost":"Yakıt Maliyeti","Trip fuel and cost calculator":"Yakıt tüketimi ve yolculuk maliyetini hesaplayın","Salary Calculator":"Maaş Hesaplama","Convert salary to hourly and daily pay":"Maaşı günlük ve saatlik ücrete dönüştürün","Savings Goal":"Birikim Hedefi","Plan how much to save each month":"Aylık ne kadar birikim yapmanız gerektiğini planlayın","Aspect Ratio Calculator":"En-Boy Oranı Hesaplama","Resize images and videos proportionally":"Görsel ve videoları orantılı olarak yeniden boyutlandırın","Speed Converter":"Hız Dönüştürücü","Convert km/h, mph and m/s":"km/sa, mil/sa ve m/sn arasında dönüştürün","Slug Generator":"SEO Slug Oluşturucu","Create clean SEO-friendly slugs":"SEO uyumlu temiz bağlantı metinleri oluşturun","Regex Tester":"Regex Test Aracı","Test regular expressions safely":"Düzenli ifadeleri güvenli şekilde test edin","Random Picker":"Rastgele Seçici","Pick one item from a list":"Listedeki bir öğeyi rastgele seçin",
     "Heads":"Yazı","Tails":"Tura","Team":"Takım","Enter at least one item":"En az bir seçenek girin",
     "ACTIVITIES":"AKTİVİTELER","Do something fun.":"Biraz eğlenelim.","Quick activities for decisions, breaks and group fun.":"Karar vermek, mola vermek ve birlikte eğlenmek için hızlı aktiviteler.","Coin Flip":"Yazı Tura","Flip a virtual coin for a quick decision.":"Hızlı bir karar için sanal para atın.","Dice Roller":"Zar Atma","Roll one or more dice instantly.":"Bir veya daha fazla zarı anında atın.","Team Generator":"Takım Oluşturucu","Split a list of people into random teams.":"Listedeki kişileri rastgele takımlara ayırın.","Decision Maker":"Karar Verici","Let Brain Rush choose between your options.":"Seçenekleriniz arasından Brain Rush karar versin.",
@@ -310,7 +312,7 @@ try{translateRoot(document);}catch(e){console.warn('Brain Rush translation skipp
 
 
 const toolTemplates = {
-  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',fuel:'fuelTemplate',salary:'salaryTemplate',savings:'savingsTemplate',ratio:'ratioTemplate',speed:'speedTemplate',slug:'slugTemplate',regex:'regexTemplate',randompick:'randompickTemplate',profit:'profitTemplate',breakeven:'breakevenTemplate',workhours:'workhoursTemplate',dateadd:'dateaddTemplate',datasize:'datasizeTemplate',pace:'paceTemplate',contrast:'contrastTemplate',utm:'utmTemplate',duplicates:'duplicatesTemplate',wordfreq:'wordfreqTemplate',coin:'coinTemplate',dice:'diceTemplate',teams:'teamsTemplate',decide:'decideTemplate',
+  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',fuel:'fuelTemplate',salary:'salaryTemplate',savings:'savingsTemplate',ratio:'ratioTemplate',speed:'speedTemplate',slug:'slugTemplate',regex:'regexTemplate',randompick:'randompickTemplate',imagesize:'imagesizeTemplate',profit:'profitTemplate',breakeven:'breakevenTemplate',workhours:'workhoursTemplate',dateadd:'dateaddTemplate',datasize:'datasizeTemplate',pace:'paceTemplate',contrast:'contrastTemplate',utm:'utmTemplate',duplicates:'duplicatesTemplate',wordfreq:'wordfreqTemplate',coin:'coinTemplate',dice:'diceTemplate',teams:'teamsTemplate',decide:'decideTemplate',
   password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',tip:'tipTemplate',discount:'discountTemplate',vat:'vatTemplate',timestamp:'timestampTemplate',url:'urlTemplate',hash:'hashTemplate',bmi:'bmiTemplate',
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
@@ -367,7 +369,7 @@ function bindTool(name){
   if(name==='compound') bindCompound();
   if(name==='base') bindBase();
   if(name==='reverse') bindReverse();
-  if(name==='timezone') bindTimezone(); if(name==='profit') bindProfit(); if(name==='breakeven') bindBreakEven(); if(name==='workhours') bindWorkHours(); if(name==='dateadd') bindDateAdd(); if(name==='datasize') bindDataSize(); if(name==='pace') bindPace(); if(name==='contrast') bindContrast(); if(name==='utm') bindUTM(); if(name==='duplicates') bindDuplicates(); if(name==='wordfreq') bindWordFreq(); if(name==='coin') bindCoin(); if(name==='dice') bindDice(); if(name==='teams') bindTeams(); if(name==='decide') bindDecide(); if(name==='fuel') bindFuel(); if(name==='salary') bindSalary(); if(name==='savings') bindSavings(); if(name==='ratio') bindRatio(); if(name==='speed') bindSpeed(); if(name==='slug') bindSlug(); if(name==='regex') bindRegex(); if(name==='randompick') bindRandomPick();
+  if(name==='timezone') bindTimezone(); if(name==='imagesize') bindImageSize(); if(name==='profit') bindProfit(); if(name==='breakeven') bindBreakEven(); if(name==='workhours') bindWorkHours(); if(name==='dateadd') bindDateAdd(); if(name==='datasize') bindDataSize(); if(name==='pace') bindPace(); if(name==='contrast') bindContrast(); if(name==='utm') bindUTM(); if(name==='duplicates') bindDuplicates(); if(name==='wordfreq') bindWordFreq(); if(name==='coin') bindCoin(); if(name==='dice') bindDice(); if(name==='teams') bindTeams(); if(name==='decide') bindDecide(); if(name==='fuel') bindFuel(); if(name==='salary') bindSalary(); if(name==='savings') bindSavings(); if(name==='ratio') bindRatio(); if(name==='speed') bindSpeed(); if(name==='slug') bindSlug(); if(name==='regex') bindRegex(); if(name==='randompick') bindRandomPick();
 }
 
 
@@ -1009,3 +1011,62 @@ function bindCoin(){const o=$('#coinResult');$('#coinFlip')?.addEventListener('c
 function bindDice(){const o=$('#diceResult'),c=$('#diceCount'),s=$('#diceSides');$('#rollDice')?.addEventListener('click',()=>{const n=Math.min(10,Math.max(1,Number(c.value)||1)),f=Math.min(100,Math.max(2,Number(s.value)||6)),a=Array.from({length:n},()=>1+Math.floor(Math.random()*f));o.textContent=a.join(' + ')+' = '+a.reduce((x,y)=>x+y,0);});}
 function bindTeams(){const i=$('#teamInput'),n=$('#teamCount'),o=$('#teamResult');$('#makeTeams')?.addEventListener('click',()=>{const a=i.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).sort(()=>Math.random()-.5),k=Math.min(20,Math.max(2,Number(n.value)||2));if(!a.length){o.textContent=t('Enter at least one item');return;}const z=Array.from({length:k},()=>[]);a.forEach((x,j)=>z[j%k].push(x));o.innerHTML=z.map((x,j)=>'<div><b>'+t('Team')+' '+(j+1)+'</b>: '+x.join(', ')+'</div>').join('');});}
 function bindDecide(){const i=$('#decisionInput'),o=$('#decisionResult');$('#makeDecision')?.addEventListener('click',()=>{const a=i.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);o.textContent=a.length?a[Math.floor(Math.random()*a.length)]:t('Enter at least one item');});}
+
+function bindImageSize(){
+  const input=$('#imageSizeInput'), zone=$('#imageSizeDropzone'), choose=$('#imageChooseBtn'), scan=$('#imageScan'), result=$('#imageSizeResult'), preview=$('#imageSizePreview'), name=$('#imageSizeName'), dims=$('#imageDimensions'), ratio=$('#imageRatio'), mega=$('#imageMegapixels'), fileSize=$('#imageFileSize'), format=$('#imageFormat'), orient=$('#imageOrientation'), dpi=$('#imageDpi'), dpiInput=$('#imageDpiInput'), p300=$('#print300'), p150=$('#print150'), p72=$('#print72'), pc=$('#printCustom'), copy=$('#copyImageSummary'), reset=$('#imageReset');
+  let currentFile=null, currentMeta={};
+  const fmtBytes=n=>n<1024? n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
+  const gcd=(a,b)=>{a=Math.round(a);b=Math.round(b);while(b){const t=a%b;a=b;b=t;}return a||1;};
+  const ratioText=(w,h)=>{const g=gcd(w,h);return Math.round(w/g)+':'+Math.round(h/g);};
+  const printText=(w,h,d)=> d>0 ? ((w/d*2.54).toFixed(2)+' × '+(h/d*2.54).toFixed(2)+' cm') : '—';
+  const readDpi=async file=>{
+    try{
+      const buf=await file.arrayBuffer(), b=new Uint8Array(buf);
+      if(file.type==='image/png' && b.length>40){
+        const view=new DataView(buf);
+        for(let i=8;i+12<b.length;){
+          const len=view.getUint32(i); const type=String.fromCharCode(b[i+4],b[i+5],b[i+6],b[i+7]);
+          if(type==='pHYs' && len>=9){const x=view.getUint32(i+8), y=view.getUint32(i+12), unit=b[i+16]; if(unit===1) return Math.round((x/39.3701+y/39.3701)/2);}
+          i+=12+len;
+        }
+      }
+      if(file.type==='image/jpeg' && b.length>20){
+        let i=2;
+        while(i+4<b.length && b[i]===0xFF){
+          const marker=b[i+1]; if(marker===0xDA||marker===0xD9) break;
+          const len=(b[i+2]<<8)|b[i+3];
+          if(marker===0xE0 && len>=14 && String.fromCharCode(b[i+4],b[i+5],b[i+6],b[i+7],b[i+8])==='JFIF'){
+            const units=b[i+11], x=(b[i+12]<<8)|b[i+13], y=(b[i+14]<<8)|b[i+15];
+            if(units===1) return Math.round((x+y)/2); if(units===2) return Math.round(((x+y)/2)*2.54);
+          }
+          i+=2+len;
+        }
+      }
+    }catch(e){}
+    return null;
+  };
+  const updatePrint=()=>{if(!currentMeta.w)return; const d=Math.max(1,Number(dpiInput.value)||300); p300.textContent=printText(currentMeta.w,currentMeta.h,300); p150.textContent=printText(currentMeta.w,currentMeta.h,150); p72.textContent=printText(currentMeta.w,currentMeta.h,72); pc.textContent=printText(currentMeta.w,currentMeta.h,d);};
+  const analyze=async file=>{
+    if(!file || !file.type.startsWith('image/')) return;
+    currentFile=file; scan.hidden=false; result.hidden=true; zone.classList.add('is-scanning');
+    await new Promise(r=>setTimeout(r,650));
+    const url=URL.createObjectURL(file);
+    preview.onload=async ()=>{
+      const w=preview.naturalWidth,h=preview.naturalHeight, d=await readDpi(file);
+      currentMeta={w,h,dpi:d};
+      name.textContent=file.name; dims.textContent=w+' × '+h; ratio.textContent=ratioText(w,h); mega.textContent=(w*h/1000000).toFixed(2)+' MP'; fileSize.textContent=fmtBytes(file.size); format.textContent=(file.type.split('/')[1]||file.name.split('.').pop()||'—').toUpperCase(); orient.textContent=w>h?t('Landscape'):w<h?t('Portrait'):t('Square'); dpi.textContent=d?d+' DPI':t('Not saved');
+      updatePrint(); scan.hidden=true; result.hidden=false; zone.classList.remove('is-scanning'); result.classList.add('image-result-show'); setTimeout(()=>result.classList.remove('image-result-show'),600); URL.revokeObjectURL(url);
+    };
+    preview.src=url;
+  };
+  choose?.addEventListener('click',e=>{e.stopPropagation();input?.click();});
+  zone?.addEventListener('click',e=>{if(e.target!==choose) input?.click();});
+  input?.addEventListener('change',e=>analyze(e.target.files?.[0]));
+  ['dragenter','dragover'].forEach(ev=>zone?.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('is-dragover');}));
+  ['dragleave','drop'].forEach(ev=>zone?.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('is-dragover');}));
+  zone?.addEventListener('drop',e=>analyze(e.dataTransfer.files?.[0]));
+  zone?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input?.click();}});
+  dpiInput?.addEventListener('input',updatePrint);
+  copy?.addEventListener('click',async()=>{if(!currentFile)return;const text=currentFile.name+' | '+currentMeta.w+' × '+currentMeta.h+' px | '+ratio.textContent+' | '+mega.textContent+' | '+fileSize.textContent+' | '+format.textContent+' | '+(currentMeta.dpi?currentMeta.dpi+' DPI':t('DPI not saved'));try{await navigator.clipboard.writeText(text);copy.textContent=t('Copied!');setTimeout(()=>copy.textContent=t('Copy summary'),1400);}catch(e){}});
+  reset?.addEventListener('click',()=>{currentFile=null;input.value='';result.hidden=true;scan.hidden=true;zone.classList.remove('is-scanning');});
+}
