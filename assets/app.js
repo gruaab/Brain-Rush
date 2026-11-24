@@ -1101,16 +1101,16 @@ function bindSizeItUp(){
   const setup=()=>{
     current=rounds[round%rounds.length];
     const r=objects[current[0]], target=objects[current[1]];
-    const basePx=Math.min(360/Math.max(r.len,t.len*.72),120);
-    refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(t)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
+    const basePx=Math.min(360/Math.max(r.len,target.len*.72),120);
+    refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(target)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
-    refObj.style.width=(r.len*basePx*zoom)+'px'; targetObj.style.width=(target.len*basePx*zoom)+'px';
+    refObj.style.width=(r.len*basePx*zoom)+'px'; targetObj.style.width=(targetarget.len*basePx*zoom)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
-    targetObj.dataset.trueWidth=(t.len*basePx*zoom);
+    targetObj.dataset.trueWidth=(target.len*basePx*zoom);
     targetObj.dataset.ratio='1';
-    slider.value='1'; estimate.textContent=t.len.toFixed(2)+' m'; errorEl.textContent=t('Adjust the red object to estimate its real length.');
+    slider.value='1'; estimate.textContent=target.len.toFixed(2)+' m'; errorEl.textContent=t('Adjust the red object to estimate its real length.');
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
-    refName.textContent=r.name; refLen.textContent=t('Real length: ')+r.len.toFixed(2)+' m'; targetName.textContent=target.name;
+    refName.textContent=r.name; refLen.textContent=t('Real length: ')+r.len.toFixed(2)+' m'; targetName.textContent=targetarget.name;
     result.hidden=true; lock.disabled=false; next.hidden=true; stage.classList.remove('size-locked');
     bindHandle();
   };
@@ -1122,9 +1122,9 @@ function bindSizeItUp(){
     h.addEventListener('pointercancel',()=>{drag=false;});
   };
   const renderTarget=()=>{
-    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,t.len*.72),120)*zoom, ratio=Number(targetObj.dataset.ratio)||1;
-    targetObj.style.width=(target.len*basePx*ratio)+'px';
-    estimate.textContent=(target.len*ratio).toFixed(2)+' m';
+    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,target.len*.72),120)*zoom, ratio=Number(targetObj.dataset.ratio)||1;
+    targetObj.style.width=(targetarget.len*basePx*ratio)+'px';
+    estimate.textContent=(targetarget.len*ratio).toFixed(2)+' m';
     const pct=Math.abs(ratio-1)*100;
     errorEl.textContent=(pct<0.05?'±'+pct.toFixed(1):pct.toFixed(1))+'% '+t('from the real size');
   };
