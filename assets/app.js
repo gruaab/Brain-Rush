@@ -302,7 +302,7 @@ try{translateRoot(document);}catch(e){console.warn('Brain Rush translation skipp
 
 
 const toolTemplates = {
-  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',
+  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',
   password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',tip:'tipTemplate',discount:'discountTemplate',vat:'vatTemplate',timestamp:'timestampTemplate',url:'urlTemplate',hash:'hashTemplate',bmi:'bmiTemplate',
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
@@ -784,33 +784,50 @@ function openGame(name){
 
 function bindMemoryGame(){
   const symbols=['🍎','🚀','🎵','⭐','🐼','⚽'];
-  let cards=[...symbols,...symbols].sort(()=>Math.random()-0.5),open=[],matched=0,moves=0,locked=false;
-  const board=$('#memoryBoard'),movesEl=$('#memoryMoves'),pairsEl=$('#memoryPairs');
+  let cards=[],open=[],matched=0,moves=0,locked=false;
+  const board=$('#memoryBoard'),movesEl=$('#memoryMoves'),pairsEl=$('#memoryPairs'),msg=$('#memoryMessage');
+  if(!board)return;
   const render=()=>{
-    board.innerHTML=cards.map((x,i)=>'<button type="button" class="memory-card" data-i="'+i+'"><span>'+x+'</span></button>').join('');
-    $('.memory-card',board).forEach(btn=>btn.addEventListener('click',()=>flip(Number(btn.dataset.i))));
-    movesEl.textContent='0';pairsEl.textContent='0/6';
+    board.innerHTML='';
+    cards.forEach((x,i)=>{
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='memory-card'; btn.dataset.i=String(i);
+      btn.innerHTML='<span>'+x+'</span>';
+      btn.onclick=()=>flip(i);
+      board.appendChild(btn);
+    });
+    movesEl.textContent='0'; pairsEl.textContent='0/6';
+    if(msg)msg.textContent='';
   };
-  const reset=()=>{cards=[...symbols,...symbols].sort(()=>Math.random()-0.5);open=[];matched=0;moves=0;locked=false;render();};
+  const reset=()=>{
+    cards=[...symbols,...symbols].sort(()=>Math.random()-0.5);
+    open=[];matched=0;moves=0;locked=false;render();
+  };
   const flip=(i)=>{
     if(locked)return;
-    const btn=$('.memory-card',board)[i];
+    const btn=board.querySelectorAll('.memory-card')[i];
     if(!btn||btn.classList.contains('matched')||btn.classList.contains('flipped'))return;
-    btn.classList.add('flipped');open.push(i);
-    if(open.length!==2)return;
+    btn.classList.add('flipped');
+    open.push(i);
+    if(open.length<2)return;
     moves++;movesEl.textContent=String(moves);
     const [a,b]=open;
     if(cards[a]===cards[b]){
-      $('.memory-card',board)[a].classList.add('matched');$('.memory-card',board)[b].classList.add('matched');
+      board.querySelectorAll('.memory-card')[a].classList.add('matched');
+      board.querySelectorAll('.memory-card')[b].classList.add('matched');
       matched++;pairsEl.textContent=matched+'/6';open=[];
-      if(matched===6)$('#memoryMessage')?.replaceChildren(document.createTextNode(t('Correct')+' 🎉'));
+      if(matched===6&&msg){msg.textContent=t('Correct')+' 🎉';msg.classList.add('game-win');}
     }else{
       locked=true;
-      setTimeout(()=>{$('.memory-card',board)[a]?.classList.remove('flipped');$('.memory-card',board)[b]?.classList.remove('flipped');open=[];locked=false;},650);
+      setTimeout(()=>{
+        board.querySelectorAll('.memory-card')[a]?.classList.remove('flipped');
+        board.querySelectorAll('.memory-card')[b]?.classList.remove('flipped');
+        open=[];locked=false;
+      },650);
     }
   };
-  $('#memoryReset').addEventListener('click',reset);
-  render();
+  $('#memoryReset').onclick=reset;
+  reset();
 }
 
 function bindReactionGame(){
@@ -846,6 +863,7 @@ function bindRPSGame(){
   const moves=['rock','paper','scissors'];
   const resultEl=$('#rpsResult'),choicesEl=$('#rpsChoices'),scoreEl=$('#rpsScore');
   const names={rock:t('Rock'),paper:t('Paper'),scissors:t('Scissors')};
+  const buttons=document.querySelectorAll('.rps-actions button');
   const play=(player)=>{
     const computer=moves[Math.floor(Math.random()*3)];
     let result='Draw!';
@@ -856,8 +874,9 @@ function bindRPSGame(){
     choicesEl.textContent=names[player]+' 🆚 '+names[computer];
     resultEl.textContent=t(result);
     scoreEl.textContent=wins+' - '+losses+' - '+draws;
+    resultEl.classList.remove('game-pop'); void resultEl.offsetWidth; resultEl.classList.add('game-pop');
   };
-  $('.rps-actions button').forEach(btn=>btn.addEventListener('click',()=>play(btn.dataset.rps)));
+  buttons.forEach(btn=>btn.onclick=()=>play(btn.dataset.rps));
 }
 
 function bindMathGame(){
@@ -881,43 +900,62 @@ function bindHangmanGame(){
     if(word.split('').every(x=>guessed.includes(x))){finished=true;$('#hangmanMessage').textContent=t('Correct')+' 🎉';button.disabled=true;input.disabled=true;}
     else if(lives<=0){finished=true;$('#hangmanMessage').textContent=t('Game over')+' — '+word;button.disabled=true;input.disabled=true;}
   };
-  button.addEventListener('click',guess);input.addEventListener('keydown',e=>{if(e.key==='Enter')guess();});render();
+  button.onclick=guess;input.onkeydown=e=>{if(e.key==='Enter')guess();};render();
 }
 function bindSudokuGame(){
   const solution=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
   const puzzle=[[1,0,3,0],[0,4,0,2],[2,0,4,0],[0,3,0,1]];
-  const grid=$('#sudokuGrid'),message=$('#sudokuMessage');
+  const grid=$('#sudokuGrid'),message=$('#sudokuMessage'),check=$('#sudokuCheck');
+  if(!grid||!check)return;
   grid.innerHTML='';
-  puzzle.forEach((row,r)=>row.forEach((v,col)=>{
-    const input=document.createElement('input');input.type='number';input.min='1';input.max='4';input.inputMode='numeric';input.dataset.r=r;input.dataset.c=col;
-    if(v){input.value=v;input.disabled=true;} grid.appendChild(input);
+  puzzle.forEach((row,r)=>row.forEach((v,c)=>{
+    const input=document.createElement('input');
+    input.type='number';input.min='1';input.max='4';input.inputMode='numeric';
+    input.dataset.r=r;input.dataset.c=c;
+    if(v){input.value=v;input.disabled=true;}
+    else input.oninput=()=>{if(input.value && !['1','2','3','4'].includes(input.value))input.value='';};
+    grid.appendChild(input);
   }));
-  $('#sudokuCheck').addEventListener('click',()=>{
+  check.onclick=()=>{
     let complete=true,correct=true;
-    $('#sudokuGrid input').forEach(input=>{
+    grid.querySelectorAll('input').forEach(input=>{
       const value=Number(input.value);
       if(!value){complete=false;return;}
       if(value!==solution[Number(input.dataset.r)][Number(input.dataset.c)])correct=false;
     });
     message.textContent=!complete?t('Fill all cells'):correct?t('Correct')+' 🎉':t('Try again');
-  });
+    message.classList.toggle('game-win',complete&&correct);
+  };
 }
 function bindSequenceGame(){
-  let sequence=[],user=[],level=0,accepting=false;
-  const colors=['1','2','3','4'],display=$('#sequenceDisplay'),buttons=$('#sequenceButtons'),message=$('#sequenceMessage');
+  let sequence=[],user=[],level=0,accepting=false,timer=null;
+  const colors=['1','2','3','4'],display=$('#sequenceDisplay'),buttons=$('#sequenceButtons'),message=$('#sequenceMessage'),startBtn=$('#sequenceStart');
+  if(!display||!buttons||!startBtn)return;
   const add=()=>{
-    sequence.push(colors[Math.floor(Math.random()*colors.length)]);user=[];accepting=false;
+    sequence.push(colors[Math.floor(Math.random()*colors.length)]);
+    user=[];accepting=false;
     display.textContent=sequence.join(' • ');
-    setTimeout(()=>{display.textContent='?';accepting=true;},Math.max(700,900-sequence.length*20));
+    clearTimeout(timer);
+    timer=setTimeout(()=>{display.textContent='?';accepting=true;},Math.max(700,1100-sequence.length*30));
   };
-  const start=()=>{sequence=[];user=[];level=0;message.textContent='';buttons.innerHTML=colors.map(c=>'<button type="button" class="sequence-btn" data-v="'+c+'">'+c+'</button>').join('');add();};
-  $('#sequenceStart').addEventListener('click',start);
-  buttons.addEventListener('click',e=>{
-    const btn=e.target.closest('.sequence-btn');if(!btn||!accepting)return;
-    user.push(btn.dataset.v);const i=user.length-1;
-    if(user[i]!==sequence[i]){accepting=false;message.textContent=t('Game over')+' — '+t('Level')+' '+level;return;}
-    if(user.length===sequence.length){accepting=false;level++;message.textContent=t('Correct')+'! '+t('Level')+' '+level;setTimeout(add,650);}
-  });
+  const start=()=>{
+    clearTimeout(timer);sequence=[];user=[];level=0;accepting=false;message.textContent='';
+    buttons.innerHTML=colors.map(c=>'<button type="button" class="sequence-btn" data-v="'+c+'">'+c+'</button>').join('');
+    buttons.querySelectorAll('.sequence-btn').forEach(btn=>btn.onclick=()=>{
+      if(!accepting)return;
+      user.push(btn.dataset.v);
+      const i=user.length-1;
+      if(user[i]!==sequence[i]){
+        accepting=false;message.textContent=t('Game over')+' — '+t('Level')+' '+level;message.classList.remove('game-win');return;
+      }
+      if(user.length===sequence.length){
+        accepting=false;level++;message.textContent=t('Correct')+'! '+t('Level')+' '+level;message.classList.add('game-win');
+        timer=setTimeout(add,650);
+      }
+    });
+    add();
+  };
+  startBtn.onclick=start;
   start();
 }
 
