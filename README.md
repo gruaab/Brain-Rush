@@ -24,3 +24,5 @@ Dedicated SEO URLs for every tool, richer metadata, accessibility refinements, a
 
 ## License
 MIT
+
+https://gruaab.github.io/Brain-Rush/
