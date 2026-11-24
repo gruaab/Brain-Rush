@@ -290,7 +290,9 @@ function setLanguage(lang){
   if(desc) desc.content=lang==='tr'
     ?'Brain Rush; hesaplama, dönüştürme, metin, tarih, şifre, QR kod ve günlük işler için ücretsiz çevrimiçi araçlar sunar.'
     :'Brain Rush is a free collection of fast online tools for calculations, conversions, text, dates, passwords, QR codes and everyday tasks.';
-  $('#languageSelect').value=lang;
+  const dict=translations[lang]||translations.en;
+  const languageSelect=$('#languageSelect');
+  if(languageSelect) languageSelect.value=lang;
   translateRoot(document);
   // Second pass for cards/templates added dynamically or restored by the browser.
   $('[data-i18n]').forEach(el=>{
