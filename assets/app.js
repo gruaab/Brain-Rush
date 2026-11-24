@@ -203,7 +203,17 @@ const translations = {
     "Total":"Toplam","You save":"Tasarrufunuz","per person":"kişi başı","Current rate":"Güncel kur","Result copied":"Sonuç kopyalandı",
     "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR kod oluşturucu yüklenemedi.",
     "HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Choose a valid date":"Geçerli bir tarih seçin","years":"yıl","months":"ay","days":"gün","days lived (approximately)":"yaklaşık yaşanan gün",
-    "Error":"Hata","min":"dk","Select at least one option":"En az bir seçenek seçin","Password copied":"Şifre kopyalandı","Choose a valid date":"Geçerli bir tarih seçin","Copy":"Kopyala","Close":"Kapat","Result":"Sonuç"
+    "Founder: Selim":"Kurucu: Selim","Games":"Oyunlar","BRAIN GAMES":"ZİHİN OYUNLARI","Play. Think. Improve.":"Oyna. Düşün. Geliş.",
+"Quick browser games for focus, memory and reaction speed.":"Odaklanma, hafıza ve tepki hızını geliştiren hızlı tarayıcı oyunları.",
+"Match the pairs and test your memory.":"Kart çiftlerini eşleştirin ve hafızanızı test edin.","How fast can you react?":"Ne kadar hızlı tepki verebilirsin?",
+"Find the hidden number with fewer guesses.":"Gizli sayıyı daha az tahminle bul.","Play a quick match against the computer.":"Bilgisayara karşı hızlı bir maç yap.",
+"Find all matching pairs.":"Tüm eşleşen kart çiftlerini bulun.","Moves":"Hamle","Pairs":"Çift","New game":"Yeni oyun",
+"Wait for green, then click as fast as you can.":"Yeşili bekleyin, ardından mümkün olduğunca hızlı tıklayın.","Reaction time":"Tepki süresi","Best":"En iyi",
+"Guess the hidden number from 1 to 100.":"1 ile 100 arasındaki gizli sayıyı tahmin edin.","Check guess":"Tahmini kontrol et","Attempts":"Deneme",
+"Too low":"Daha büyük bir sayı deneyin.","Too high":"Daha küçük bir sayı deneyin.","Correct":"Doğru!","You found it":"Buldunuz!",
+"Choose your move and play against the computer.":"Hamlenizi seçin ve bilgisayara karşı oynayın.","Rock":"Taş","Paper":"Kağıt","Scissors":"Makas",
+"Choose a move":"Bir hamle seçin","You win!":"Kazandınız!","You lose!":"Kaybettiniz!","Draw!":"Berabere!","Waiting...":"Bekleyin...",
+"Click now!":"ŞİMDİ TIKLA!","Too early!":"Çok erken!","Your reaction":"Tepkiniz","ms":"ms","Error":"Hata","min":"dk","Select at least one option":"En az bir seçenek seçin","Password copied":"Şifre kopyalandı","Choose a valid date":"Geçerli bir tarih seçin","Copy":"Kopyala","Close":"Kapat","Result":"Sonuç"
     ,"Tip: You can search by what you want to do, like “discount”, “loan”, “QR”, or “password”.":"İpucu: “indirim”, “kredi”, “QR” veya “şifre” gibi yapmak istediğiniz işlemi yazarak arayabilirsiniz.",
     "Enter your bill, choose a tip and split it between people.":"Hesap tutarını girin, bahşiş oranını seçin ve kişi sayısını belirleyin.",
     "See the sale price and exactly how much you save.":"İndirimli fiyatı ve tam olarak ne kadar tasarruf ettiğinizi görün.",
@@ -291,7 +301,8 @@ const toolTemplates = {
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
 
-$$('.tool-card').forEach(card => card.addEventListener('click', () => openTool(card.dataset.tool)));
+$('.tool-card').forEach(card => card.addEventListener('click', () => openTool(card.dataset.tool)));
+$('.game-card').forEach(card => card.addEventListener('click',()=>openGame(card.dataset.game)));
 
 function openTool(name){
   const template = document.getElementById(toolTemplates[name]);
@@ -701,6 +712,95 @@ async function copyText(value,message){
   catch{alert(value);}
 }
 
+
+function openGame(name){
+  const ids={memory:'memoryGameTemplate',reaction:'reactionGameTemplate',number:'numberGameTemplate',rps:'rpsGameTemplate'};
+  const template=document.getElementById(ids[name]);
+  if(!template)return;
+  modalBody.replaceChildren(template.content.cloneNode(true));
+  modal.hidden=false;document.body.style.overflow='hidden';
+  if(name==='memory') bindMemoryGame();
+  if(name==='reaction') bindReactionGame();
+  if(name==='number') bindNumberGame();
+  if(name==='rps') bindRPSGame();
+  translateRoot(modalBody);
+  setTimeout(()=>$('.modal-close')?.focus(),0);
+}
+
+function bindMemoryGame(){
+  const symbols=['🍎','🚀','🎵','⭐','🐼','⚽'];
+  let cards=[...symbols,...symbols].sort(()=>Math.random()-.5),open=[],matched=0,moves=0;
+  const board=$('#memoryBoard');
+  const render=()=>{
+    board.innerHTML=cards.map((x,i)=>'<button class="memory-card" data-i="'+i+'"><span>'+x+'</span></button>').join('');
+    $('.memory-card',board).forEach(btn=>btn.addEventListener('click',()=>flip(Number(btn.dataset.i))));
+  };
+  const flip=(i)=>{
+    const btn=$('.memory-card',board)[i];
+    if(!btn||btn.classList.contains('matched')||btn.classList.contains('flipped')||open.length===2)return;
+    btn.classList.add('flipped');open.push(i);
+    if(open.length===2){
+      moves++;$('#memoryMoves').textContent=moves;
+      const [a,b]=open;
+      if(cards[a]===cards[b]){
+        $('.memory-card',board)[a].classList.add('matched');
+        $('.memory-card',board)[b].classList.add('matched');
+        matched++;$('#memoryPairs').textContent=matched+'/6';open=[];
+        if(matched===6)setTimeout(()=>alert(t('Correct')+' 🎉'),250);
+      }else{
+        setTimeout(()=>{ $('.memory-card',board)[a]?.classList.remove('flipped'); $('.memory-card',board)[b]?.classList.remove('flipped'); open=[]; },650);
+      }
+    }
+  };
+  $('#memoryReset').addEventListener('click',bindMemoryGame);
+  render();
+}
+
+function bindReactionGame(){
+  let started=false,waiting=false,startTime=0,timer=null;
+  const box=$('#reactionBox'),textEl=$('#reactionText'),bestKey='brainrush-reaction-best';
+  const best=Number(localStorage.getItem(bestKey)||0);
+  if(best)$('#reactionBest').textContent=best+' '+t('ms');
+  const reset=()=>{
+    started=false;waiting=true;box.classList.remove('ready','too-early');textEl.textContent=t('Waiting...');
+    clearTimeout(timer);timer=setTimeout(()=>{box.classList.add('ready');textEl.textContent=t('Click now!');started=true;startTime=performance.now();},900+Math.random()*3000);
+  };
+  box.addEventListener('click',()=>{
+    if(waiting&&!started){clearTimeout(timer);waiting=false;box.classList.add('too-early');textEl.textContent=t('Too early!');setTimeout(reset,900);return;}
+    if(started){const ms=Math.round(performance.now()-startTime);started=false;waiting=false;box.classList.remove('ready');$('#reactionResult').textContent=ms+' '+t('ms');const old=Number(localStorage.getItem(bestKey)||Infinity);if(ms<old){localStorage.setItem(bestKey,ms);$('#reactionBest').textContent=ms+' '+t('ms');}setTimeout(reset,1000);}
+  });
+  reset();
+}
+
+function bindNumberGame(){
+  let target=Math.floor(Math.random()*100)+1,attempts=0;
+  const input=$('#numberGuess'),msg=$('#numberMessage');
+  $('#numberCheck').addEventListener('click',()=>{
+    const n=Number(input.value);if(!n||n<1||n>100)return;
+    attempts++;$('#numberAttempts').textContent=attempts;
+    if(n===target){msg.textContent=t('Correct')+' 🎉 '+t('You found it')+' '+target;input.disabled=true;return;}
+    msg.textContent=n<target?t('Too low'):t('Too high');
+  });
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')$('#numberCheck').click();});
+}
+
+function bindRPSGame(){
+  let wins=0,losses=0,choices=0;
+  const moves=['rock','paper','scissors'];
+  $('.rps-actions button').forEach(btn=>btn.addEventListener('click',()=>{
+    const player=btn.dataset.rps,computer=moves[Math.floor(Math.random()*3)];
+    choices++;
+    let result='Draw!';
+    if(player!==computer){
+      const win=(player==='rock'&&computer==='scissors')||(player==='paper'&&computer==='rock')||(player==='scissors'&&computer==='paper');
+      if(win){wins++;result='You win!';}else{losses++;result='You lose!';}
+    }
+    const names={rock:t('Rock'),paper:t('Paper'),scissors:t('Scissors')};
+    $('#rpsChoices').textContent=names[player]+' 🆚 '+names[computer];
+    $('#rpsResult').textContent=t(result);
+    $('#rpsScore').textContent=wins+' - '+losses;
+  }));
+}
 
 $('.category-pill').forEach(p=>p.addEventListener('click',()=>{
   $('.category-pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');
