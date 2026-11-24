@@ -302,7 +302,7 @@ try{translateRoot(document);}catch(e){console.warn('Brain Rush translation skipp
 
 
 const toolTemplates = {
-  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',
+  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',fuel:'fuelTemplate',salary:'salaryTemplate',savings:'savingsTemplate',ratio:'ratioTemplate',speed:'speedTemplate',slug:'slugTemplate',regex:'regexTemplate',randompick:'randompickTemplate',
   password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',tip:'tipTemplate',discount:'discountTemplate',vat:'vatTemplate',timestamp:'timestampTemplate',url:'urlTemplate',hash:'hashTemplate',bmi:'bmiTemplate',
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
@@ -359,10 +359,19 @@ function bindTool(name){
   if(name==='compound') bindCompound();
   if(name==='base') bindBase();
   if(name==='reverse') bindReverse();
-  if(name==='timezone') bindTimezone();
+  if(name==='timezone') bindTimezone(); if(name==='fuel') bindFuel(); if(name==='salary') bindSalary(); if(name==='savings') bindSavings(); if(name==='ratio') bindRatio(); if(name==='speed') bindSpeed(); if(name==='slug') bindSlug(); if(name==='regex') bindRegex(); if(name==='randompick') bindRandomPick();
 }
 
 
+
+function bindFuel(){const c=()=>{const d=Math.max(0,Number($('#fuelDistance').value)||0),l=Math.max(0,Number($('#fuelConsumption').value)||0),p=Math.max(0,Number($('#fuelPrice').value)||0);$('#fuelLiters').textContent=(d*l/100).toFixed(2)+' L';$('#fuelCost').textContent=(d*l/100*p).toFixed(2);};['fuelDistance','fuelConsumption','fuelPrice'].forEach(id=>$('#'+id)?.addEventListener('input',c));c();}
+function bindSalary(){const c=()=>{const m=Math.max(0,Number($('#salaryMonthly').value)||0),d=Math.max(1,Number($('#salaryDays').value)||1),h=Math.max(1,Number($('#salaryHours').value)||1);$('#salaryDaily').textContent=(m/d).toFixed(2);$('#salaryHourly').textContent=(m/d/h).toFixed(2);};['salaryMonthly','salaryDays','salaryHours'].forEach(id=>$('#'+id)?.addEventListener('input',c));c();}
+function bindSavings(){const c=()=>{const t=Math.max(0,Number($('#saveTarget').value)||0),cur=Math.max(0,Number($('#saveCurrent').value)||0),m=Math.max(0,Number($('#saveMonthly').value)||0),rem=Math.max(0,t-cur);$('#saveRemaining').textContent=rem.toFixed(2);$('#saveMonths').textContent=rem===0?'0':m>0?String(Math.ceil(rem/m)):'—';};['saveTarget','saveCurrent','saveMonthly'].forEach(id=>$('#'+id)?.addEventListener('input',c));c();}
+function bindRatio(){const c=()=>{const w=Math.max(0,Number($('#ratioWidth').value)||0),h=Math.max(0,Number($('#ratioHeight').value)||0),nw=Math.max(0,Number($('#ratioNewWidth').value)||0);if(!w||!h){$('#ratioValue').textContent='—';$('#ratioNewHeight').textContent='—';return;}const g=(a,b)=>b?g(b,a%b):a,d=g(Math.round(w),Math.round(h));$('#ratioValue').textContent=(w/d)+':'+(h/d);$('#ratioNewHeight').textContent=(nw*h/w).toFixed(2);};['ratioWidth','ratioHeight','ratioNewWidth'].forEach(id=>$('#'+id)?.addEventListener('input',c));c();}
+function bindSpeed(){const c=()=>{const v=Number($('#speedValue').value)||0,f=$('#speedFrom').value,to=$('#speedTo').value,factor={kmh:1,mph:1.609344,ms:3.6};const kmh=v*factor[f],out=kmh/factor[to];$('#speedResult').textContent=out.toFixed(4)+' '+to;};['speedValue','speedFrom','speedTo'].forEach(id=>$('#'+id)?.addEventListener('input',c));c();}
+function bindSlug(){const i=$('#slugInput'),o=$('#slugOutput');const c=()=>{o.value=i.value.toLowerCase().trim().replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ı/g,'i').replace(/ö/g,'o').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');};i?.addEventListener('input',c);c();}
+function bindRegex(){const c=()=>{try{const r=new RegExp($('#regexPattern').value,$('#regexFlags').value);const m=$('#regexText').value.match(r);$('#regexResult').textContent=m?(m[0]||'Match found'):'No match';}catch(e){$('#regexResult').textContent='Invalid regex';}};['regexPattern','regexFlags','regexText'].forEach(id=>$('#'+id)?.addEventListener('input',c));c();}
+function bindRandomPick(){const i=$('#pickInput'),o=$('#pickResult');$('#pickButton')?.addEventListener('click',()=>{const a=i.value.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);o.textContent=a.length?a[Math.floor(Math.random()*a.length)]:t('Enter at least one item');});}
 function bindLoan(){
   const calc=()=>{
     const p=Number($('#loanAmount').value)||0,r=(Number($('#loanRate').value)||0)/100/12,n=Math.max(1,Math.round(Number($('#loanMonths').value)||1));
