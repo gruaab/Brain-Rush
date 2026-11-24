@@ -80,10 +80,10 @@ const translations = {
     "Case Converter":"Case Converter","Color Picker":"Color Picker","Copy":"Copy","Category":"Category","Strong password":"Strong password",
     "Your age":"Your age","Current rate":"Current rate","Underweight":"Underweight","Normal range":"Normal range","Overweight":"Overweight","Obesity":"Obesity",
     "Timer finished!":"Timer finished!","Generate a QR code first.":"Generate a QR code first.","QR renderer could not be loaded.":"QR renderer could not be loaded.",
-    "Result copied":"Result copied","HEX copied":"HEX copied","Add VAT":"Add VAT","Remove VAT":"Remove VAT","Total with VAT":"Total with VAT","Price without VAT":"Price without VAT","Bill amount":"Bill amount","Tip %":"Tip %","People":"People","Total":"Total","You pay":"You pay","Original price":"Original price","Discount %":"Discount %","You save":"You save","Current time":"Current time","Timestamp → Date":"Timestamp → Date","Date → Timestamp":"Date → Timestamp","Unix timestamp":"Unix timestamp","Date and time":"Date and time","SHA-256":"SHA-256","SHA-1":"SHA-1","Algorithm":"Algorithm","Invalid text":"Invalid text","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter.","Loading rate…":"Loading rate…","Unable to load rate":"Unable to load rate","Check your connection and try again.":"Check your connection and try again."
+    "Result copied":"Result copied","HEX copied":"HEX copied","Add VAT":"Add VAT","Remove VAT":"Remove VAT","Total with VAT":"Total with VAT","Price without VAT":"Price without VAT","Bill amount":"Bill amount","Tip %":"Tip %","People":"People","Total":"Total","You pay":"You pay","Original price":"Original price","Discount %":"Discount %","You save":"You save","Current time":"Current time","Timestamp → Date":"Timestamp → Date","Date → Timestamp":"Date → Timestamp","Unix timestamp":"Unix timestamp","Date and time":"Date and time","SHA-256":"SHA-256","SHA-1":"SHA-1","Algorithm":"Algorithm","Invalid text":"Invalid text","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter.","Loading rate…":"Loading rate…","Unable to load rate":"Unable to load rate","Check your connection and try again.":"Check your connection and try again.","Loan Calculator":"Loan Calculator","Compound Interest":"Compound Interest","Number Base Converter":"Number Base Converter","Text Reverser":"Text Reverser","Time Zone Converter":"Time Zone Converter","Monthly payment":"Monthly payment","Total payment":"Total payment","Total interest":"Total interest","Principal":"Principal","Annual rate":"Annual rate","Months":"Months","Interest earned":"Interest earned","Years":"Years","Compounds per year":"Compounds per year","Input number":"Input number","From base":"From base","To base":"To base","Reversed text":"Reversed text","Date and time":"Date and time","Time zone":"Time zone"
   },
   tr: {
-    "Tools":"Araçlar","About":"Hakkında","Privacy":"Gizlilik","Search tools...":"Araçlarda ara...",
+"Loan Calculator":"Kredi Hesaplama","Compound Interest":"Bileşik Faiz Hesaplama","Number Base Converter":"Sayı Tabanı Dönüştürücü","Text Reverser":"Metin Ters Çevirici","Time Zone Converter":"Saat Dilimi Dönüştürücü","Monthly payment":"Aylık ödeme","Total payment":"Toplam ödeme","Total interest":"Toplam faiz","Principal":"Ana para","Annual rate":"Yıllık faiz","Months":"Ay","Interest earned":"Kazanç","Years":"Yıl","Compounds per year":"Yıllık bileşik dönem","Input number":"Sayı","From base":"Kaynak taban","To base":"Hedef taban","Reversed text":"Ters metin","Date and time":"Tarih ve saat","Time zone":"Saat dilimi",    "Tools":"Araçlar","About":"Hakkında","Privacy":"Gizlilik","Search tools...":"Araçlarda ara...",
     "FREE • FAST • USEFUL":"ÜCRETSİZ • HIZLI • KULLANIŞLI","Everyday tools.":"Günlük araçlar.","One smart place.":"Tek akıllı yerde.",
     "Calculate, convert, generate and solve everyday tasks in seconds. No account required.":"Hesapla, dönüştür, oluştur ve günlük işlerini saniyeler içinde çöz. Üyelik gerekmez.",
     "Explore tools":"Araçları keşfet","Surprise me":"Beni şaşırt","Get things done.":"İşlerini hallet.",
@@ -362,6 +362,40 @@ function bindTool(name){
   if(name==='timezone') bindTimezone();
 }
 
+
+function bindLoan(){
+  const calc=()=>{
+    const p=Number($('#loanAmount').value)||0,r=(Number($('#loanRate').value)||0)/100/12,n=Math.max(1,Math.round(Number($('#loanMonths').value)||1));
+    const payment=r===0?p/n:p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1),total=payment*n,interest=total-p;
+    $('#loanPayment').textContent=payment.toLocaleString(undefined,{maximumFractionDigits:2});
+    $('#loanTotal').textContent=total.toLocaleString(undefined,{maximumFractionDigits:2});
+    $('#loanInterest').textContent=interest.toLocaleString(undefined,{maximumFractionDigits:2});
+  };
+  ['loanAmount','loanRate','loanMonths'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
+}
+function bindCompound(){
+  const calc=()=>{
+    const p=Number($('#compoundPrincipal').value)||0,rate=(Number($('#compoundRate').value)||0)/100,years=Number($('#compoundYears').value)||0,n=Math.max(1,Math.round(Number($('#compoundPeriods').value)||12));
+    const total=p*Math.pow(1+rate/n,n*years),gain=total-p;
+    $('#compoundTotal').textContent=total.toLocaleString(undefined,{maximumFractionDigits:2});
+    $('#compoundGain').textContent=gain.toLocaleString(undefined,{maximumFractionDigits:2});
+  };
+  ['compoundPrincipal','compoundRate','compoundYears','compoundPeriods'].forEach(id=>$('#'+id).addEventListener('input',calc));calc();
+}
+function bindBase(){
+  const input=$('#baseInput'),from=$('#baseFrom'),to=$('#baseTo'),out=$('#baseResult');
+  const convert=()=>{try{const n=parseInt(input.value.trim(),Number(from.value));if(!Number.isFinite(n))throw 0;out.value=n.toString(Number(to.value)).toUpperCase();}catch{out.value='—';}};
+  [input,from,to].forEach(el=>el.addEventListener('input',convert));convert();
+}
+function bindReverse(){
+  const input=$('#reverseInput'),out=$('#reverseOutput');
+  input.addEventListener('input',()=>out.value=[...input.value].reverse().join('')); 
+}
+function bindTimezone(){
+  const date=$('#tzDate'),zone=$('#tzZone'),out=$('#tzResult');
+  const update=()=>{const d=new Date(date.value);if(Number.isNaN(d.getTime())){out.textContent='—';return;}out.textContent=new Intl.DateTimeFormat(undefined,{dateStyle:'full',timeStyle:'long',timeZone:zone.value}).format(d);};
+  [date,zone].forEach(el=>el.addEventListener('input',update));update();
+}
 
 function bindTip(){
   const calc=()=>{const b=Number($('#tipBill').value)||0,p=Number($('#tipPercent').value)||0,n=Math.max(1,Number($('#tipPeople').value)||1),tip=b*p/100,total=b+tip;$('#tipTotal').textContent=total.toFixed(2);$('#tipPerPerson').textContent=(total/n).toFixed(2)+' '+t('per person')+(n===1?'':' × '+n);};
