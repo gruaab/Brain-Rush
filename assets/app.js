@@ -203,7 +203,12 @@ const translations = {
     "Total":"Toplam","You save":"Tasarrufunuz","per person":"kişi başı","Current rate":"Güncel kur","Result copied":"Sonuç kopyalandı",
     "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR kod oluşturucu yüklenemedi.",
     "HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Choose a valid date":"Geçerli bir tarih seçin","years":"yıl","months":"ay","days":"gün","days lived (approximately)":"yaklaşık yaşanan gün",
-    "Founder: Selim":"Kurucu: Selim","Games":"Oyunlar","BRAIN GAMES":"ZİHİN OYUNLARI","Play. Think. Improve.":"Oyna. Düşün. Geliş.",
+    "Memory Match":"Hafıza Eşleştirme","Reaction Rush":"Tepki Yarışı","Number Hunt":"Sayı Avı","Rock Paper Scissors":"Taş Kağıt Makas",
+"Quick Math":"Hızlı Matematik","Word Guess":"Kelime Tahmini","Mini Sudoku":"Mini Sudoku","Sequence":"Sıralama",
+"Solve as many calculations as you can in 30 seconds.":"30 saniyede mümkün olduğunca çok işlem çözün.","Guess the hidden word before you run out of tries.":"Denemeleriniz bitmeden gizli kelimeyi bulun.",
+"Complete the 4×4 number puzzle.":"4×4 sayı bulmacasını tamamlayın.","Remember the sequence and repeat it correctly.":"Sırayı hatırlayın ve doğru şekilde tekrarlayın.",
+"Check":"Kontrol et","Score":"Skor","Seconds":"Saniye","Answer":"Cevap","Guess":"Tahmin et","Lives":"Can","Check Sudoku":"Sudokuyu kontrol et","Start Game":"Oyunu başlat","Game over":"Oyun bitti","Try again":"Tekrar deneyin","Level":"Seviye",
+"Games":"Oyunlar","BRAIN GAMES":"ZİHİN OYUNLARI","Play. Think. Improve.":"Oyna. Düşün. Geliş.","Founder: Selim":"Kurucu: Selim","Games":"Oyunlar","BRAIN GAMES":"ZİHİN OYUNLARI","Play. Think. Improve.":"Oyna. Düşün. Geliş.",
 "Quick browser games for focus, memory and reaction speed.":"Odaklanma, hafıza ve tepki hızını geliştiren hızlı tarayıcı oyunları.",
 "Match the pairs and test your memory.":"Kart çiftlerini eşleştirin ve hafızanızı test edin.","How fast can you react?":"Ne kadar hızlı tepki verebilirsin?",
 "Find the hidden number with fewer guesses.":"Gizli sayıyı daha az tahminle bul.","Play a quick match against the computer.":"Bilgisayara karşı hızlı bir maç yap.",
@@ -715,7 +720,7 @@ async function copyText(value,message){
 
 
 function openGame(name){
-  const ids={memory:'memoryGameTemplate',reaction:'reactionGameTemplate',number:'numberGameTemplate',rps:'rpsGameTemplate'};
+  const ids={memory:'memoryGameTemplate',reaction:'reactionGameTemplate',number:'numberGameTemplate',rps:'rpsGameTemplate',math:'mathGameTemplate',hangman:'hangmanGameTemplate',sudoku:'sudokuGameTemplate',sequence:'sequenceGameTemplate'};
   const template=document.getElementById(ids[name]);
   if(!template)return;
   modalBody.replaceChildren(template.content.cloneNode(true));
@@ -724,6 +729,10 @@ function openGame(name){
   if(name==='reaction') bindReactionGame();
   if(name==='number') bindNumberGame();
   if(name==='rps') bindRPSGame();
+  if(name==='math') bindMathGame();
+  if(name==='hangman') bindHangmanGame();
+  if(name==='sudoku') bindSudokuGame();
+  if(name==='sequence') bindSequenceGame();
   translateRoot(modalBody);
   setTimeout(()=>$('.modal-close')?.focus(),0);
 }
@@ -801,6 +810,49 @@ function bindRPSGame(){
     $('#rpsResult').textContent=t(result);
     $('#rpsScore').textContent=wins+' - '+losses;
   }));
+}
+
+function bindMathGame(){
+  let score=0,time=30,answer=0,timer=null;
+  const q=$('#mathQuestion'),input=$('#mathAnswer');
+  const next=()=>{const a=Math.floor(Math.random()*20)+1,b=Math.floor(Math.random()*20)+1,ops=['+','−','×'],op=ops[Math.floor(Math.random()*ops.length)];answer=op==='+'?a+b:op==='−'?a-b:a*b;q.textContent=a+' '+op+' '+b;input.value='';input.focus();};
+  const start=()=>{score=0;time=30;$('#mathScore').textContent=0;$('#mathTime').textContent=30;clearInterval(timer);next();timer=setInterval(()=>{time--;$('#mathTime').textContent=time;if(time<=0){clearInterval(timer);q.textContent='🏁 '+t('Game over');}},1000);};
+  $('#mathCheck').addEventListener('click',()=>{if(time<=0)return; if(Number(input.value)===answer){score++;$('#mathScore').textContent=score;next();}else{input.value='';}});
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')$('#mathCheck').click();}); start();
+}
+function bindHangmanGame(){
+  const words=['BRAIN','RUSH','PUZZLE','MEMORY','PLANET','CODING','GARDEN','SCHOOL'];
+  let word=words[Math.floor(Math.random()*words.length)],guessed=[],lives=6;
+  const render=()=>{$('#hangmanWord').textContent=word.split('').map(c=>guessed.includes(c)?c:'_').join(' ');$('#hangmanLives').textContent=lives;};
+  $('#hangmanGuess').addEventListener('click',()=>{
+    const c=$('#hangmanInput').value.toUpperCase();$('#hangmanInput').value='';
+    if(!/^[A-ZÇĞİÖŞÜ]$/.test(c)||guessed.includes(c))return;
+    guessed.push(c);if(!word.includes(c))lives--;
+    render();
+    if(word.split('').every(x=>guessed.includes(x))){$('#hangmanMessage').textContent=t('Correct')+' 🎉';$('#hangmanGuess').disabled=true;}
+    else if(lives<=0){$('#hangmanMessage').textContent=t('Game over')+' — '+word;$('#hangmanGuess').disabled=true;}
+  });
+  $('#hangmanInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('#hangmanGuess').click();});render();
+}
+function bindSudokuGame(){
+  const solution=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
+  const puzzle=[[1,0,3,0],[0,4,0,2],[2,0,4,0],[0,3,0,1]];
+  const grid=$('#sudokuGrid');
+  grid.innerHTML=puzzle.flatMap((row,r)=>row.map((v,c)=>'<input type="number" min="1" max="4" value="'+(v||'')+'" '+(v?'disabled':'')+' data-r="'+r+'" data-c="'+c+'"></input>')).join('');
+  $('#sudokuCheck').addEventListener('click',()=>{
+    let ok=true; $('.sudoku-grid input').forEach(i=>{if(Number(i.value)!==solution[Number(i.dataset.r)][Number(i.dataset.c)])ok=false;});
+    $('#sudokuMessage').textContent=ok?t('Correct')+' 🎉':t('Try again');
+  });
+}
+function bindSequenceGame(){
+  let sequence=[],user=[],level=0;
+  const colors=['1','2','3','4'];
+  const start=()=>{sequence=[];user=[];level=0;$('#sequenceMessage').textContent='';$('#sequenceButtons').innerHTML=colors.map(c=>'<button class="sequence-btn" data-v="'+c+'">'+c+'</button>').join('');add();};
+  const add=()=>{sequence.push(colors[Math.floor(Math.random()*4)]);user=[];$('#sequenceDisplay').textContent=sequence.join(' • ');setTimeout(()=>$('#sequenceDisplay').textContent='?',700);};
+  const check=()=>{user.push(this.dataset.v);const i=user.length-1;if(user[i]!==sequence[i]){$('#sequenceMessage').textContent=t('Game over');return;}if(user.length===sequence.length){level++;$('#sequenceMessage').textContent=t('Correct')+'! '+t('Level')+' '+level;setTimeout(add,600);}};
+  $('#sequenceStart').addEventListener('click',start);
+  $('#sequenceButtons').addEventListener('click',e=>{if(e.target.matches('.sequence-btn'))check.call(e.target);});
+  start();
 }
 
 $('.category-pill').forEach(p=>p.addEventListener('click',()=>{
