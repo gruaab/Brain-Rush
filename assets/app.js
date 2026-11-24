@@ -8,6 +8,143 @@ let timerSeconds = 300;
 let stopwatchSeconds = 0;
 let qrLoaded = false;
 
+const translations = {
+  en: {
+    "Tools":"Tools","About":"About","Privacy":"Privacy","Search tools...":"Search tools...",
+    "FREE • FAST • USEFUL":"FREE • FAST • USEFUL","Everyday tools.":"Everyday tools.","One smart place.":"One smart place.",
+    "Calculate, convert, generate and solve everyday tasks in seconds. No account required.":"Calculate, convert, generate and solve everyday tasks in seconds. No account required.",
+    "Explore tools":"Explore tools","Surprise me":"Surprise me","Get things done.":"Get things done.",
+    "Simple tools with zero friction.":"Simple tools with zero friction.","tools":"tools","signups":"signups","uses":"uses",
+    "TOOLBOX":"TOOLBOX","What do you need?":"What do you need?","No tools matched your search.":"No tools matched your search.",
+    "⚡ Fast":"⚡ Fast","Built for instant results.":"Built for instant results.","🔒 Private":"🔒 Private","Most tools run in your browser.":"Most tools run in your browser.",
+    "📱 Responsive":"📱 Responsive","Works on phones and desktops.":"Works on phones and desktops.","🌍 Free":"🌍 Free","No account required.":"No account required.",
+    "WHY BRAIN RUSH?":"WHY BRAIN RUSH?","Useful beats complicated.":"Useful beats complicated.",
+    "Brain Rush brings small tools together so you do not have to search the web for a different calculator every time. The interface is intentionally simple, fast and mobile-friendly.":"Brain Rush brings small tools together so you do not have to search the web for a different calculator every time. The interface is intentionally simple, fast and mobile-friendly.",
+    "✓ No sign-up":"✓ No sign-up","✓ Browser-first":"✓ Browser-first","✓ Responsive":"✓ Responsive","✓ Free to use":"✓ Free to use",
+    "PRIVACY":"PRIVACY","Simple by design.":"Simple by design.","Common calculations happen locally in your browser and no account is required. The Currency tool contacts a public exchange-rate service when you request a rate.":"Common calculations happen locally in your browser and no account is required. The Currency tool contacts a public exchange-rate service when you request a rate.",
+    "As Brain Rush grows, this section can be expanded with the final privacy policy, analytics disclosure and advertising information.":"As Brain Rush grows, this section can be expanded with the final privacy policy, analytics disclosure and advertising information.",
+    "Built for everyday life.":"Built for everyday life.","Length":"Length","Weight":"Weight","Temperature":"Temperature",
+    "Value":"Value","From":"From","To":"To","Result":"Result","Amount":"Amount","Convert":"Convert","Converted amount":"Converted amount",
+    "Date of birth":"Date of birth","Calculate age":"Calculate age","Your age":"Your age","Uppercase":"Uppercase","Lowercase":"Lowercase",
+    "Numbers":"Numbers","Symbols":"Symbols","Generate new password":"Generate new password","Paste or type your text here...":"Paste or type your text here...",
+    "Words":"Words","Characters":"Characters","Lines":"Lines","Reading time":"Reading time","What is":"What is","is what % of":"is what % of",
+    "Weight (kg)":"Weight (kg)","Height (cm)":"Height (cm)","Calculate BMI":"Calculate BMI","BMI":"BMI",
+    "Start date":"Start date","End date":"End date","Calculate difference":"Calculate difference","Difference":"Difference",
+    "Text or URL":"Text or URL","Generate":"Generate","Download PNG":"Download PNG","Countdown":"Countdown","Stopwatch":"Stopwatch",
+    "Start":"Start","Pause":"Pause","Resume":"Resume","Reset":"Reset","Minimum":"Minimum","Maximum":"Maximum",
+    "UPPERCASE":"UPPERCASE","lowercase":"lowercase","Title Case":"Title Case","Sentence case":"Sentence case","Copy result":"Copy result",
+    "Pick a color and copy HEX or RGB values.":"Pick a color and copy HEX or RGB values.","HEX":"HEX","RGB":"RGB",
+    "Quick everyday math":"Quick everyday math","Length, weight & temperature":"Length, weight & temperature","Live exchange rates":"Live exchange rates",
+    "Exact age from a birthday":"Exact age from a birthday","Create strong passwords":"Create strong passwords","Words, characters & lines":"Words, characters & lines",
+    "Percent calculations made easy":"Percent calculations made easy","Body mass index":"Body mass index","Days between two dates":"Days between two dates",
+    "Create a QR code":"Create a QR code","Focus, cook or exercise":"Focus, cook or exercise","Pick a number instantly":"Pick a number instantly",
+    "UPPER, lower & Title Case":"UPPER, lower & Title Case","Pick and copy colors":"Pick and copy colors",
+    "Fast arithmetic without leaving the page.":"Fast arithmetic without leaving the page.","Convert length, weight and temperature.":"Convert length, weight and temperature.",
+    "Current rates from the Frankfurter public API.":"Current rates from the Frankfurter public API.","Find exact age in years, months and days.":"Find exact age in years, months and days.",
+    "Create a strong random password locally.":"Create a strong random password locally.","Count words, characters, lines and reading time.":"Count words, characters, lines and reading time.",
+    "Handle common percentage questions quickly.":"Handle common percentage questions quickly.","Calculate body mass index using metric units.":"Calculate body mass index using metric units.",
+    "Find the number of days between dates.":"Find the number of days between dates.","Turn text or a URL into a downloadable QR code.":"Turn text or a URL into a downloadable QR code.",
+    "A simple focus timer and stopwatch.":"A simple focus timer and stopwatch.","Generate a random integer between two values.":"Generate a random integer between two values.",
+    "Convert text to upper, lower, title or sentence case.":"Convert text to upper, lower, title or sentence case.","Pick a color and copy HEX or RGB values.":"Pick a color and copy HEX or RGB values.",
+    "Calculator":"Calculator","Unit Converter":"Unit Converter","Currency Converter":"Currency Converter","Age Calculator":"Age Calculator",
+    "Password Generator":"Password Generator","Text Counter":"Text Counter","Percentage Calculator":"Percentage Calculator","BMI Calculator":"BMI Calculator",
+    "Date Difference":"Date Difference","QR Code Generator":"QR Code Generator","Timer & Stopwatch":"Timer & Stopwatch","Random Number":"Random Number",
+    "Case Converter":"Case Converter","Color Picker":"Color Picker","Copy":"Copy","Category":"Category","Strong password":"Strong password",
+    "Your age":"Your age","Current rate":"Current rate","Underweight":"Underweight","Normal range":"Normal range","Overweight":"Overweight","Obesity":"Obesity",
+    "Timer finished!":"Timer finished!","Generate a QR code first.":"Generate a QR code first.","QR renderer could not be loaded.":"QR renderer could not be loaded.",
+    "Result copied":"Result copied","HEX copied":"HEX copied","RGB copied":"RGB copied"
+  },
+  tr: {
+    "Tools":"Araçlar","About":"Hakkında","Privacy":"Gizlilik","Search tools...":"Araçlarda ara...",
+    "FREE • FAST • USEFUL":"ÜCRETSİZ • HIZLI • KULLANIŞLI","Everyday tools.":"Günlük araçlar.","One smart place.":"Tek akıllı yerde.",
+    "Calculate, convert, generate and solve everyday tasks in seconds. No account required.":"Hesapla, dönüştür, oluştur ve günlük işlerini saniyeler içinde çöz. Üyelik gerekmez.",
+    "Explore tools":"Araçları keşfet","Surprise me":"Beni şaşırt","Get things done.":"İşlerini hallet.",
+    "Simple tools with zero friction.":"Sade, hızlı ve zahmetsiz araçlar.","tools":"araç","signups":"kayıt","uses":"kullanım",
+    "TOOLBOX":"ARAÇ KUTUSU","What do you need?":"Neye ihtiyacın var?","No tools matched your search.":"Aramanızla eşleşen araç bulunamadı.",
+    "⚡ Fast":"⚡ Hızlı","Built for instant results.":"Anında sonuç için tasarlandı.","🔒 Private":"🔒 Gizli","Most tools run in your browser.":"Çoğu araç tarayıcınızda çalışır.",
+    "📱 Responsive":"📱 Mobil Uyumlu","Works on phones and desktops.":"Telefon ve bilgisayarlarda çalışır.","🌍 Free":"🌍 Ücretsiz","No account required.":"Üyelik gerekmez.",
+    "WHY BRAIN RUSH?":"NEDEN BRAIN RUSH?","Useful beats complicated.":"Karmaşıklık yerine kullanışlılık.",
+    "Brain Rush brings small tools together so you do not have to search the web for a different calculator every time. The interface is intentionally simple, fast and mobile-friendly.":"Brain Rush, her seferinde farklı bir hesap makinesi aramanıza gerek kalmaması için kullanışlı araçları tek yerde toplar. Arayüz özellikle sade, hızlı ve mobil uyumlu tasarlandı.",
+    "✓ No sign-up":"✓ Üyelik yok","✓ Browser-first":"✓ Tarayıcı öncelikli","✓ Responsive":"✓ Mobil uyumlu","✓ Free to use":"✓ Ücretsiz kullanım",
+    "PRIVACY":"GİZLİLİK","Simple by design.":"Sadelik önceliğimiz.","Common calculations happen locally in your browser and no account is required. The Currency tool contacts a public exchange-rate service when you request a rate.":"Yaygın hesaplamalar tarayıcınızda yerel olarak yapılır ve üyelik gerekmez. Para birimi aracı kur istediğinizde herkese açık bir döviz kuru servisine bağlanır.",
+    "As Brain Rush grows, this section can be expanded with the final privacy policy, analytics disclosure and advertising information.":"Brain Rush büyüdükçe bu bölüm kapsamlı gizlilik politikası, analiz ve reklam bilgilendirmeleriyle genişletilebilir.",
+    "Built for everyday life.":"Günlük hayat için tasarlandı.","Length":"Uzunluk","Weight":"Ağırlık","Temperature":"Sıcaklık",
+    "Value":"Değer","From":"Kaynak","To":"Hedef","Result":"Sonuç","Amount":"Miktar","Convert":"Dönüştür","Converted amount":"Dönüştürülen miktar",
+    "Date of birth":"Doğum tarihi","Calculate age":"Yaşı hesapla","Your age":"Yaşınız","Uppercase":"Büyük harf","Lowercase":"Küçük harf",
+    "Numbers":"Rakamlar","Symbols":"Semboller","Generate new password":"Yeni şifre oluştur","Paste or type your text here...":"Metninizi buraya yapıştırın veya yazın...",
+    "Words":"Kelime","Characters":"Karakter","Lines":"Satır","Reading time":"Okuma süresi","What is":"Nedir","is what % of":"hangi yüzde?",
+    "Weight (kg)":"Ağırlık (kg)","Height (cm)":"Boy (cm)","Calculate BMI":"VKİ hesapla","BMI":"VKİ",
+    "Start date":"Başlangıç tarihi","End date":"Bitiş tarihi","Calculate difference":"Farkı hesapla","Difference":"Fark",
+    "Text or URL":"Metin veya URL","Generate":"Oluştur","Download PNG":"PNG indir","Countdown":"Geri sayım","Stopwatch":"Kronometre",
+    "Start":"Başlat","Pause":"Duraklat","Resume":"Devam et","Reset":"Sıfırla","Minimum":"Minimum","Maximum":"Maksimum",
+    "UPPERCASE":"BÜYÜK HARF","lowercase":"küçük harf","Title Case":"Başlık Biçimi","Sentence case":"Cümle biçimi","Copy result":"Sonucu kopyala",
+    "Pick a color and copy HEX or RGB values.":"Bir renk seçin ve HEX veya RGB değerini kopyalayın.","HEX":"HEX","RGB":"RGB",
+    "Quick everyday math":"Hızlı günlük matematik","Length, weight & temperature":"Uzunluk, ağırlık ve sıcaklık","Live exchange rates":"Güncel döviz kurları",
+    "Exact age from a birthday":"Doğum tarihinden tam yaş","Create strong passwords":"Güçlü şifreler oluşturun","Words, characters & lines":"Kelime, karakter ve satır sayısı",
+    "Percent calculations made easy":"Yüzde hesaplamalarını kolaylaştırın","Body mass index":"Vücut kitle indeksi","Days between two dates":"İki tarih arasındaki günler",
+    "Create a QR code":"QR kod oluşturun","Focus, cook or exercise":"Odaklanın, yemek yapın veya egzersiz yapın","Pick a number instantly":"Anında bir sayı seçin",
+    "UPPER, lower & Title Case":"BÜYÜK, küçük ve Başlık Biçimi","Pick and copy colors":"Renk seçin ve kopyalayın",
+    "Fast arithmetic without leaving the page.":"Sayfadan ayrılmadan hızlı matematik.","Convert length, weight and temperature.":"Uzunluk, ağırlık ve sıcaklığı dönüştürün.",
+    "Current rates from the Frankfurter public API.":"Frankfurter herkese açık API'sinden güncel kurlar.","Find exact age in years, months and days.":"Yıl, ay ve gün olarak tam yaşınızı bulun.",
+    "Create a strong random password locally.":"Tarayıcıda güçlü ve rastgele bir şifre oluşturun.","Count words, characters, lines and reading time.":"Kelime, karakter, satır ve okuma süresini sayın.",
+    "Handle common percentage questions quickly.":"Yaygın yüzde hesaplamalarını hızlıca yapın.","Calculate body mass index using metric units.":"Metrik birimlerle vücut kitle indeksini hesaplayın.",
+    "Find the number of days between dates.":"İki tarih arasındaki gün sayısını bulun.","Turn text or a URL into a downloadable QR code.":"Metin veya URL'yi indirilebilir QR koduna dönüştürün.",
+    "A simple focus timer and stopwatch.":"Basit bir odak sayacı ve kronometre.","Generate a random integer between two values.":"İki değer arasında rastgele tam sayı üretin.",
+    "Convert text to upper, lower, title or sentence case.":"Metni büyük, küçük, başlık veya cümle biçimine dönüştürün.","Pick a color and copy HEX or RGB values.":"Bir renk seçin ve HEX veya RGB değerlerini kopyalayın.",
+    "Calculator":"Hesap Makinesi","Unit Converter":"Birim Dönüştürücü","Currency Converter":"Para Birimi Dönüştürücü","Age Calculator":"Yaş Hesaplama",
+    "Password Generator":"Şifre Oluşturucu","Text Counter":"Metin Sayacı","Percentage Calculator":"Yüzde Hesaplama","BMI Calculator":"VKİ Hesaplama",
+    "Date Difference":"Tarih Farkı","QR Code Generator":"QR Kod Oluşturucu","Timer & Stopwatch":"Sayaç ve Kronometre","Random Number":"Rastgele Sayı",
+    "Case Converter":"Büyük/Küçük Harf Dönüştürücü","Color Picker":"Renk Seçici","Copy":"Kopyala","Category":"Kategori","Strong password":"Güçlü şifre",
+    "Current rate":"Güncel kur","Underweight":"Zayıf","Normal range":"Normal aralık","Overweight":"Fazla kilolu","Obesity":"Obezite",
+    "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR oluşturucu yüklenemedi.",
+    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı"
+  }
+};
+
+function t(value){
+  const lang=localStorage.getItem('brainrush-language')||'en';
+  return (translations[lang]&&translations[lang][value])||value;
+}
+
+function translateRoot(root=document){
+  const lang=localStorage.getItem('brainrush-language')||'en';
+  const dict=translations[lang]||translations.en;
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    const key=node.nodeValue.trim();
+    if(dict[key] && node.nodeValue.trim()===key) node.nodeValue=node.nodeValue.replace(key,dict[key]);
+  });
+  $('input[placeholder], textarea[placeholder]',root).forEach(el=>{
+    const key=el.getAttribute('placeholder');
+    if(dict[key]) el.setAttribute('placeholder',dict[key]);
+  });
+  $('button',root).forEach(el=>{
+    const key=el.getAttribute('data-label-key');
+    if(key && dict[key]) el.textContent=dict[key];
+  });
+}
+
+function setLanguage(lang){
+  localStorage.setItem('brainrush-language',lang);
+  document.documentElement.lang=lang;
+  translateRoot(document);
+  $('#languageSelect').value=lang;
+  if(!modal.hidden) {
+    const active=document.querySelector('.tool-card.active-tool');
+    // Re-translate the currently open modal without rebuilding its state.
+    translateRoot(modalBody);
+  }
+}
+
+const initialLanguage=localStorage.getItem('brainrush-language')||'en';
+document.documentElement.lang=initialLanguage;
+$('#languageSelect').value=initialLanguage;
+$('#languageSelect').addEventListener('change',e=>setLanguage(e.target.value));
+translateRoot(document);
+
+
 $('#year').textContent = new Date().getFullYear();
 
 const savedTheme = localStorage.getItem('brainrush-theme');
@@ -32,6 +169,7 @@ function openTool(name){
   const template = document.getElementById(toolTemplates[name]);
   if (!template) return;
   modalBody.replaceChildren(template.content.cloneNode(true));
+  translateRoot(modalBody);
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
   bindTool(name);
@@ -201,7 +339,7 @@ function bindBMI(){
     const w=Number($('#bmiWeight').value),h=Number($('#bmiHeight').value)/100;
     if(w<=0||h<=0){$('#bmiResult').textContent='—';return;}
     const bmi=w/(h*h);$('#bmiResult').textContent=bmi.toFixed(1);
-    let cat=bmi<18.5?'Underweight':bmi<25?'Normal range':bmi<30?'Overweight':'Obesity';
+    let cat=bmi<18.5?t('Underweight'):bmi<25?t('Normal range'):bmi<30?t('Overweight'):t('Obesity');
     $('#bmiCategory').textContent=cat;
   };
   $('#bmiCalculate').addEventListener('click',update);update();
@@ -229,12 +367,12 @@ async function bindQR(){
   async function generate(){
     box.replaceChildren();
     try{await loadQRLib();new QRCode(box,{text:text.value||'Brain Rush',width:210,height:210,colorDark:'#111827',colorLight:'#ffffff'});}
-    catch{box.textContent='QR renderer could not be loaded.';}
+    catch{box.textContent=t('QR renderer could not be loaded.');}
   }
   $('#generateQR').addEventListener('click',generate);
   $('#downloadQR').addEventListener('click',()=>{
     const img=box.querySelector('img');
-    if(!img){alert('Generate a QR code first.');return;}
+    if(!img){alert(t('Generate a QR code first.'));return;}
     const a=document.createElement('a');a.href=img.src;a.download='brainrush-qr.png';a.click();
   });
   generate();
@@ -253,18 +391,18 @@ function bindTimer(){
     if(activeTimer){clearInterval(activeTimer);activeTimer=null;}render();
   }));
   $('#timerStart').addEventListener('click',()=>{
-    if(activeTimer){clearInterval(activeTimer);activeTimer=null;$('#timerStart').textContent='Resume';return;}
+    if(activeTimer){clearInterval(activeTimer);activeTimer=null;$('#timerStart').textContent=t('Resume');return;}
     if(timerMode==='countdown') timerSeconds=Number($('#timerMinutes').value||0)*60+Number($('#timerSeconds').value||0);
     activeTimer=setInterval(()=>{
-      if(timerMode==='countdown'){if(timerSeconds<=0){clearInterval(activeTimer);activeTimer=null;alert('Timer finished!');return;}timerSeconds--;}
+      if(timerMode==='countdown'){if(timerSeconds<=0){clearInterval(activeTimer);activeTimer=null;alert(t('Timer finished!'));return;}timerSeconds--;}
       else stopwatchSeconds++;
       render();
     },1000);
-    $('#timerStart').textContent='Pause';render();
+    $('#timerStart').textContent=t('Pause');render();
   });
   $('#timerReset').addEventListener('click',()=>{
     if(activeTimer){clearInterval(activeTimer);activeTimer=null;}
-    timerSeconds=Number($('#timerMinutes').value||5)*60+Number($('#timerSeconds').value||0);stopwatchSeconds=0;$('#timerStart').textContent='Start';render();
+    timerSeconds=Number($('#timerMinutes').value||5)*60+Number($('#timerSeconds').value||0);stopwatchSeconds=0;$('#timerStart').textContent=t('Start');render();
   });
   $('#timerMinutes').addEventListener('input',render);$('#timerSeconds').addEventListener('input',render);render();
 }
@@ -287,7 +425,7 @@ function bindCase(){
     if(mode==='title')out.value=t.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
     if(mode==='sentence')out.value=t.toLowerCase().replace(/(^|[.!?]\s+)(\w)/g,(m,a,b)=>a+b.toUpperCase());
   }));
-  $('#copyCase').addEventListener('click',()=>copyText(out.value,'Result copied'));
+  $('#copyCase').addEventListener('click',()=>copyText(out.value,t('Result copied')));
 }
 function bindColor(){
   const input=$('#colorInput');
@@ -297,8 +435,8 @@ function bindColor(){
     $('#colorPreview').style.background=hex;$('#hexValue').textContent=hex;$('#rgbValue').textContent='rgb('+r+', '+g+', '+b+')';
   };
   input.addEventListener('input',update);
-  $('#copyHex').addEventListener('click',()=>copyText($('#hexValue').textContent,'HEX copied'));
-  $('#copyRgb').addEventListener('click',()=>copyText($('#rgbValue').textContent,'RGB copied'));update();
+  $('#copyHex').addEventListener('click',()=>copyText($('#hexValue').textContent,t('HEX copied')));
+  $('#copyRgb').addEventListener('click',()=>copyText($('#rgbValue').textContent,t('RGB copied')));update();
 }
 async function copyText(value,message){
   if(!value)return;
