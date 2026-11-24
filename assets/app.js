@@ -1100,17 +1100,17 @@ function bindSizeItUp(){
   const svgFor=o=>o.svg;
   const setup=()=>{
     current=rounds[round%rounds.length];
-    const r=objects[current[0]], t=objects[current[1]];
+    const r=objects[current[0]], target=objects[current[1]];
     const basePx=Math.min(360/Math.max(r.len,t.len*.72),120);
     refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(t)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
-    refObj.style.width=(r.len*basePx*zoom)+'px'; targetObj.style.width=(t.len*basePx*zoom)+'px';
+    refObj.style.width=(r.len*basePx*zoom)+'px'; targetObj.style.width=(target.len*basePx*zoom)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
     targetObj.dataset.trueWidth=(t.len*basePx*zoom);
     targetObj.dataset.ratio='1';
     slider.value='1'; estimate.textContent=t.len.toFixed(2)+' m'; errorEl.textContent=t('Adjust the red object to estimate its real length.');
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
-    refName.textContent=r.name; refLen.textContent=t('Real length: ')+r.len.toFixed(2)+' m'; targetName.textContent=t.name;
+    refName.textContent=r.name; refLen.textContent=t('Real length: ')+r.len.toFixed(2)+' m'; targetName.textContent=target.name;
     result.hidden=true; lock.disabled=false; next.hidden=true; stage.classList.remove('size-locked');
     bindHandle();
   };
@@ -1122,9 +1122,9 @@ function bindSizeItUp(){
     h.addEventListener('pointercancel',()=>{drag=false;});
   };
   const renderTarget=()=>{
-    const r=objects[current[0]], t=objects[current[1]], basePx=Math.min(360/Math.max(r.len,t.len*.72),120)*zoom, ratio=Number(targetObj.dataset.ratio)||1;
-    targetObj.style.width=(t.len*basePx*ratio)+'px';
-    estimate.textContent=(t.len*ratio).toFixed(2)+' m';
+    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,t.len*.72),120)*zoom, ratio=Number(targetObj.dataset.ratio)||1;
+    targetObj.style.width=(target.len*basePx*ratio)+'px';
+    estimate.textContent=(target.len*ratio).toFixed(2)+' m';
     const pct=Math.abs(ratio-1)*100;
     errorEl.textContent=(pct<0.05?'±'+pct.toFixed(1):pct.toFixed(1))+'% '+t('from the real size');
   };
@@ -1138,7 +1138,7 @@ function bindSizeItUp(){
     result.hidden=false; resultIcon.textContent=err<=.1?'✓':'↗'; resultTitle.textContent=err<=.1?t('Great estimate!'):t('Nice try!'); resultText.textContent=t('Real size')+': '+objects[current[1]].len.toFixed(2)+' m • '+t('Your estimate')+': '+(objects[current[1]].len*ratio).toFixed(2)+' m • '+t('Error')+': '+(err*100).toFixed(1)+'% • '+points+' '+t('points');
     next.hidden=false;
   });
-  next.addEventListener('click',()=>{round++; if(round>=5){resultTitle.textContent=t('Game complete!'); resultText.textContent=t('Final score')+': '+score; next.textContent=t('Play Again'); next.onclick=()=>{round=0;score=0;next.onclick=null;setup();};}else setup();});
+  next.addEventListener('click',()=>{if(round>=4){round=0;score=0;next.textContent=t('Next Round');setup();}else{round++;setup();}});
   restart.addEventListener('click',()=>{round=0;score=0;setup();});
   setup();
 }
