@@ -8,6 +8,34 @@ let timerSeconds = 300;
 let stopwatchSeconds = 0;
 let qrLoaded = false;
 
+
+// Theme system: saved preference first, then OS preference.
+function applyTheme(theme){
+  const dark=theme==='dark';
+  document.documentElement.dataset.theme=dark?'dark':'light';
+  localStorage.setItem('brainrush-theme',dark?'dark':'light');
+  const btn=$('#themeToggle');
+  if(btn){
+    btn.textContent=dark?'☀':'☾';
+    btn.setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme');
+    btn.setAttribute('title',dark?'Light theme':'Dark theme');
+  }
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.content=dark?'#080b12':'#f6f7fb';
+}
+const savedTheme=localStorage.getItem('brainrush-theme');
+const preferredTheme=savedTheme||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');
+applyTheme(preferredTheme);
+$('#themeToggle').addEventListener('click',()=>{
+  applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+});
+if(window.matchMedia){
+  const media=window.matchMedia('(prefers-color-scheme: dark)');
+  media.addEventListener?.('change',e=>{
+    if(!localStorage.getItem('brainrush-theme')) applyTheme(e.matches?'dark':'light');
+  });
+}
+
 const translations = {
   en: {
     "Tools":"Tools","About":"About","Privacy":"Privacy","Search tools...":"Search tools...",
