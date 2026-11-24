@@ -245,6 +245,10 @@ const originalTextNodes = new WeakMap();
 function translateRoot(root=document){
   const lang=localStorage.getItem('brainrush-language')||'en';
   const dict=translations[lang]||translations.en;
+  $('[data-i18n]',root).forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(dict[key]) el.textContent=dict[key];
+  });
   const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
   const nodes=[];
   while(walker.nextNode()) nodes.push(walker.currentNode);
