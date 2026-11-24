@@ -52,7 +52,7 @@ const translations = {
     "Case Converter":"Case Converter","Color Picker":"Color Picker","Copy":"Copy","Category":"Category","Strong password":"Strong password",
     "Your age":"Your age","Current rate":"Current rate","Underweight":"Underweight","Normal range":"Normal range","Overweight":"Overweight","Obesity":"Obesity",
     "Timer finished!":"Timer finished!","Generate a QR code first.":"Generate a QR code first.","QR renderer could not be loaded.":"QR renderer could not be loaded.",
-    "Result copied":"Result copied","HEX copied":"HEX copied","RGB copied":"RGB copied"
+    "Result copied":"Result copied","HEX copied":"HEX copied","RGB copied":"RGB copied","Meter":"Meter","Kilometer":"Kilometer","Centimeter":"Centimeter","Millimeter":"Millimeter","Mile":"Mile","Yard":"Yard","Foot":"Foot","Inch":"Inch","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Milligram","Pound":"Pound","Ounce":"Ounce","Celsius":"Celsius","Fahrenheit":"Fahrenheit","Kelvin":"Kelvin","Enter a valid amount":"Enter a valid amount","Same currency":"Same currency","Rate supplied by Frankfurter.":"Rate supplied by Frankfurter."
   },
   tr: {
     "Tools":"Araçlar","About":"Hakkında","Privacy":"Gizlilik","Search tools...":"Araçlarda ara...",
@@ -97,7 +97,7 @@ const translations = {
     "Case Converter":"Büyük/Küçük Harf Dönüştürücü","Color Picker":"Renk Seçici","Copy":"Kopyala","Category":"Kategori","Strong password":"Güçlü şifre",
     "Current rate":"Güncel kur","Underweight":"Zayıf","Normal range":"Normal aralık","Overweight":"Fazla kilolu","Obesity":"Obezite",
     "Timer finished!":"Sayaç tamamlandı!","Generate a QR code first.":"Önce bir QR kod oluşturun.","QR renderer could not be loaded.":"QR oluşturucu yüklenemedi.",
-    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı"
+    "Result copied":"Sonuç kopyalandı","HEX copied":"HEX kopyalandı","RGB copied":"RGB kopyalandı","Meter":"Metre","Kilometer":"Kilometre","Centimeter":"Santimetre","Millimeter":"Milimetre","Mile":"Mil","Yard":"Yarda","Foot":"Fit","Inch":"İnç","Kilogram":"Kilogram","Gram":"Gram","Milligram":"Miligram","Pound":"Pound","Ounce":"Ons","Celsius":"Santigrat","Fahrenheit":"Fahrenhayt","Kelvin":"Kelvin","Enter a valid amount":"Geçerli bir miktar girin","Same currency":"Aynı para birimi","Rate supplied by Frankfurter.":"Kur bilgisi Frankfurter tarafından sağlanıyor."
   }
 };
 
@@ -106,6 +106,8 @@ function t(value){
   return (translations[lang]&&translations[lang][value])||value;
 }
 
+const originalTextNodes = new WeakMap();
+
 function translateRoot(root=document){
   const lang=localStorage.getItem('brainrush-language')||'en';
   const dict=translations[lang]||translations.en;
@@ -113,29 +115,30 @@ function translateRoot(root=document){
   const nodes=[];
   while(walker.nextNode()) nodes.push(walker.currentNode);
   nodes.forEach(node=>{
-    const key=node.nodeValue.trim();
-    if(dict[key] && node.nodeValue.trim()===key) node.nodeValue=node.nodeValue.replace(key,dict[key]);
+    if(!originalTextNodes.has(node)) originalTextNodes.set(node,node.nodeValue);
+    const original=originalTextNodes.get(node);
+    const key=original.trim();
+    if(dict[key] && original.trim()===key) node.nodeValue=original.replace(key,dict[key]);
+    else node.nodeValue=original;
   });
-  $('input[placeholder], textarea[placeholder]',root).forEach(el=>{
-    const key=el.getAttribute('placeholder');
-    if(dict[key]) el.setAttribute('placeholder',dict[key]);
-  });
-  $('button',root).forEach(el=>{
-    const key=el.getAttribute('data-label-key');
-    if(key && dict[key]) el.textContent=dict[key];
+  $$('input[placeholder], textarea[placeholder]',root).forEach(el=>{
+    if(!el.dataset.originalPlaceholder) el.dataset.originalPlaceholder=el.getAttribute('placeholder')||'';
+    const key=el.dataset.originalPlaceholder;
+    el.setAttribute('placeholder',dict[key]||key);
   });
 }
 
 function setLanguage(lang){
   localStorage.setItem('brainrush-language',lang);
   document.documentElement.lang=lang;
-  translateRoot(document);
+  document.title=lang==='tr'?'Brain Rush — Ücretsiz Günlük Araçlar':'Brain Rush — Free Everyday Tools';
+  const desc=document.querySelector('meta[name="description"]');
+  if(desc) desc.content=lang==='tr'
+    ?'Brain Rush; hesaplama, dönüştürme, metin, tarih, şifre, QR kod ve günlük işler için ücretsiz çevrimiçi araçlar sunar.'
+    :'Brain Rush is a free collection of fast online tools for calculations, conversions, text, dates, passwords, QR codes and everyday tasks.';
   $('#languageSelect').value=lang;
-  if(!modal.hidden) {
-    const active=document.querySelector('.tool-card.active-tool');
-    // Re-translate the currently open modal without rebuilding its state.
-    translateRoot(modalBody);
-  }
+  translateRoot(document);
+  if(!modal.hidden) translateRoot(modalBody);
 }
 
 const initialLanguage=localStorage.getItem('brainrush-language')||'en';
@@ -143,19 +146,6 @@ document.documentElement.lang=initialLanguage;
 $('#languageSelect').value=initialLanguage;
 $('#languageSelect').addEventListener('change',e=>setLanguage(e.target.value));
 translateRoot(document);
-
-
-$('#year').textContent = new Date().getFullYear();
-
-const savedTheme = localStorage.getItem('brainrush-theme');
-if (savedTheme) document.documentElement.dataset.theme = savedTheme;
-$('#themeToggle').textContent = document.documentElement.dataset.theme === 'dark' ? '☀' : '☾';
-$('#themeToggle').addEventListener('click', () => {
-  const dark = document.documentElement.dataset.theme !== 'dark';
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  localStorage.setItem('brainrush-theme', dark ? 'dark' : 'light');
-  $('#themeToggle').textContent = dark ? '☀' : '☾';
-});
 
 const toolTemplates = {
   calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',
@@ -169,10 +159,10 @@ function openTool(name){
   const template = document.getElementById(toolTemplates[name]);
   if (!template) return;
   modalBody.replaceChildren(template.content.cloneNode(true));
-  translateRoot(modalBody);
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
   bindTool(name);
+  translateRoot(modalBody);
   setTimeout(() => $('.modal-close')?.focus(), 0);
 }
 function closeModal(){
@@ -247,7 +237,7 @@ function bindUnit(){
     let out;
     if(cat.value==='temperature') out=tempConvert(n,from.value,to.value);
     else out=n*units[cat.value][from.value]/units[cat.value][to.value];
-    $('#unitResult').textContent = Number(out.toFixed(8)).toLocaleString()+' '+to.value;
+    $('#unitResult').textContent = Number(out.toFixed(8)).toLocaleString()+' '+t(to.value[0].toUpperCase()+to.value.slice(1));
   }
   function tempConvert(n,a,b){
     let c=a==='celsius'?n:a==='fahrenheit'?(n-32)*5/9:n-273.15;
@@ -260,15 +250,15 @@ function bindUnit(){
 function bindCurrency(){
   const from=$('#currencyFrom'),to=$('#currencyTo'),amount=$('#currencyAmount'),result=$('#currencyResult'),status=$('#currencyStatus');
   $('#currencyConvert').addEventListener('click',async()=>{
-    const n=Number(amount.value); if(!Number.isFinite(n)||n<0){result.textContent='Enter a valid amount';return;}
-    if(from.value===to.value){result.textContent=n.toFixed(2)+' '+to.value;status.textContent='Same currency';return;}
+    const n=Number(amount.value); if(!Number.isFinite(n)||n<0){result.textContent=t('Enter a valid amount');return;}
+    if(from.value===to.value){result.textContent=n.toFixed(2)+' '+to.value;status.textContent=t('Same currency');return;}
     result.textContent='Loading…';status.textContent='';
     try{
       const res=await fetch('https://api.frankfurter.app/latest?amount='+encodeURIComponent(n)+'&from='+from.value+'&to='+to.value);
       if(!res.ok) throw new Error();
       const data=await res.json();
       result.textContent=Number(data.rates[to.value]).toLocaleString(undefined,{maximumFractionDigits:4})+' '+to.value;
-      status.textContent='Rate supplied by Frankfurter.';
+      status.textContent=t('Rate supplied by Frankfurter.');
     }catch{result.textContent='Unable to load rate';status.textContent='Check your connection and try again.';}
   });
 }
