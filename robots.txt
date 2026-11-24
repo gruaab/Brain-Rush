@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gruaab.github.io/Brain-Rush/sitemap.xml
