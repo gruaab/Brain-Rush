@@ -1082,7 +1082,7 @@ function bindImageSize(){
 }
 
 function bindSizeItUp(){
-  const roundEl=$('#sizeRound'), scoreEl=$('#sizeScore'), refName=$('#sizeReferenceName'), refLen=$('#sizeReferenceLength'), targetName=$('#sizeTargetName'), refObj=$('#sizeReferenceObject'), targetObj=$('#sizeTargetObject'), handle=$('#sizeHandle'), stage=$('#sizeStage'), slider=$('#sizeSlider'), estimate=$('#sizeEstimate'), errorEl=$('#sizeError'), lock=$('#sizeLock'), result=$('#sizeResult'), resultIcon=$('#sizeResultIcon'), resultTitle=$('#sizeResultTitle'), resultText=$('#sizeResultText'), next=$('#sizeNext'), restart=$('#sizeRestart'), zoomIn=$('#sizeZoomIn'), zoomOut=$('#sizeZoomOut'), scaleLabel=$('#sizeScaleLabel');
+  const roundEl=$('#sizeRound'), scoreEl=$('#sizeScore'), refName=$('#sizeReferenceName'), refLen=$('#sizeReferenceLength'), targetName=$('#sizeTargetName'), refObj=$('#sizeReferenceObject'), targetObj=$('#sizeTargetObject'), handle=$('#sizeHandle'), stage=$('#sizeStage'), estimate=$('#sizeEstimate'), errorEl=$('#sizeError'), lock=$('#sizeLock'), result=$('#sizeResult'), resultIcon=$('#sizeResultIcon'), resultTitle=$('#sizeResultTitle'), resultText=$('#sizeResultText'), next=$('#sizeNext'), restart=$('#sizeRestart'), zoomIn=$('#sizeZoomIn'), zoomOut=$('#sizeZoomOut'), scaleLabel=$('#sizeScaleLabel');
   const objects={
     door:{name:'Kapı',len:2.00,svg:'<svg viewBox="0 0 200 420"><rect x="15" y="10" width="170" height="400" rx="5"/><rect x="35" y="35" width="105" height="145" rx="2" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="157" cy="220" r="7" fill="currentColor"/><path d="M35 200h105v180H35z" fill="none" stroke="currentColor" stroke-width="7"/></svg>'},
     table:{name:'Masa',len:1.60,svg:'<svg viewBox="0 0 320 180"><rect x="18" y="35" width="284" height="48" rx="12"/><path d="M42 83l18 82h28L82 83M238 83l-6 82h28l18-82" fill="currentColor"/></svg>'},
@@ -1123,7 +1123,7 @@ function bindSizeItUp(){
     refObj.style.height='auto'; targetObj.style.height='auto';
     const startingRatio=0.01;
     targetObj.dataset.ratio=String(startingRatio);
-    slider.value=String(startingRatio); estimate.textContent='—'; errorEl.textContent='';
+    estimate.textContent='—'; errorEl.textContent='';
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
     refName.textContent=r.name; refLen.textContent=''; targetName.textContent=target.name;
     result.hidden=true; lock.disabled=false; lock.textContent='Kilitle'; next.hidden=true; stage.classList.remove('size-locked');
@@ -1147,7 +1147,6 @@ function bindSizeItUp(){
       const delta=(e.clientX-startX)/260;
       const ratio=Math.max(0.01,startRatio+delta);
       targetObj.dataset.ratio=ratio;
-      slider.value=ratio;
       renderTarget();
     });
     const stopResize=()=>{resizeDrag=false;};
@@ -1193,7 +1192,7 @@ function bindSizeItUp(){
     estimate.textContent='—';
     errorEl.textContent='';
   };
-  // + / − zooms the map and the objects together; slider controls the target ratio.
+  // + / − zooms the map and the objects together; the target is resized only from its handle.
   let zoomFxTimer=null;
   const updateZoom=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
@@ -1204,7 +1203,6 @@ function bindSizeItUp(){
     clearTimeout(zoomFxTimer);
     zoomFxTimer=setTimeout(()=>stage.classList.remove('size-zooming'),360);
   };
-  slider.addEventListener('input',()=>{targetObj.dataset.ratio=slider.value;renderTarget();});
   zoomIn.addEventListener('click',()=>{
     zoom*=1.25;
     updateZoom();
