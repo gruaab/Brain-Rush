@@ -1095,7 +1095,7 @@ function bindSizeItUp(){
   const rounds=[
     ['door','table'],['car','bus'],['hoop','person'],['fridge','sofa'],['container','shark'],['laptop','keyboard'],['ruler','guitar']
   ];
-  let round=0, score=0, zoom=1, drag=false, startX=0, startRatio=1, current=null;
+  let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null;
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const svgFor=o=>o.svg;
   const setup=()=>{
@@ -1111,15 +1111,66 @@ function bindSizeItUp(){
     slider.value='1'; estimate.textContent=target.len.toFixed(2)+' m'; errorEl.textContent=t('Adjust the red object to estimate its real length.');
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
     refName.textContent=r.name; refLen.textContent=t('Real length: ')+r.len.toFixed(2)+' m'; targetName.textContent=target.name;
-    result.hidden=true; lock.disabled=false; next.hidden=true; stage.classList.remove('size-locked');
+    result.hidden=true; lock.disabled=false; lock.textContent='Kilitle'; next.hidden=true; stage.classList.remove('size-locked');
     bindHandle();
   };
   const bindHandle=()=>{
     const h=$('#sizeHandle'); if(!h)return;
-    h.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();drag=true;startX=e.clientX;startRatio=Number(targetObj.dataset.ratio)||1;h.setPointerCapture?.(e.pointerId);});
-    h.addEventListener('pointermove',e=>{if(!drag)return; const delta=(e.clientX-startX)/260; const ratio=Math.max(.35,Math.min(1.65,startRatio+delta)); targetObj.dataset.ratio=ratio; slider.value=ratio; renderTarget();});
-    h.addEventListener('pointerup',()=>{drag=false;});
-    h.addEventListener('pointercancel',()=>{drag=false;});
+
+    // Resize from the corner handle.
+    h.addEventListener('pointerdown',e=>{
+      if(stage.classList.contains('size-locked')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      resizeDrag=true;
+      startX=e.clientX;
+      startRatio=Number(targetObj.dataset.ratio)||1;
+      h.setPointerCapture?.(e.pointerId);
+    });
+    h.addEventListener('pointermove',e=>{
+      if(!resizeDrag) return;
+      const delta=(e.clientX-startX)/260;
+      const ratio=Math.max(.35,Math.min(1.65,startRatio+delta));
+      targetObj.dataset.ratio=ratio;
+      slider.value=ratio;
+      renderTarget();
+    });
+    const stopResize=()=>{resizeDrag=false;};
+    h.addEventListener('pointerup',stopResize);
+    h.addEventListener('pointercancel',stopResize);
+
+    // Drag the whole red object anywhere inside the stage.
+    targetObj.addEventListener('pointerdown',e=>{
+      if(stage.classList.contains('size-locked') || e.target.closest('.size-handle')) return;
+      e.preventDefault();
+      moveDrag=true;
+      const rect=stage.getBoundingClientRect();
+      const objRect=targetObj.getBoundingClientRect();
+      startX=e.clientX;
+      startY=e.clientY;
+      startLeft=objRect.left-rect.left+objRect.width/2;
+      startTop=objRect.top-rect.top;
+      targetObj.style.transform='translateX(-50%)';
+      targetObj.setPointerCapture?.(e.pointerId);
+      targetObj.classList.add('size-active');
+    });
+    targetObj.addEventListener('pointermove',e=>{
+      if(!moveDrag) return;
+      const rect=stage.getBoundingClientRect();
+      const objRect=targetObj.getBoundingClientRect();
+      const x=Math.max(objRect.width/2,Math.min(rect.width-objRect.width/2,startLeft+(e.clientX-startX)));
+      const y=Math.max(8,Math.min(rect.height-objRect.height-8,startTop+(e.clientY-startY)));
+      targetObj.style.left=x+'px';
+      targetObj.style.top=y+'px';
+      targetObj.style.bottom='auto';
+      targetObj.style.transform='translateX(-50%)';
+    });
+    const stopMove=()=>{
+      moveDrag=false;
+      targetObj.classList.remove('size-active');
+    };
+    targetObj.addEventListener('pointerup',stopMove);
+    targetObj.addEventListener('pointercancel',stopMove);
   };
   const renderTarget=()=>{
     const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,target.len*.72),120)*zoom, ratio=Number(targetObj.dataset.ratio)||1;
@@ -1133,10 +1184,30 @@ function bindSizeItUp(){
   zoomIn.addEventListener('click',()=>{zoom=Math.min(1.35,zoom+.1);updateZoom();});
   zoomOut.addEventListener('click',()=>{zoom=Math.max(.75,zoom-.1);updateZoom();});
   lock.addEventListener('click',()=>{
-    const ratio=Number(targetObj.dataset.ratio)||1, err=Math.abs(ratio-1), points=err<=.03?1000:err<=.07?850:err<=.12?700:err<=.2?500:err<=.3?300:100;
-    score+=points; scoreEl.textContent=score; lock.disabled=true; stage.classList.add('size-locked');
-    result.hidden=false; resultIcon.textContent=err<=.1?'✓':'↗'; resultTitle.textContent=err<=.1?t('Great estimate!'):t('Nice try!'); resultText.textContent=t('Real size')+': '+objects[current[1]].len.toFixed(2)+' m • '+t('Your estimate')+': '+(objects[current[1]].len*ratio).toFixed(2)+' m • '+t('Error')+': '+(err*100).toFixed(1)+'% • '+points+' '+t('points');
+    if(lock.disabled || stage.classList.contains('size-locked')) return;
+    const ratio=Number(targetObj.dataset.ratio)||1;
+    const err=Math.abs(ratio-1);
+    const points=err<=.03?1000:err<=.07?850:err<=.12?700:err<=.2?500:err<=.3?300:100;
+
+    resizeDrag=false;
+    moveDrag=false;
+    score+=points;
+    scoreEl.textContent=score;
+    lock.disabled=true;
+    lock.textContent='Kilitlendi ✓';
+    stage.classList.add('size-locked');
+
+    result.hidden=false;
+    resultIcon.textContent=err<=.1?'✓':'↗';
+    resultTitle.textContent=err<=.1?t('Great estimate!'):t('Nice try!');
+    resultText.textContent=t('Real size')+': '+objects[current[1]].len.toFixed(2)+' m • '+t('Your estimate')+': '+(objects[current[1]].len*ratio).toFixed(2)+' m • '+t('Error')+': '+(err*100).toFixed(1)+'% • '+points+' '+t('points');
     next.hidden=false;
+
+    // Make the result impossible to miss, even on smaller screens.
+    result.classList.remove('size-result-pop');
+    void result.offsetWidth;
+    result.classList.add('size-result-pop');
+    setTimeout(()=>result.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
   });
   next.addEventListener('click',()=>{if(round>=4){round=0;score=0;next.textContent=t('Next Round');setup();}else{round++;setup();}});
   restart.addEventListener('click',()=>{round=0;score=0;setup();});
