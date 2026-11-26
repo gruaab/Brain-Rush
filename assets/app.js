@@ -1105,11 +1105,8 @@ function bindSizeItUp(){
     const basePx=Math.min(360/Math.max(r.len,target.len*.72),120);
     refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(target)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
-    // Map zoom must NEVER resize the reference or target objects.
-    // Objects keep their physical on-screen size; only the grid/map scale changes.
     refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
-    targetObj.dataset.trueWidth=(target.len*basePx*zoom);
     targetObj.dataset.ratio='1';
     slider.value='1'; estimate.textContent=target.len.toFixed(2)+' m'; errorEl.textContent=t('Adjust the red object to estimate its real length.');
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
@@ -1182,7 +1179,7 @@ function bindSizeItUp(){
     const pct=Math.abs(ratio-1)*100;
     errorEl.textContent=(pct<0.05?'±'+pct.toFixed(1):pct.toFixed(1))+'% '+t('from the real size');
   };
-  // + / − zooms the map/grid only. It never changes the red object's size.
+  // + / − zooms the map and the objects together; slider controls the target ratio.
   const updateZoom=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
     scaleLabel.textContent=(zoom.toFixed(1)+'× harita');
