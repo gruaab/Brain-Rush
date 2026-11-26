@@ -35,7 +35,44 @@
 </div><div class="hero-panel"><div class="panel-glow"></div><div class="mini-window">
 <div class="window-top"><span></span><span></span><span></span><b>Brain Rush</b></div>
 <div class="mini-content"><div class="mini-icon">⚡</div><strong><span data-i18n="Get things done.">Get things done.</span></strong><p><span data-i18n="Simple tools with zero friction.">Simple tools with zero friction.</span></p>
-<div class="mini-stats"><span><b>24+</b> tools</span><span><b>0</b> signups</span><span><b>∞</b> uses</span></div></div></div></div></section>
+<div class="mini-stats"><span><b>50+</b> tools</span><span><b>0</b> signups</span><span><b>∞</b> uses</span></div></div></div></div></section>
+
+<section class="container section estimate-game-section" id="guessGame">
+  <div class="guess-game-shell" data-theme-color="violet">
+    <div class="guess-game-header">
+      <div>
+        <span class="eyebrow"><span class="pulse"></span> BRAIN RUSH • GUESS</span>
+        <h2 data-i18n="How Many?">How Many?</h2>
+        <p data-i18n="Estimate the answer. The closer you are, the higher your score.">Tahminini yaz. Cevaba ne kadar yakınsan o kadar çok puan kazan.</p>
+      </div>
+      <div class="guess-game-stats">
+        <div><b id="guessScore">0</b><small data-i18n="Score">PUAN</small></div>
+        <div><b id="guessStreak">0</b><small data-i18n="Streak">SERİ</small></div>
+        <div><b id="guessBest">0</b><small data-i18n="Best">REKOR</small></div>
+      </div>
+    </div>
+    <div class="guess-progress"><span id="guessProgressBar"></span></div>
+    <div class="guess-card" id="guessCard">
+      <div class="guess-category" id="guessCategory">☕ Yiyecek & İçecek</div>
+      <div class="guess-emoji" id="guessEmoji">☕</div>
+      <h3 id="guessQuestion">Bir bardağı kaç kahve çekirdeği doldurur?</h3>
+      <p class="guess-hint" id="guessHint">Yaklaşık bir tahmin yap. Google yok. 😄</p>
+      <div class="guess-answer-row">
+        <input id="guessInput" type="number" inputmode="numeric" min="0" step="any" autocomplete="off" placeholder="Tahminini yaz">
+        <span id="guessUnit">adet</span>
+        <button class="btn primary" id="guessSubmit" type="button">Tahmin Et →</button>
+      </div>
+      <div class="guess-feedback" id="guessFeedback" aria-live="polite"></div>
+      <button class="guess-next" id="guessNext" type="button" hidden>Sonraki Soru →</button>
+    </div>
+    <div class="guess-footer">
+      <span>🧠 <b data-i18n="200+ questions">200+ soru</b></span>
+      <span>🎨 <b data-i18n="Color-coded topics">Konuya özel renkler</b></span>
+      <span>⚡ <b data-i18n="No account required">Üyelik yok</b></span>
+    </div>
+  </div>
+</section>
+
 <section class="container section" id="tools"><div class="section-heading"><div><span class="eyebrow"><span data-i18n="TOOLBOX">TOOLBOX</span></span><h2>What do you need?</h2></div>
 <div class="search-box"><span>⌕</span><input id="toolSearch" type="search" placeholder="Search tools..." aria-label="Search tools"></div></div>
 <div class="tool-grid">
@@ -81,7 +118,7 @@
 <button class="tool-card" data-tool="speed" data-category="calculator" data-keywords="speed kmh mph conversion"><span class="tool-icon teal">↔</span><span><b data-i18n="Speed Converter">Speed Converter</b><small data-i18n="Convert km/h, mph and m/s">Convert km/h, mph and m/s</small></span><i>→</i></button>
 <button class="tool-card" data-tool="slug" data-category="text" data-keywords="slug url seo title text"><span class="tool-icon pink">#</span><span><b data-i18n="Slug Generator">Slug Generator</b><small data-i18n="Create clean SEO-friendly slugs">Create clean SEO-friendly slugs</small></span><i>→</i></button>
 <button class="tool-card" data-tool="regex" data-category="developer" data-keywords="regex regular expression tester developer"><span class="tool-icon indigo">.*</span><span><b data-i18n="Regex Tester">Regex Tester</b><small data-i18n="Test regular expressions safely">Test regular expressions safely</small></span><i>→</i></button>
-<button class="tool-card" data-tool="randompick" data-category="generator" data-keywords="random picker choice list"><span class="tool-icon yellow">?</span><span><b data-i18n="Random Picker">Random Picker</b><small data-i18n="Pick one item from a list">Pick one item from a list</small></span><i>→</i></button></div><button class="tool-card" data-tool="imagesize" data-category="generator" data-keywords="image size dimensions pixels photo width height dpi megapixel ratio"><span class="tool-icon cyan">↔</span><span><b data-i18n="Image Size Checker">Görsel Boyutu Bulucu</b><small data-i18n="Find exact pixels, ratio, file size and print dimensions">Piksel, oran, dosya boyutu ve baskı ölçüsünü bulun</small></span><i>→</i></button><p class="tool-tip"><span data-i18n="Tip: You can search by what you want to do, like “discount”, “loan”, “QR”, or “password”.">💡 Tip: You can search by what you want to do, like “discount”, “loan”, “QR”, or “password”.</span></p><p class="no-results" id="noResults" hidden>No tools matched your search.</p></section>
+<button class="tool-card" data-tool="randompick" data-category="generator" data-keywords="random picker choice list"><span class="tool-icon yellow">?</span><span><b data-i18n="Random Picker">Random Picker</b><small data-i18n="Pick one item from a list">Pick one item from a list</small></span><i>→</i></button></div><p class="tool-tip"><span data-i18n="Tip: You can search by what you want to do, like “discount”, “loan”, “QR”, or “password”.">💡 Tip: You can search by what you want to do, like “discount”, “loan”, “QR”, or “password”.</span></p><p class="no-results" id="noResults" hidden>No tools matched your search.</p></section>
 <section class="container category-strip"><div class="category-pill active" data-category="all"><span data-i18n="All Tools">All Tools</span></div><div class="category-pill" data-category="calculator"><span data-i18n="Calculators">Calculators</span></div><div class="category-pill" data-category="text"><span data-i18n="Text & Writing">Text & Writing</span></div><div class="category-pill" data-category="developer"><span data-i18n="Developer">Developer</span></div><div class="category-pill" data-category="generator"><span data-i18n="Generators">Generators</span></div><div class="category-pill" data-category="time"><span data-i18n="Date & Time">Date & Time</span></div></section><section class="container section games-section" id="games">
 <div class="section-heading"><div><span class="eyebrow" data-i18n="BRAIN GAMES">BRAIN GAMES</span><h2 data-i18n="Play. Think. Improve.">Play. Think. Improve.</h2></div>
 <p class="section-subtitle" data-i18n="Quick browser games for focus, memory and reaction speed.">Quick browser games for focus, memory and reaction speed.</p></div>
@@ -181,43 +218,7 @@
 <template id="coinTemplate"><div class="tool-head"><span class="game-icon">🪙</span><div><h3 data-i18n="Coin Flip">Coin Flip</h3><p data-i18n="Flip a virtual coin for a quick decision.">Flip a virtual coin for a quick decision.</p></div></div><button class="btn primary full" id="coinFlip">Flip Coin</button><div class="big-random" id="coinResult">—</div></template>
 <template id="diceTemplate"><div class="tool-head"><span class="game-icon">🎲</span><div><h3 data-i18n="Dice Roller">Dice Roller</h3><p data-i18n="Roll one or more dice instantly.">Roll one or more dice instantly.</p></div></div><div class="form-grid"><label>Dice count<input id="diceCount" type="number" value="2" min="1" max="10"></label><label>Sides<input id="diceSides" type="number" value="6" min="2" max="100"></label></div><button class="btn primary full" id="rollDice">Roll Dice</button><div class="big-random" id="diceResult">—</div></template>
 <template id="teamsTemplate"><div class="tool-head"><span class="game-icon">👥</span><div><h3 data-i18n="Team Generator">Team Generator</h3><p data-i18n="Split a list of people into random teams.">Split a list of people into random teams.</p></div></div><textarea id="teamInput" class="large-text"></textarea><label class="single-label">Number of teams<input id="teamCount" type="number" value="2" min="2" max="20"></label><button class="btn primary full" id="makeTeams">Create Teams</button><div class="result-box"><strong id="teamResult">—</strong></div></template>
-<template id="decideTemplate"><div class="tool-head"><span class="game-icon">🎯</span><div><h3 data-i18n="Decision Maker">Decision Maker</h3><p data-i18n="Let Brain Rush choose between your options.">Let Brain Rush choose between your options.</p></div></div><textarea id="decisionInput" class="large-text"></textarea><button class="btn primary full" id="makeDecision">Choose</button><div class="big-random" id="decisionResult">—</div></template><template id="imagesizeTemplate">
-<div class="image-size-tool">
-  <div class="tool-head"><span class="tool-icon cyan">↔</span><div><h3 data-i18n="Image Size Checker">Görsel Boyutu Bulucu</h3><p data-i18n="Find the exact dimensions and technical details of an image">Bir görselin gerçek boyutunu ve teknik detaylarını bulun</p></div></div>
-  <div class="image-dropzone" id="imageSizeDropzone" tabindex="0">
-    <input id="imageSizeInput" type="file" accept="image/*" hidden>
-    <div class="image-drop-icon" id="imageDropIcon">🖼️</div>
-    <div class="image-drop-title" data-i18n="Drop an image here">Görseli buraya bırakın</div>
-    <div class="image-drop-sub" data-i18n="or click to choose a file • processed in your browser">veya dosya seçin • görseliniz tarayıcınızda işlenir</div>
-    <button class="btn primary image-choose-btn" id="imageChooseBtn" type="button" data-i18n="Choose Image">Görsel Seç</button>
-    <div class="image-drop-hint" data-i18n="JPG, PNG, WebP, GIF, AVIF and other browser-supported formats">JPG, PNG, WebP, GIF, AVIF ve tarayıcının desteklediği diğer formatlar</div>
-  </div>
-  <div class="image-scan" id="imageScan" hidden><span class="scan-line"></span><span data-i18n="Analyzing image...">Görsel analiz ediliyor...</span></div>
-  <div class="image-result" id="imageSizeResult" hidden>
-    <div class="image-preview-panel">
-      <div class="image-preview-frame"><img id="imageSizePreview" alt="Image preview"></div>
-      <div class="image-preview-name" id="imageSizeName">—</div>
-      <div class="image-preview-badge" data-i18n="Local browser analysis">Tarayıcıda yerel analiz</div>
-    </div>
-    <div class="image-metrics">
-      <div class="image-primary-metric"><span data-i18n="Actual dimensions">Gerçek boyut</span><strong id="imageDimensions">—</strong><small>px</small></div>
-      <div class="image-metric-grid">
-        <div><span data-i18n="Aspect ratio">En-boy oranı</span><b id="imageRatio">—</b></div>
-        <div><span data-i18n="Megapixels">Megapiksel</span><b id="imageMegapixels">—</b></div>
-        <div><span data-i18n="File size">Dosya boyutu</span><b id="imageFileSize">—</b></div>
-        <div><span data-i18n="Format">Format</span><b id="imageFormat">—</b></div>
-        <div><span data-i18n="Orientation">Yön</span><b id="imageOrientation">—</b></div>
-        <div><span data-i18n="DPI / PPI">DPI / PPI</span><b id="imageDpi">—</b></div>
-      </div>
-      <div class="image-print-card">
-        <div class="image-print-head"><div><b data-i18n="Estimated print size">Tahmini baskı boyutu</b><small data-i18n="Physical size depends on DPI/PPI">Fiziksel boyut DPI/PPI değerine bağlıdır</small></div><label><span data-i18n="DPI">DPI</span><input id="imageDpiInput" type="number" min="1" max="1200" value="300"></label></div>
-        <div class="print-grid"><div><span>300 DPI</span><b id="print300">—</b></div><div><span>150 DPI</span><b id="print150">—</b></div><div><span>72 DPI</span><b id="print72">—</b></div><div><span data-i18n="Custom">Özel</span><b id="printCustom">—</b></div></div>
-      </div>
-      <div class="image-actions"><button class="btn secondary" id="copyImageSummary" type="button" data-i18n="Copy summary">Özeti Kopyala</button><button class="btn secondary" id="imageReset" type="button" data-i18n="Check another image">Başka Görsel Kontrol Et</button></div>
-    </div>
-  </div>
-</div>
-</template><template id="sizeitupGameTemplate">
+<template id="decideTemplate"><div class="tool-head"><span class="game-icon">🎯</span><div><h3 data-i18n="Decision Maker">Decision Maker</h3><p data-i18n="Let Brain Rush choose between your options.">Let Brain Rush choose between your options.</p></div></div><textarea id="decisionInput" class="large-text"></textarea><button class="btn primary full" id="makeDecision">Choose</button><div class="big-random" id="decisionResult">—</div></template><template id="sizeitupGameTemplate">
   <div class="size-game-shell">
     <div class="size-game-top">
       <div class="game-head"><span class="game-icon size-game-badge">📏</span><div><h3 data-i18n="Size It Up">Boyutunu Tahmin Et</h3><p data-i18n="Match the red object to its real-world size using the blue reference.">Mavi referansı kullanarak kırmızı nesneyi gerçek boyutuna getirin.</p></div></div>
