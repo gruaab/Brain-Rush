@@ -1582,4 +1582,4 @@ function bindSizeItUp(){
   next.addEventListener('click',newQuestion);
   stats();
   newQuestion();
-})();)();
+})();
