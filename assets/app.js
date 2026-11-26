@@ -1533,9 +1533,7 @@ function bindSizeItUp(){
   // Use direct handlers as well as normal events so the game still works
   // if another component rebinds buttons during page initialization.
   submit.onclick=submitGuess;
-  submit.addEventListener('click',submitGuess);
   input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();submitGuess();}};
   next.onclick=newQuestion;
-  next.addEventListener('click',newQuestion);
   renderStats(); newQuestion();
 })();
