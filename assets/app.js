@@ -1387,8 +1387,9 @@ function bindSizeItUp(){
   const setTheme = key => {
     const color=categoryColors[key]||'#6c63ff';
     card.style.setProperty('--guess-color',color);
-    card.style.setProperty('--guess-soft',color+'22');
-    card.style.setProperty('--guess-glow',color+'55');
+    card.style.setProperty('--guess-soft',color+'33');
+    card.style.setProperty('--guess-glow',color+'66');
+    card.style.setProperty('--guess-bg',color);
   };
   const newQuestion=()=>{
     if(!pool.length) pool=shuffle(profiles);
@@ -1403,6 +1404,8 @@ function bindSizeItUp(){
     unit.textContent=current[4];
     hint.textContent='Yaklaşık bir tahmin yap. Ne kadar yakınsan o kadar çok puan!';
     feedback.textContent='';
+    feedback.className='guess-feedback';
+    feedback.hidden=true;
     input.value='';
     input.placeholder='Tahminini yaz';
     setTheme(current[0]);
@@ -1411,18 +1414,27 @@ function bindSizeItUp(){
   };
   const submitGuess=()=>{
     if(locked) return;
-    const value=normalize(Number(input.value));
-    if(!Number.isFinite(value) || value<0 || input.value===''){
+    const raw=String(input.value).trim().replace(',', '.');
+    const value=Number(raw);
+    if(raw==='' || !Number.isFinite(value) || value<0){
       feedback.textContent='⚠️ Önce geçerli bir tahmin yaz.';
       feedback.className='guess-feedback error';
-      input.focus(); return;
+      feedback.hidden=false;
+      input.focus();
+      return;
     }
-    locked=true; input.disabled=true; submit.disabled=true;
-    const target=current[3], error=Math.abs(value-target)/Math.max(Math.abs(target),1);
+
+    locked=true;
+    input.disabled=true;
+    submit.disabled=true;
+
+    const target=current[3];
+    const error=Math.abs(value-target)/Math.max(Math.abs(target),1);
     const closeness=Math.max(0,1-error);
     let gained=Math.round(1000*Math.pow(closeness,1.35));
     if(gained>900 && error<=0.03) gained+=100;
     gained=Math.min(1100,gained);
+
     score+=gained;
     if(error<=0.12) streak++; else streak=0;
     best=Math.max(best,score);
@@ -1430,12 +1442,22 @@ function bindSizeItUp(){
     localStorage.setItem('br_guess_streak',streak);
     localStorage.setItem('br_guess_best',best);
     renderStats();
-    const diff=value-target, abs=Math.abs(diff);
-    let verdict=error<=0.03?'🔥 MÜKEMMEL!':error<=0.10?'🎯 Çok yakın!':error<=0.25?'👏 İyi tahmin!':error<=0.5?'🙂 Fena değil!':'😄 Bu biraz uzaktı!';
+
+    const abs=Math.abs(value-target);
+    const verdict=error<=0.03?'🔥 MÜKEMMEL!':error<=0.10?'🎯 Çok yakın!':error<=0.25?'👏 İyi tahmin!':error<=0.5?'🙂 Fena değil!':'😄 Bu biraz uzaktı!';
+
     feedback.className='guess-feedback success';
-    feedback.innerHTML='<strong>'+verdict+'</strong><span>Gerçek hedef: <b>'+target.toLocaleString('tr-TR')+' '+current[4]+'</b></span><span>Tahminin: <b>'+value.toLocaleString('tr-TR')+' '+current[4]+'</b> • Fark: <b>'+abs.toLocaleString('tr-TR')+' '+current[4]+'</b></span><em>+'+gained+' puan</em>';
-    next.hidden=false; next.focus();
-    card.classList.remove('guess-pop'); void card.offsetWidth; card.classList.add('guess-pop');
+    feedback.hidden=false;
+    feedback.innerHTML=
+      '<div class="guess-result-title">'+verdict+'</div>'+
+      '<div class="guess-result-answer">✅ Doğru cevap: <b>'+target.toLocaleString('tr-TR')+' '+current[4]+'</b></div>'+
+      '<div class="guess-result-your">Senin tahminin: <b>'+value.toLocaleString('tr-TR')+' '+current[4]+'</b> · Fark: <b>'+abs.toLocaleString('tr-TR')+' '+current[4]+'</b></div>'+
+      '<div class="guess-result-points">+'+gained+' PUAN</div>';
+
+    next.hidden=false;
+    card.classList.remove('guess-pop');
+    void card.offsetWidth;
+    card.classList.add('guess-pop');
   };
   submit.addEventListener('click',submitGuess);
   input.addEventListener('keydown',e=>{if(e.key==='Enter') submitGuess();});
