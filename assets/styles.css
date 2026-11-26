@@ -201,3 +201,12 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 /* Size Guessing: resize only from the object handle */
 .size-controls{grid-template-columns:150px 130px;justify-content:space-between}
 .size-controls .size-lock{grid-column:2}
+
+/* Final Size Guessing control cleanup */
+.size-slider-wrap{display:none!important}
+.size-controls{grid-template-columns:1fr auto!important;align-items:center!important}
+.size-instruction{display:flex;align-items:center;gap:12px;min-height:46px;padding:9px 14px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2)}
+.size-instruction-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#17284a;color:#73b2ff;font-size:18px;font-weight:900}
+.size-instruction strong{display:block;font-size:13px;color:#e8eef8}
+.size-instruction small{display:block;margin-top:2px;color:var(--muted);font-size:10px}
+@media(max-width:700px){.size-controls{grid-template-columns:1fr!important}.size-lock{width:100%}}
