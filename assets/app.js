@@ -1108,7 +1108,7 @@ function bindSizeItUp(){
     const j=Math.floor(Math.random()*(i+1));
     [shuffledRounds[i],shuffledRounds[j]]=[shuffledRounds[j],shuffledRounds[i]];
   }
-  let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null;
+  let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null, resizeCleanup=null;
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const svgFor=o=>o.svg
     .replace('<svg ','<svg fill="currentColor" ');
@@ -1130,6 +1130,7 @@ function bindSizeItUp(){
     bindHandle();
   };
   const bindHandle=()=>{
+    if(resizeCleanup) resizeCleanup();
     const h=$('#sizeHandle'); if(!h)return;
 
     h.addEventListener('pointerdown',e=>{
@@ -1158,6 +1159,12 @@ function bindSizeItUp(){
     document.addEventListener('pointermove',resizeMove,{passive:false});
     document.addEventListener('pointerup',stopResize);
     document.addEventListener('pointercancel',stopResize);
+    resizeCleanup=()=>{
+      document.removeEventListener('pointermove',resizeMove);
+      document.removeEventListener('pointerup',stopResize);
+      document.removeEventListener('pointercancel',stopResize);
+      stopResize();
+    };
   };
   const renderTarget=()=>{
     const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(180/Math.max(r.len,target.len*.72),180), ratio=Number(targetObj.dataset.ratio)||0.35;
