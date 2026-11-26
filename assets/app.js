@@ -1496,7 +1496,7 @@ function bindSizeItUp(){
   };
   const submitGuess=()=>{
     if(locked) return;
-    const raw=String(input.value).trim().replace(',', '.');
+    const raw=String(input.value ?? '').trim().replace(/\s+/g,'').replace(',', '.');
     const value=Number(raw);
     if(raw==='' || !Number.isFinite(value) || value<0){
       feedback.textContent='⚠️ Önce geçerli bir tahmin yaz.';
@@ -1543,8 +1543,15 @@ function bindSizeItUp(){
   };
   // Use direct handlers as well as normal events so the game still works
   // if another component rebinds buttons during page initialization.
+  // Robust delegation: the button remains functional even if another UI script
+  // replaces or re-renders part of the game card.
   submit.onclick=submitGuess;
   input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();submitGuess();}};
   next.onclick=newQuestion;
-  renderStats(); newQuestion();
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('#guessSubmit');
+    if(btn && !btn.disabled) submitGuess();
+  });
+  renderStats();
+  newQuestion();
 })();
