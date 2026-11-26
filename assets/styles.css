@@ -197,3 +197,7 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
     height:420px;
   }
 }
+
+/* Size Guessing: resize only from the object handle */
+.size-controls{grid-template-columns:150px 130px;justify-content:space-between}
+.size-controls .size-lock{grid-column:2}
