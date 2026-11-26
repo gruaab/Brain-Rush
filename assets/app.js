@@ -314,7 +314,7 @@ try{translateRoot(document);}catch(e){console.warn('Brain Rush translation skipp
 
 
 const toolTemplates = {
-  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',fuel:'fuelTemplate',salary:'salaryTemplate',savings:'savingsTemplate',ratio:'ratioTemplate',speed:'speedTemplate',slug:'slugTemplate',regex:'regexTemplate',randompick:'randompickTemplate',imagesize:'imagesizeTemplate',profit:'profitTemplate',breakeven:'breakevenTemplate',workhours:'workhoursTemplate',dateadd:'dateaddTemplate',datasize:'datasizeTemplate',pace:'paceTemplate',contrast:'contrastTemplate',utm:'utmTemplate',duplicates:'duplicatesTemplate',wordfreq:'wordfreqTemplate',coin:'coinTemplate',dice:'diceTemplate',teams:'teamsTemplate',decide:'decideTemplate',
+  calculator:'calculatorTemplate',unit:'unitTemplate',currency:'currencyTemplate',age:'ageTemplate',json:'jsonTemplate',base64:'base64Template',uuid:'uuidTemplate',lorem:'loremTemplate',loan:'loanTemplate',compound:'compoundTemplate',base:'baseTemplate',reverse:'reverseTemplate',timezone:'timezoneTemplate',fuel:'fuelTemplate',salary:'salaryTemplate',savings:'savingsTemplate',ratio:'ratioTemplate',speed:'speedTemplate',slug:'slugTemplate',regex:'regexTemplate',randompick:'randompickTemplate',profit:'profitTemplate',breakeven:'breakevenTemplate',workhours:'workhoursTemplate',dateadd:'dateaddTemplate',datasize:'datasizeTemplate',pace:'paceTemplate',contrast:'contrastTemplate',utm:'utmTemplate',duplicates:'duplicatesTemplate',wordfreq:'wordfreqTemplate',coin:'coinTemplate',dice:'diceTemplate',teams:'teamsTemplate',decide:'decideTemplate',
   password:'passwordTemplate',text:'textTemplate',percentage:'percentageTemplate',tip:'tipTemplate',discount:'discountTemplate',vat:'vatTemplate',timestamp:'timestampTemplate',url:'urlTemplate',hash:'hashTemplate',bmi:'bmiTemplate',
   date:'dateTemplate',qr:'qrTemplate',timer:'timerTemplate',random:'randomTemplate',case:'caseTemplate',color:'colorTemplate'
 };
@@ -371,7 +371,7 @@ function bindTool(name){
   if(name==='compound') bindCompound();
   if(name==='base') bindBase();
   if(name==='reverse') bindReverse();
-  if(name==='timezone') bindTimezone(); if(name==='imagesize') bindImageSize(); if(name==='profit') bindProfit(); if(name==='breakeven') bindBreakEven(); if(name==='workhours') bindWorkHours(); if(name==='dateadd') bindDateAdd(); if(name==='datasize') bindDataSize(); if(name==='pace') bindPace(); if(name==='contrast') bindContrast(); if(name==='utm') bindUTM(); if(name==='duplicates') bindDuplicates(); if(name==='wordfreq') bindWordFreq(); if(name==='coin') bindCoin(); if(name==='dice') bindDice(); if(name==='teams') bindTeams(); if(name==='decide') bindDecide(); if(name==='fuel') bindFuel(); if(name==='salary') bindSalary(); if(name==='savings') bindSavings(); if(name==='ratio') bindRatio(); if(name==='speed') bindSpeed(); if(name==='slug') bindSlug(); if(name==='regex') bindRegex(); if(name==='randompick') bindRandomPick();
+  if(name==='timezone') bindTimezone(); if(name==='profit') bindProfit(); if(name==='breakeven') bindBreakEven(); if(name==='workhours') bindWorkHours(); if(name==='dateadd') bindDateAdd(); if(name==='datasize') bindDataSize(); if(name==='pace') bindPace(); if(name==='contrast') bindContrast(); if(name==='utm') bindUTM(); if(name==='duplicates') bindDuplicates(); if(name==='wordfreq') bindWordFreq(); if(name==='coin') bindCoin(); if(name==='dice') bindDice(); if(name==='teams') bindTeams(); if(name==='decide') bindDecide(); if(name==='fuel') bindFuel(); if(name==='salary') bindSalary(); if(name==='savings') bindSavings(); if(name==='ratio') bindRatio(); if(name==='speed') bindSpeed(); if(name==='slug') bindSlug(); if(name==='regex') bindRegex(); if(name==='randompick') bindRandomPick();
 }
 
 
@@ -1142,3 +1142,303 @@ function bindSizeItUp(){
   restart.addEventListener('click',()=>{round=0;score=0;setup();});
   setup();
 }
+
+
+/* =========================
+   HOW MANY? ESTIMATION GAME
+   ========================= */
+(function initHowManyGame(){
+  const $q = s => document.querySelector(s);
+  const categoryColors = {
+    food:'#f59e0b', nature:'#22c55e', home:'#8b5cf6', vehicles:'#ef4444',
+    world:'#0ea5e9', animals:'#14b8a6', sport:'#16a34a', tech:'#6366f1',
+    human:'#ec4899', science:'#06b6d4'
+  };
+  const profiles = [
+    ['food','☕','Bir bardağı yaklaşık kaç kahve çekirdeği doldurur?',1800,'adet'],
+    ['food','🍚','Bir su bardağı pirinçte yaklaşık kaç pirinç tanesi vardır?',3500,'tane'],
+    ['food','🍬','Bir avuç dolusu küçük şeker yaklaşık kaç gram gelir?',45,'gram'],
+    ['food','🍿','Bir orta boy sinema kovasında yaklaşık kaç patlamış mısır tanesi vardır?',900,'tane'],
+    ['food','🍝','Bir tabak pişmiş makarnada yaklaşık kaç makarna parçası bulunur?',120,'parça'],
+    ['food','🍓','Bir kilogram çilekte yaklaşık kaç çilek vardır?',35,'adet'],
+    ['food','🥜','Bir avuç yer fıstığında yaklaşık kaç fıstık içi vardır?',45,'adet'],
+    ['food','🍇','Bir kilogram üzümde yaklaşık kaç üzüm tanesi vardır?',300,'tane'],
+    ['food','🍒','Bir kâse kirazda yaklaşık kaç kiraz bulunur?',35,'adet'],
+    ['food','🥚','Bir düzine yumurtanın toplam ağırlığı yaklaşık kaç gramdır?',720,'gram'],
+    ['food','🍞','Bir somun ekmekte yaklaşık kaç dilim çıkar?',20,'dilim'],
+    ['food','🧂','Bir çay kaşığı tuz yaklaşık kaç gramdır?',6,'gram'],
+    ['food','🍯','Bir yemek kaşığı bal yaklaşık kaç gramdır?',21,'gram'],
+    ['food','🍫','100 gramlık bir çikolata tablette yaklaşık kaç kare vardır?',24,'kare'],
+    ['food','🍋','Bir kilogram limonda yaklaşık kaç limon vardır?',7,'adet'],
+    ['food','🍊','Bir kilogram mandalinada yaklaşık kaç mandalina vardır?',9,'adet'],
+    ['food','🥔','Bir kilogram patateste yaklaşık kaç orta boy patates vardır?',6,'adet'],
+    ['food','🍌','Bir kilogram muzda yaklaşık kaç muz vardır?',6,'adet'],
+    ['food','🥕','Bir kilogram havuçta yaklaşık kaç havuç vardır?',10,'adet'],
+    ['food','🍪','Bir paket 200 gramlık bisküvide yaklaşık kaç bisküvi vardır?',24,'adet'],
+
+    ['nature','🌳','Ortalama bir ağacın gövdesinde yaklaşık kaç litre su bulunabilir?',400,'litre'],
+    ['nature','🌿','Bir avuç çimde yaklaşık kaç yaprak bulunabilir?',300,'yaprak'],
+    ['nature','🍂','Orta büyüklükte bir ağaç bir sonbaharda yaklaşık kaç yaprak dökebilir?',20000,'yaprak'],
+    ['nature','🌻','Bir ayçiçeğinde yaklaşık kaç çekirdek bulunur?',1200,'çekirdek'],
+    ['nature','🌲','10 metre yüksekliğinde bir çam ağacının yaklaşık kaç iğne yaprağı olabilir?',50000,'iğne'],
+    ['nature','🌱','Bir avuç toprağın içinde yaklaşık kaç bakteri bulunabilir?',100000000,'bakteri'],
+    ['nature','🐝','Bir arının bir günde yaklaşık kaç çiçeği ziyaret ettiği tahmin edilir?',1500,'çiçek'],
+    ['nature','🌧️','Bir milimetre yağış bir metrekareye yaklaşık kaç litre su bırakır?',1,'litre'],
+    ['nature','🌊','Bir küvetteki suyun yaklaşık kaç litre olduğunu tahmin et.',150,'litre'],
+    ['nature','🪨','Bir avuç küçük çakıl taşında yaklaşık kaç taş vardır?',30,'taş'],
+    ['nature','🌰','Bir kilogram meşe palamudunda yaklaşık kaç palamut bulunur?',60,'adet'],
+    ['nature','🍃','Bir orta boy yaprakta yaklaşık kaç damar bulunabilir?',50,'damar'],
+    ['nature','🌵','Küçük bir kaktüsün bir yılda yaklaşık kaç santimetre büyümesi beklenir?',8,'cm'],
+    ['nature','🌾','Bir avuç buğday tanesinde yaklaşık kaç tane bulunur?',700,'tane'],
+    ['nature','🌷','Bir bukette 10 lale varsa toplam yaklaşık kaç taç yaprak vardır?',60,'taç yaprak'],
+    ['nature','🌳','Bir metrekare orman zemininde yaklaşık kaç yaprak parçası bulunabilir?',1000,'parça'],
+    ['nature','☀️','Güneş ışığının Dünya’ya ulaşması yaklaşık kaç dakika sürer?',8.3,'dakika'],
+    ['nature','🌙','Ay’ın Dünya etrafında bir turu yaklaşık kaç gün sürer?',27.3,'gün'],
+    ['nature','🌍','Dünya’nın çevresi yaklaşık kaç kilometredir?',40075,'km'],
+    ['nature','🌡️','Normal bir insanın yaşadığı bir odanın sıcaklığı yaklaşık kaç °C olur?',22,'°C'],
+
+    ['home','🪑','Standart bir yemek sandalyesinin yüksekliği yaklaşık kaç cm olur?',90,'cm'],
+    ['home','🚪','Standart bir iç kapının genişliği yaklaşık kaç cm olur?',80,'cm'],
+    ['home','🛏️','Tek kişilik bir yatağın genişliği yaklaşık kaç cm olur?',90,'cm'],
+    ['home','🛋️','Üç kişilik bir koltuğun uzunluğu yaklaşık kaç cm olur?',210,'cm'],
+    ['home','📚','Bir raf dolusu 2 cm kalınlığında kitapta yaklaşık kaç kitap olur?',40,'kitap'],
+    ['home','🪥','Bir diş fırçası yaklaşık kaç cm uzunluğundadır?',18,'cm'],
+    ['home','🥄','Bir yemek kaşığının hacmi yaklaşık kaç ml’dir?',15,'ml'],
+    ['home','🥤','Orta boy bir su bardağı yaklaşık kaç ml su alır?',250,'ml'],
+    ['home','🧴','Bir şampuan şişesi yaklaşık kaç ml olur?',400,'ml'],
+    ['home','🧻','Bir tuvalet kâğıdı rulosunda yaklaşık kaç metre kâğıt vardır?',30,'metre'],
+    ['home','💡','Ev tipi bir LED ampul yaklaşık kaç watt elektrik tüketir?',10,'watt'],
+    ['home','🧊','Ev tipi bir buz kalıbındaki tek küp yaklaşık kaç gramdır?',20,'gram'],
+    ['home','🪣','Orta boy bir kova yaklaşık kaç litre su alır?',10,'litre'],
+    ['home','🧹','Standart bir süpürgenin sapı yaklaşık kaç cm uzunluğundadır?',120,'cm'],
+    ['home','🖼️','Orta boy bir tablo yaklaşık kaç cm genişliğindedir?',60,'cm'],
+    ['home','🕯️','Küçük bir mum yaklaşık kaç saat yanabilir?',8,'saat'],
+    ['home','🔑','Bir ev anahtarının uzunluğu yaklaşık kaç cm’dir?',6,'cm'],
+    ['home','🧺','Orta boy bir çamaşır sepeti yaklaşık kaç litre hacmindedir?',45,'litre'],
+    ['home','🧯','Ev tipi yangın tüpü yaklaşık kaç kg gelir?',4,'kg'],
+    ['home','🪟','Standart bir pencerenin genişliği yaklaşık kaç cm olabilir?',120,'cm'],
+
+    ['vehicles','🚗','Ortalama bir otomobilin uzunluğu yaklaşık kaç metredir?',4.5,'metre'],
+    ['vehicles','🛞','Bir otomobil lastiğinin çevresi yaklaşık kaç cm’dir?',200,'cm'],
+    ['vehicles','⛽','Bir otomobil yakıt deposu yaklaşık kaç litre yakıt alır?',50,'litre'],
+    ['vehicles','🚲','Şehir bisikletinin tekerlek çapı yaklaşık kaç cm’dir?',70,'cm'],
+    ['vehicles','🚌','Standart şehir otobüsü yaklaşık kaç metre uzunluğundadır?',12,'metre'],
+    ['vehicles','🚛','Büyük bir kamyonun uzunluğu yaklaşık kaç metredir?',12,'metre'],
+    ['vehicles','🏍️','Bir motosikletin ağırlığı yaklaşık kaç kg’dır?',180,'kg'],
+    ['vehicles','🚕','Bir taksinin şehir içinde ortalama günlük yaptığı yol yaklaşık kaç km olabilir?',200,'km'],
+    ['vehicles','🚆','Bir yolcu treninin bir vagonunda yaklaşık kaç koltuk bulunur?',60,'koltuk'],
+    ['vehicles','✈️','Bir yolcu uçağının kanat açıklığı yaklaşık kaç metredir?',35,'metre'],
+    ['vehicles','🚢','Orta büyüklükte bir yolcu gemisinin uzunluğu yaklaşık kaç metredir?',200,'metre'],
+    ['vehicles','🛴','Elektrikli scooterın ortalama ağırlığı yaklaşık kaç kg’dır?',15,'kg'],
+    ['vehicles','🚙','Bir SUV aracın yerden yüksekliği yaklaşık kaç cm’dir?',20,'cm'],
+    ['vehicles','🚗','Bir otomobilde yaklaşık kaç adet elektronik kontrol ünitesi bulunabilir?',70,'adet'],
+    ['vehicles','🚦','Bir trafik ışığının direği yaklaşık kaç metre yüksek olabilir?',3,'metre'],
+    ['vehicles','🛣️','Bir otomobil 100 km/s hızla 1 dakikada yaklaşık kaç km gider?',1.67,'km'],
+    ['vehicles','⛽','Bir otomobil 100 km’de ortalama kaç litre yakıt tüketebilir?',7,'litre'],
+    ['vehicles','🚲','Bir bisiklet pedalının bir tam turu yaklaşık kaç derece döner?',360,'derece'],
+    ['vehicles','🛞','Bir otomobilde genellikle kaç tekerlek bulunur?',4,'adet'],
+    ['vehicles','🚁','Küçük bir helikopterin yaklaşık ağırlığı kaç kg olabilir?',1000,'kg'],
+
+    ['world','🌍','Dünya’da yaklaşık kaç ülke vardır?',195,'ülke'],
+    ['world','🏙️','Dünyanın en büyük şehirlerinde yaklaşık kaç milyon insan yaşayabilir?',20,'milyon kişi'],
+    ['world','🗺️','Dünya haritasındaki kıtaların sayısı kaçtır?',7,'kıta'],
+    ['world','🌊','Okyanusların sayısı yaklaşık kaçtır?',5,'okyanus'],
+    ['world','🏔️','Everest’in yüksekliği yaklaşık kaç metredir?',8849,'metre'],
+    ['world','🏜️','Sahra Çölü yaklaşık kaç milyon km² alana yayılır?',9.2,'milyon km²'],
+    ['world','🇹🇷','Türkiye’nin yüzölçümü yaklaşık kaç bin km²’dir?',784,'bin km²'],
+    ['world','🗼','Eyfel Kulesi yaklaşık kaç metre yüksekliğindedir?',330,'metre'],
+    ['world','🗽','Özgürlük Heykeli kaidesiyle birlikte yaklaşık kaç metre yüksekliğindedir?',93,'metre'],
+    ['world','🌉','Golden Gate Köprüsü’nün ana açıklığı yaklaşık kaç metredir?',1280,'metre'],
+    ['world','🏝️','Dünya’nın en büyük adası Grönland yaklaşık kaç milyon km²’dir?',2.16,'milyon km²'],
+    ['world','🚶','Bir insanın Dünya çevresini ekvator boyunca yürüyerek dolaşması yaklaşık kaç km sürer?',40075,'km'],
+    ['world','⏰','Dünya’da kaç saat dilimi vardır?',24,'saat dilimi'],
+    ['world','📅','Bir artık yılda kaç gün vardır?',366,'gün'],
+    ['world','🌐','İnternette yaklaşık kaç milyar insanın kullanıcı olduğu tahmin edilir?',5500,'milyon kişi'],
+    ['world','✈️','Türkiye’den Avrupa’ya kısa bir uçuş yaklaşık kaç saat sürebilir?',3,'saat'],
+    ['world','🏛️','Roma’daki Kolezyum’un yaşı yaklaşık kaç yıldır?',1950,'yıl'],
+    ['world','🌋','Everest’in deniz seviyesinden yüksekliği yaklaşık kaç km’dir?',8.85,'km'],
+    ['world','🧭','Dünya’nın kendi ekseni etrafındaki dönüşü yaklaşık kaç saattir?',24,'saat'],
+    ['world','🌎','Dünya’nın Güneş etrafındaki bir turu yaklaşık kaç gündür?',365.25,'gün'],
+
+    ['animals','🐘','Yetişkin bir filin ağırlığı yaklaşık kaç kg olabilir?',5000,'kg'],
+    ['animals','🐋','Mavi balinanın uzunluğu yaklaşık kaç metredir?',25,'metre'],
+    ['animals','🐜','Bir karıncanın ağırlığı yaklaşık kaç miligramdır?',5,'mg'],
+    ['animals','🐈','Evcil bir kedinin ağırlığı yaklaşık kaç kg’dır?',4,'kg'],
+    ['animals','🐕','Orta boy bir köpeğin ağırlığı yaklaşık kaç kg’dır?',20,'kg'],
+    ['animals','🦒','Zürafanın boyu yaklaşık kaç metredir?',5,'metre'],
+    ['animals','🐢','Dev bir kara kaplumbağası yaklaşık kaç kg olabilir?',150,'kg'],
+    ['animals','🐇','Bir tavşan saatte yaklaşık kaç km hızla koşabilir?',40,'km/s'],
+    ['animals','🐔','Bir tavuk yılda yaklaşık kaç yumurta verebilir?',250,'yumurta'],
+    ['animals','🐄','Bir süt ineği günde yaklaşık kaç litre süt verebilir?',25,'litre'],
+    ['animals','🐎','Bir atın kalbi dakikada yaklaşık kaç kez atabilir?',40,'atım'],
+    ['animals','🦁','Bir aslanın kükremesi yaklaşık kaç km uzaktan duyulabilir?',8,'km'],
+    ['animals','🐝','Bir bal arısının ömrü yaklaşık kaç gün olabilir?',40,'gün'],
+    ['animals','🦋','Bir kelebeğin kanat açıklığı yaklaşık kaç cm olabilir?',8,'cm'],
+    ['animals','🐧','Bir imparator pengueninin boyu yaklaşık kaç cm’dir?',115,'cm'],
+    ['animals','🦘','Bir kanguru tek sıçrayışta yaklaşık kaç metre ilerleyebilir?',9,'metre'],
+    ['animals','🐊','Bir timsahın ısırma kuvveti yaklaşık kaç newton olabilir?',16000,'N'],
+    ['animals','🐙','Bir ahtapotun yaklaşık kaç kolu vardır?',8,'kol'],
+    ['animals','🦉','Bir baykuş başını yaklaşık kaç derece çevirebilir?',270,'derece'],
+    ['animals','🐬','Bir yunus yaklaşık kaç metre derine dalabilir?',300,'metre'],
+
+    ['sport','⚽','Bir futbol sahasının uzunluğu yaklaşık kaç metredir?',105,'metre'],
+    ['sport','🏀','Basketbol potasının yerden yüksekliği kaç metredir?',3.05,'metre'],
+    ['sport','🎾','Bir tenis kortunun uzunluğu yaklaşık kaç metredir?',23.77,'metre'],
+    ['sport','🏐','Voleybol filesinin erkeklerde yüksekliği kaç metredir?',2.43,'metre'],
+    ['sport','🏊','Olimpik yüzme havuzunun uzunluğu kaç metredir?',50,'metre'],
+    ['sport','🏃','Bir maratonun uzunluğu kaç kilometredir?',42.195,'km'],
+    ['sport','🚴','Bir bisiklet yarışında 1 saatte yaklaşık kaç km yol alınabilir?',35,'km'],
+    ['sport','⚾','Beyzbol topunun çevresi yaklaşık kaç cm’dir?',23,'cm'],
+    ['sport','🏓','Masa tenisinde masanın uzunluğu yaklaşık kaç cm’dir?',274,'cm'],
+    ['sport','🥊','Bir boks raundu profesyonel maçlarda kaç dakika sürer?',3,'dakika'],
+    ['sport','⛳','Golf sahasında standart bir turda kaç çukur vardır?',18,'çukur'],
+    ['sport','🏋️','Olimpik halter barının ağırlığı kaç kg’dır?',20,'kg'],
+    ['sport','⚽','Bir futbol maçının normal süresi kaç dakikadır?',90,'dakika'],
+    ['sport','🏀','NBA üçlük çizgisinin en uzak noktası yaklaşık kaç metredir?',7.24,'metre'],
+    ['sport','🏹','Olimpik okçulukta hedefe atış mesafesi kaç metredir?',70,'metre'],
+    ['sport','🥋','Judo müsabakasında yetişkinler için normal süre yaklaşık kaç dakikadır?',4,'dakika'],
+    ['sport','🏎️','Formula 1 yarışında bir turun uzunluğu yaklaşık kaç km olabilir?',5,'km'],
+    ['sport','🏆','Bir futbol takımının sahada aynı anda kaç oyuncusu bulunur?',11,'oyuncu'],
+    ['sport','🏊','Olimpik havuzda bir kulvarın genişliği yaklaşık kaç metredir?',2.5,'metre'],
+    ['sport','🎯','Standart dart tahtasının merkezden dış halkaya çapı yaklaşık kaç cm’dir?',45,'cm'],
+
+    ['tech','💻','Ortalama bir dizüstü bilgisayar ekranı kaç inç olabilir?',15.6,'inç'],
+    ['tech','📱','Modern bir akıllı telefonun ağırlığı yaklaşık kaç gramdır?',200,'gram'],
+    ['tech','⌨️','Standart bir bilgisayar klavyesinde yaklaşık kaç tuş bulunur?',105,'tuş'],
+    ['tech','🖱️','Bir bilgisayar faresinin ağırlığı yaklaşık kaç gramdır?',100,'gram'],
+    ['tech','💾','1 GB yaklaşık kaç MB olarak kabul edilir?',1024,'MB'],
+    ['tech','📷','12 megapiksellik bir fotoğrafta yaklaşık kaç milyon piksel vardır?',12,'milyon piksel'],
+    ['tech','🔋','Bir telefon bataryası yaklaşık kaç mAh kapasiteye sahip olabilir?',5000,'mAh'],
+    ['tech','💡','Bir LED ekran pikselinde kaç temel renk kanalı bulunur?',3,'kanal'],
+    ['tech','🖨️','Ev tipi bir yazıcı dakikada yaklaşık kaç sayfa basabilir?',15,'sayfa'],
+    ['tech','🎧','Kablosuz kulaklığın ağırlığı tek kulakta yaklaşık kaç gramdır?',5,'gram'],
+    ['tech','📺','55 inç bir televizyonun köşegen uzunluğu yaklaşık kaç cm’dir?',140,'cm'],
+    ['tech','⌚','Akıllı saat ekranı yaklaşık kaç cm çapındadır?',4,'cm'],
+    ['tech','🔌','USB-A bağlantısının genişliği yaklaşık kaç mm’dir?',12,'mm'],
+    ['tech','🧮','Basit bir hesap makinesinde yaklaşık kaç tuş bulunur?',30,'tuş'],
+    ['tech','💿','Bir CD’nin kapasitesi yaklaşık kaç MB’dir?',700,'MB'],
+    ['tech','📀','Bir DVD’nin tek katman kapasitesi yaklaşık kaç GB’dir?',4.7,'GB'],
+    ['tech','📡','Wi-Fi yönlendiricinin ev içinde kullanılabilir menzili yaklaşık kaç metredir?',30,'metre'],
+    ['tech','🛰️','GPS konumlandırması için en az kaç uyduya ihtiyaç duyulur?',4,'uydu'],
+    ['tech','📱','Bir akıllı telefon ekranında saniyede 60 Hz yenileme varsa bir saniyede kaç kare yenilenir?',60,'kare'],
+    ['tech','🧠','1 byte kaç bit içerir?',8,'bit'],
+
+    ['human','👣','Bir insan günde ortalama kaç adım atabilir?',7000,'adım'],
+    ['human','❤️','Yetişkin bir insanın kalbi dakikada yaklaşık kaç kez atar?',70,'atım'],
+    ['human','🫁','İnsan akciğerlerinin toplam kapasitesi yaklaşık kaç litredir?',6,'litre'],
+    ['human','🦷','Yetişkin bir insanın normalde kaç dişi vardır?',32,'diş'],
+    ['human','💧','Bir insanın vücudunda yaklaşık kaç litre su bulunur?',40,'litre'],
+    ['human','🩸','Yetişkin bir insanın vücudunda yaklaşık kaç litre kan vardır?',5,'litre'],
+    ['human','👀','İnsan gözünün yaklaşık kaç megapiksel eşdeğerinde algı sunduğu tahmin edilir?',576,'MP'],
+    ['human','🧠','İnsan beyninin ağırlığı yaklaşık kaç gramdır?',1300,'gram'],
+    ['human','💇','İnsan saçı ayda yaklaşık kaç cm uzar?',1,'cm'],
+    ['human','🖐️','Bir insanın iki elinde toplam kaç parmak vardır?',10,'parmak'],
+    ['human','🦴','Yetişkin insan vücudunda yaklaşık kaç kemik vardır?',206,'kemik'],
+    ['human','👂','İnsan kulağı yaklaşık kaç farklı frekans aralığını duyabilir?',20000,'Hz'],
+    ['human','🌡️','Normal insan vücut sıcaklığı yaklaşık kaç °C’dir?',37,'°C'],
+    ['human','😴','Bir yetişkinin gecede ortalama uyku süresi yaklaşık kaç saattir?',8,'saat'],
+    ['human','🚶','İnsan saatte ortalama kaç km yürür?',5,'km'],
+    ['human','🏃','Orta tempoda bir insan saatte yaklaşık kaç km koşabilir?',10,'km'],
+    ['human','💨','İnsan normalde dakikada yaklaşık kaç nefes alır?',15,'nefes'],
+    ['human','👅','İnsan dilinde yaklaşık kaç tat tomurcuğu bulunabilir?',10000,'tomurcuk'],
+    ['human','🧴','Bir yetişkinin günde yaklaşık kaç litre su içmesi önerilebilir?',2,'litre'],
+    ['human','🧬','İnsan vücudundaki toplam DNA uzunluğu yaklaşık kaç metre olabilir?',20000000000,'metre'],
+
+    ['science','⚛️','Bir saniyede ışık yaklaşık kaç kilometre yol alır?',300000,'km'],
+    ['science','🌡️','Suyun kaynama noktası deniz seviyesinde kaç °C’dir?',100,'°C'],
+    ['science','🧊','Suyun donma noktası kaç °C’dir?',0,'°C'],
+    ['science','🔬','Bir insan saçının kalınlığı yaklaşık kaç mikrometredir?',70,'µm'],
+    ['science','🧪','Bir litre suda yaklaşık kaç gram su bulunur?',1000,'gram'],
+    ['science','🌌','Işığın Ay’dan Dünya’ya gelmesi yaklaşık kaç saniye sürer?',1.3,'saniye'],
+    ['science','☀️','Güneş’in yüzey sıcaklığı yaklaşık kaç °C’dir?',5500,'°C'],
+    ['science','🌋','Lavın sıcaklığı yaklaşık kaç °C olabilir?',1100,'°C'],
+    ['science','⚡','Şimşek kanalı yaklaşık kaç °C sıcaklığa ulaşabilir?',30000,'°C'],
+    ['science','🧲','Dünya’nın yerçekimi ivmesi yaklaşık kaç m/s²’dir?',9.81,'m/s²'],
+    ['science','🔭','Ay’ın Dünya’ya ortalama uzaklığı yaklaşık kaç km’dir?',384400,'km'],
+    ['science','🪐','Jüpiter’in çapı yaklaşık kaç km’dir?',140000,'km'],
+    ['science','🌙','Ay’ın çapı yaklaşık kaç km’dir?',3474,'km'],
+    ['science','🌍','Dünya’nın çapı yaklaşık kaç km’dir?',12742,'km'],
+    ['science','💨','Ses havada saniyede yaklaşık kaç metre ilerler?',343,'m/s'],
+    ['science','🔋','AA alkalin pilin gerilimi yaklaşık kaç volttur?',1.5,'V'],
+    ['science','💡','Güneş ışığının boşluktaki hızı yaklaşık kaç km/s’dir?',300000,'km/s'],
+    ['science','🧊','Bir litre buzun sıvı suya göre hacmi yaklaşık yüzde kaç daha büyüktür?',9,'%'],
+    ['science','🧫','Bir milimetrede kaç mikrometre vardır?',1000,'µm'],
+    ['science','🔬','Bir nanometre kaç metrenin milyarda biridir?',1,'milyarda biri']
+  ];
+
+  let current = null, score = Number(localStorage.getItem('br_guess_score')||0);
+  let streak = Number(localStorage.getItem('br_guess_streak')||0);
+  let best = Number(localStorage.getItem('br_guess_best')||0);
+  let asked = 0, locked = false, pool = [];
+
+  const card=$q('#guessCard'), cat=$q('#guessCategory'), emoji=$q('#guessEmoji'), question=$q('#guessQuestion');
+  const hint=$q('#guessHint'), input=$q('#guessInput'), unit=$q('#guessUnit'), submit=$q('#guessSubmit');
+  const feedback=$q('#guessFeedback'), next=$q('#guessNext'), scoreEl=$q('#guessScore'), streakEl=$q('#guessStreak'), bestEl=$q('#guessBest'), bar=$q('#guessProgressBar');
+
+  if(!card || !input) return;
+
+  const shuffle = a => a.slice().sort(()=>Math.random()-.5);
+  const normalize = n => Number.isFinite(n) ? n : 0;
+  const renderStats=()=>{
+    scoreEl.textContent=Math.round(score).toLocaleString('tr-TR');
+    streakEl.textContent=streak;
+    bestEl.textContent=Math.round(best).toLocaleString('tr-TR');
+  };
+  const setTheme = key => {
+    const color=categoryColors[key]||'#6c63ff';
+    card.style.setProperty('--guess-color',color);
+    card.style.setProperty('--guess-soft',color+'22');
+    card.style.setProperty('--guess-glow',color+'55');
+  };
+  const newQuestion=()=>{
+    if(!pool.length) pool=shuffle(profiles);
+    current=pool.pop(); asked++;
+    locked=false; input.disabled=false; submit.disabled=false; next.hidden=true;
+    cat.textContent=current[1]+'  '+({
+      food:'Yiyecek & İçecek',nature:'Doğa',home:'Ev & Günlük Hayat',vehicles:'Araçlar',
+      world:'Dünya',animals:'Hayvanlar',sport:'Spor',tech:'Teknoloji',human:'İnsan',science:'Bilim'
+    }[current[0]]||'Karışık');
+    emoji.textContent=current[1];
+    question.textContent=current[2];
+    unit.textContent=current[4];
+    hint.textContent='Yaklaşık bir tahmin yap. Ne kadar yakınsan o kadar çok puan!';
+    feedback.textContent='';
+    input.value='';
+    input.placeholder='Tahminini yaz';
+    setTheme(current[0]);
+    bar.style.width=((asked%10||10)*10)+'%';
+    setTimeout(()=>input.focus(),40);
+  };
+  const submitGuess=()=>{
+    if(locked) return;
+    const value=normalize(Number(input.value));
+    if(!Number.isFinite(value) || value<0 || input.value===''){
+      feedback.textContent='⚠️ Önce geçerli bir tahmin yaz.';
+      feedback.className='guess-feedback error';
+      input.focus(); return;
+    }
+    locked=true; input.disabled=true; submit.disabled=true;
+    const target=current[3], error=Math.abs(value-target)/Math.max(Math.abs(target),1);
+    const closeness=Math.max(0,1-error);
+    let gained=Math.round(1000*Math.pow(closeness,1.35));
+    if(gained>900 && error<=0.03) gained+=100;
+    gained=Math.min(1100,gained);
+    score+=gained;
+    if(error<=0.12) streak++; else streak=0;
+    best=Math.max(best,score);
+    localStorage.setItem('br_guess_score',score);
+    localStorage.setItem('br_guess_streak',streak);
+    localStorage.setItem('br_guess_best',best);
+    renderStats();
+    const diff=value-target, abs=Math.abs(diff);
+    let verdict=error<=0.03?'🔥 MÜKEMMEL!':error<=0.10?'🎯 Çok yakın!':error<=0.25?'👏 İyi tahmin!':error<=0.5?'🙂 Fena değil!':'😄 Bu biraz uzaktı!';
+    feedback.className='guess-feedback success';
+    feedback.innerHTML='<strong>'+verdict+'</strong><span>Gerçek hedef: <b>'+target.toLocaleString('tr-TR')+' '+current[4]+'</b></span><span>Tahminin: <b>'+value.toLocaleString('tr-TR')+' '+current[4]+'</b> • Fark: <b>'+abs.toLocaleString('tr-TR')+' '+current[4]+'</b></span><em>+'+gained+' puan</em>';
+    next.hidden=false; next.focus();
+    card.classList.remove('guess-pop'); void card.offsetWidth; card.classList.add('guess-pop');
+  };
+  submit.addEventListener('click',submitGuess);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter') submitGuess();});
+  next.addEventListener('click',newQuestion);
+  renderStats(); newQuestion();
+})();
