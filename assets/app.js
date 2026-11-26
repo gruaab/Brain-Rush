@@ -1103,19 +1103,24 @@ function bindSizeItUp(){
   const rounds=[
     ['door','table'],['car','bus'],['hoop','person'],['fridge','sofa'],['container','shark'],['laptop','keyboard'],['ruler','guitar']
   ];
+  const shuffledRounds=[...rounds];
+  for(let i=shuffledRounds.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [shuffledRounds[i],shuffledRounds[j]]=[shuffledRounds[j],shuffledRounds[i]];
+  }
   let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null;
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const svgFor=o=>o.svg;
   const setup=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
-    current=rounds[round%rounds.length];
+    current=shuffledRounds[round%shuffledRounds.length];
     const r=objects[current[0]], target=objects[current[1]];
     const basePx=Math.min(360/Math.max(r.len,target.len*.72),120);
     refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(target)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
     refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
-    const startingRatio=Number((0.55+Math.random()*0.90).toFixed(3));
+    const startingRatio=0.35;
     targetObj.dataset.ratio=String(startingRatio);
     slider.value=String(startingRatio); estimate.textContent='—'; errorEl.textContent='';
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
