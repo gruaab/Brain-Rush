@@ -1108,70 +1108,134 @@ function bindSizeItUp(){
     const j=Math.floor(Math.random()*(i+1));
     [shuffledRounds[i],shuffledRounds[j]]=[shuffledRounds[j],shuffledRounds[i]];
   }
-  let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null, resizeCleanup=null;
+  let round=0, score=0, zoom=1, resizeDrag=false, startX=0, startRatio=1, current=null, resizePointerId=null;
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const svgFor=o=>o.svg
     .replace('<svg ','<svg fill="currentColor" ');
+  const positionHandle=()=>{
+    const h=$('#sizeHandle');
+    if(!h)return;
+    const sr=stage.getBoundingClientRect();
+    const tr=targetObj.getBoundingClientRect();
+    h.style.left=(tr.right-sr.left+10)+'px';
+    h.style.top=(tr.top-sr.top-12)+'px';
+  };
+
   const setup=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
     current=shuffledRounds[round%shuffledRounds.length];
     const r=objects[current[0]], target=objects[current[1]];
     const basePx=Math.min(180/Math.max(r.len,target.len*.72),180);
-    refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(target)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
-    refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
-    refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
-    refObj.style.height='auto'; targetObj.style.height='auto';
-    const startingRatio=0.35;
-    targetObj.dataset.ratio=String(startingRatio);
-    estimate.textContent='—'; errorEl.textContent='';
-    roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
-    refName.replaceChildren(document.createTextNode(r.name)); targetName.replaceChildren(document.createTextNode(target.name)); refLen.textContent='';
-    result.hidden=true; lock.disabled=false; lock.textContent='Kilitle'; next.hidden=true; stage.classList.remove('size-locked');
-    bindHandle();
-  };
-  const bindHandle=()=>{
-    if(resizeCleanup) resizeCleanup();
-    const h=$('#sizeHandle'); if(!h)return;
 
-    h.addEventListener('pointerdown',e=>{
-      if(stage.classList.contains('size-locked')) return;
+    refObj.innerHTML=svgFor(r);
+    targetObj.innerHTML=svgFor(target);
+
+    refObj.style.setProperty('--object-color','#2f8cff');
+    targetObj.style.setProperty('--object-color','#ff4d55');
+    refObj.style.width=(r.len*basePx)+'px';
+    targetObj.style.width=(target.len*basePx)+'px';
+    refObj.style.height='auto';
+    targetObj.style.height='auto';
+
+    targetObj.dataset.ratio='0.35';
+    targetObj.style.transformOrigin='center bottom';
+
+    // The resize handle belongs to the stage, not the object.
+    // This keeps it clickable and prevents it from moving with the object itself.
+    let h=$('#sizeHandle');
+    if(!h){
+      h=document.createElement('button');
+      h.id='sizeHandle';
+      h.className='size-handle';
+      h.type='button';
+      h.setAttribute('aria-label','Nesneyi boyutlandır');
+      h.textContent='↗';
+    }
+    stage.appendChild(h);
+
+    estimate.textContent='—';
+    errorEl.textContent='';
+    roundEl.textContent=(round+1)+' / 5';
+    scoreEl.textContent=score;
+    refName.replaceChildren(document.createTextNode(r.name));
+    targetName.replaceChildren(document.createTextNode(target.name));
+    refLen.textContent='';
+
+    result.hidden=true;
+    lock.disabled=false;
+    lock.textContent='Kilitle';
+    next.hidden=true;
+    stage.classList.remove('size-locked');
+
+    renderTarget();
+  };
+
+  const bindHandle=()=>{
+    const h=$('#sizeHandle');
+    if(!h)return;
+
+    h.onpointerdown=e=>{
+      if(stage.classList.contains('size-locked'))return;
       e.preventDefault();
       e.stopPropagation();
+
       resizeDrag=true;
+      resizePointerId=e.pointerId;
       startX=e.clientX;
       startRatio=Number(targetObj.dataset.ratio)||0.35;
-      document.body.classList.add('size-resizing');
-    });
 
-    // Use document-level listeners so the handle never loses the drag.
-    const resizeMove=e=>{
-      if(!resizeDrag)return;
+      try{h.setPointerCapture(e.pointerId);}catch(_){}
+      h.classList.add('is-dragging');
+      document.body.classList.add('size-resizing');
+    };
+
+    h.onpointermove=e=>{
+      if(!resizeDrag || e.pointerId!==resizePointerId)return;
       e.preventDefault();
+
+      // No upper limit: the player can make the object as large as needed.
       const delta=(e.clientX-startX)/220;
-      const ratio=Math.max(0.02,startRatio+delta);
+      const ratio=Math.max(0.01,startRatio+delta);
+
       targetObj.dataset.ratio=String(ratio);
       renderTarget();
     };
-    const stopResize=()=>{
+
+    const stop=()=>{
       resizeDrag=false;
+      resizePointerId=null;
+      h.classList.remove('is-dragging');
       document.body.classList.remove('size-resizing');
     };
-    document.addEventListener('pointermove',resizeMove,{passive:false});
-    document.addEventListener('pointerup',stopResize);
-    document.addEventListener('pointercancel',stopResize);
-    resizeCleanup=()=>{
-      document.removeEventListener('pointermove',resizeMove);
-      document.removeEventListener('pointerup',stopResize);
-      document.removeEventListener('pointercancel',stopResize);
-      stopResize();
+
+    h.onpointerup=e=>{
+      if(resizePointerId!==null && e.pointerId!==resizePointerId)return;
+      try{h.releasePointerCapture(e.pointerId);}catch(_){}
+      stop();
     };
+    h.onpointercancel=stop;
+    h.onlostpointercapture=()=>{
+      if(resizeDrag)stop();
+    };
+    h.ondragstart=e=>e.preventDefault();
   };
+
   const renderTarget=()=>{
-    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(180/Math.max(r.len,target.len*.72),180), ratio=Number(targetObj.dataset.ratio)||0.35;
+    if(!current)return;
+    const r=objects[current[0]], target=objects[current[1]];
+    const basePx=Math.min(180/Math.max(r.len,target.len*.72),180);
+    const ratio=Number(targetObj.dataset.ratio)||0.35;
+
+    // Resize the actual object. There is deliberately no maximum.
     targetObj.style.width=(target.len*basePx*ratio)+'px';
+    targetObj.style.height='auto';
+
     estimate.textContent='—';
     errorEl.textContent='';
+
+    requestAnimationFrame(positionHandle);
   };
+
   // + / − zooms the map and the objects together; the target is resized only from its handle.
   let zoomFxTimer=null;
   const updateZoom=()=>{
