@@ -278,7 +278,16 @@ function translateRoot(root=document){
   // compatibility issues and prevents runtime errors from disabling all buttons.
   scope.querySelectorAll?.('[data-i18n]').forEach(el=>{
     const key=el.getAttribute('data-i18n');
-    if(Object.prototype.hasOwnProperty.call(dict,key)) el.textContent=dict[key];
+    if(!Object.prototype.hasOwnProperty.call(dict,key)) return;
+    const translated=dict[key];
+    // Preserve form controls and other child elements; replace only the label's
+    // own text node instead of assigning textContent to the whole element.
+    let textNode=null;
+    for(const node of el.childNodes){
+      if(node.nodeType===Node.TEXT_NODE){textNode=node;break;}
+    }
+    if(textNode) textNode.nodeValue=translated;
+    else el.insertBefore(document.createTextNode(translated),el.firstChild);
   });
 
   scope.querySelectorAll?.('input[placeholder], textarea[placeholder]').forEach(el=>{
@@ -1106,8 +1115,9 @@ function bindSizeItUp(){
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
     refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
-    targetObj.dataset.ratio='1';
-    slider.value='1'; estimate.textContent='—'; errorEl.textContent='';
+    const startingRatio=Number((0.55+Math.random()*0.90).toFixed(3));
+    targetObj.dataset.ratio=String(startingRatio);
+    slider.value=String(startingRatio); estimate.textContent='—'; errorEl.textContent='';
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
     refName.textContent=r.name; refLen.textContent=''; targetName.textContent=target.name;
     result.hidden=true; lock.disabled=false; lock.textContent='Kilitle'; next.hidden=true; stage.classList.remove('size-locked');
