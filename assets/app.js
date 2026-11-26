@@ -1236,15 +1236,39 @@ function bindSizeItUp(){
 
 
 /* =========================
-   HOW MANY? ESTIMATION GAME
+   HOW MANY? ESTIMATION GAME — rebuilt
    ========================= */
 (function initHowManyGame(){
-  const $q = s => document.querySelector(s);
-  const categoryColors = {
-    food:'#f59e0b', nature:'#22c55e', home:'#8b5cf6', vehicles:'#ef4444',
-    world:'#0ea5e9', animals:'#14b8a6', sport:'#16a34a', tech:'#6366f1',
-    human:'#ec4899', science:'#06b6d4'
+  const root=document.getElementById('guessGame');
+  if(!root) return;
+
+  const card=root.querySelector('#guessCard');
+  const input=root.querySelector('#guessInput');
+  const submit=root.querySelector('#guessSubmit');
+  const next=root.querySelector('#guessNext');
+  const feedback=root.querySelector('#guessFeedback');
+  const category=root.querySelector('#guessCategory');
+  const emoji=root.querySelector('#guessEmoji');
+  const question=root.querySelector('#guessQuestion');
+  const hint=root.querySelector('#guessHint');
+  const unit=root.querySelector('#guessUnit');
+  const progress=root.querySelector('#guessProgressBar');
+  const scoreEl=root.querySelector('#guessScore');
+  const streakEl=root.querySelector('#guessStreak');
+  const bestEl=root.querySelector('#guessBest');
+  if(!card||!input||!submit||!next||!feedback) return;
+
+  const colors={
+    food:'#f59e0b',nature:'#22c55e',home:'#8b5cf6',vehicles:'#ef4444',
+    world:'#0ea5e9',animals:'#14b8a6',sport:'#16a34a',tech:'#6366f1',
+    human:'#ec4899',science:'#06b6d4'
   };
+  const labels={
+    food:'🍽️ Yiyecek & İçecek',nature:'🌿 Doğa',home:'🏠 Ev & Yaşam',
+    vehicles:'🚗 Araçlar',world:'🌍 Dünya',animals:'🐾 Hayvanlar',
+    sport:'⚽ Spor',tech:'💻 Teknoloji',human:'🧠 İnsan',science:'🔬 Bilim'
+  };
+
   const profiles = [
     ['food','☕','Bir bardağı yaklaşık kaç kahve çekirdeği doldurur?',1800,'adet'],
     ['food','🍚','Bir su bardağı pirinçte yaklaşık kaç pirinç tanesi vardır?',3500,'tane'],
@@ -1455,112 +1479,107 @@ function bindSizeItUp(){
     ['science','🧊','Bir litre buzun sıvı suya göre hacmi yaklaşık yüzde kaç daha büyüktür?',9,'%'],
     ['science','🧫','Bir milimetrede kaç mikrometre vardır?',1000,'µm'],
     ['science','🔬','Bir nanometre kaç metrenin milyarda biridir?',1,'milyarda biri']
-  ];
+  ]
 
-  let current = null, score = Number(localStorage.getItem('br_guess_score')||0);
-  let streak = Number(localStorage.getItem('br_guess_streak')||0);
-  let best = Number(localStorage.getItem('br_guess_best')||0);
-  let asked = 0, locked = false, pool = [];
+  let pool=[], current=null, score=0, streak=0, best=0, locked=false, round=0;
+  try{score=Number(localStorage.getItem('br_guess_score'))||0;streak=Number(localStorage.getItem('br_guess_streak'))||0;best=Number(localStorage.getItem('br_guess_best'))||0}catch(_){}
 
-  const card=$q('#guessCard'), cat=$q('#guessCategory'), emoji=$q('#guessEmoji'), question=$q('#guessQuestion');
-  const hint=$q('#guessHint'), input=$q('#guessInput'), unit=$q('#guessUnit'), submit=$q('#guessSubmit');
-  const feedback=$q('#guessFeedback'), next=$q('#guessNext'), scoreEl=$q('#guessScore'), streakEl=$q('#guessStreak'), bestEl=$q('#guessBest'), bar=$q('#guessProgressBar');
+  const save=()=>{try{
+    localStorage.setItem('br_guess_score',String(score));
+    localStorage.setItem('br_guess_streak',String(streak));
+    localStorage.setItem('br_guess_best',String(best));
+  }catch(_){}};
 
-  if(!card || !input) return;
-
-  const shuffle = a => a.slice().sort(()=>Math.random()-.5);
-  const normalize = n => Number.isFinite(n) ? n : 0;
-  const renderStats=()=>{
-    scoreEl.textContent=Math.round(score).toLocaleString('tr-TR');
+  const stats=()=>{
+    scoreEl.textContent=score.toLocaleString('tr-TR');
     streakEl.textContent=streak;
-    bestEl.textContent=Math.round(best).toLocaleString('tr-TR');
+    bestEl.textContent=best.toLocaleString('tr-TR');
   };
-  const setTheme = key => {
-    const color=categoryColors[key]||'#6c63ff';
-    card.style.setProperty('--guess-color',color);
-    card.style.setProperty('--guess-soft',color+'33');
-    card.style.setProperty('--guess-glow',color+'66');
-    card.style.setProperty('--guess-bg',color);
+
+  const setTheme=(key)=>{
+    const color=colors[key]||'#6c63ff';
+    root.style.setProperty('--guess-color',color);
+    root.style.setProperty('--guess-soft',color+'22');
+    root.style.setProperty('--guess-glow',color+'66');
+    root.style.setProperty('--guess-bg',color);
   };
+
+  const shuffle=(arr)=>{
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+    return arr;
+  };
+
   const newQuestion=()=>{
-    if(!pool.length) pool=shuffle(profiles);
-    current=pool.pop(); asked++;
-    locked=false; input.disabled=false; submit.disabled=false; next.hidden=true;
-    cat.textContent=current[1]+'  '+({
-      food:'Yiyecek & İçecek',nature:'Doğa',home:'Ev & Günlük Hayat',vehicles:'Araçlar',
-      world:'Dünya',animals:'Hayvanlar',sport:'Spor',tech:'Teknoloji',human:'İnsan',science:'Bilim'
-    }[current[0]]||'Karışık');
-    emoji.textContent=current[1];
-    question.textContent=current[2];
-    unit.textContent=current[4];
-    hint.textContent='Yaklaşık bir tahmin yap. Ne kadar yakınsan o kadar çok puan!';
-    feedback.textContent='';
-    feedback.className='guess-feedback';
-    feedback.hidden=true;
+    if(!pool.length) pool=shuffle(profiles.map((_,i)=>i));
+    current=profiles[pool.pop()];
+    locked=false;
+    round++;
+    const [key,icon,q,answer,u]=current;
+    setTheme(key);
+    category.textContent=labels[key]||key;
+    emoji.textContent=icon;
+    question.textContent=q;
+    unit.textContent=u;
     input.value='';
-    input.placeholder='Tahminini yaz';
-    setTheme(current[0]);
-    bar.style.width=((asked%10||10)*10)+'%';
-    setTimeout(()=>input.focus(),40);
+    input.disabled=false;
+    submit.disabled=false;
+    submit.textContent='Tahmin Et →';
+    feedback.hidden=true;
+    feedback.innerHTML='';
+    next.hidden=true;
+    progress.style.width=((round-1)%10+1)*10+'%';
+    card.classList.remove('guess-pop');
+    void card.offsetWidth;
+    card.classList.add('guess-pop');
+    input.focus();
   };
+
   const submitGuess=()=>{
-    if(locked) return;
-    const raw=String(input.value ?? '').trim().replace(/\s+/g,'').replace(',', '.');
+    if(locked||!current) return;
+    const raw=String(input.value||'').trim().replace(/\s+/g,'').replace(',','.');
+    if(!raw){feedback.hidden=false;feedback.className='guess-feedback error';feedback.textContent='⚠️ Önce bir tahmin yaz.';input.focus();return;}
     const value=Number(raw);
-    if(raw==='' || !Number.isFinite(value) || value<0){
-      feedback.textContent='⚠️ Önce geçerli bir tahmin yaz.';
-      feedback.className='guess-feedback error';
-      feedback.hidden=false;
-      input.focus();
-      return;
+    if(!Number.isFinite(value)||value<0){
+      feedback.hidden=false;feedback.className='guess-feedback error';feedback.textContent='⚠️ Geçerli bir sayı yaz.';input.focus();return;
     }
 
     locked=true;
     input.disabled=true;
     submit.disabled=true;
 
-    const target=current[3];
-    const error=Math.abs(value-target)/Math.max(Math.abs(target),1);
-    const closeness=Math.max(0,1-error);
-    let gained=Math.round(1000*Math.pow(closeness,1.35));
-    if(gained>900 && error<=0.03) gained+=100;
-    gained=Math.min(1100,gained);
+    const answer=Number(current[3]);
+    const diff=Math.abs(value-answer);
+    const error=answer===0?diff:diff/Math.abs(answer);
+    let points=0,title='';
+    if(error<=.03){points=1000;title='🎯 MÜKEMMEL TAHMİN!';}
+    else if(error<=.10){points=700;title='🔥 ÇOK YAKIN!';}
+    else if(error<=.20){points=500;title='👍 İYİ TAHMİN!';}
+    else if(error<=.40){points=250;title='🙂 FENA DEĞİL!';}
+    else {points=100;title='📏 UZAK TAHMİN!';}
 
-    score+=gained;
-    if(error<=0.12) streak++; else streak=0;
-    best=Math.max(best,score);
-    localStorage.setItem('br_guess_score',score);
-    localStorage.setItem('br_guess_streak',streak);
-    localStorage.setItem('br_guess_best',best);
-    renderStats();
+    if(error<=.12) streak++; else streak=0;
+    score+=points;
+    if(score>best) best=score;
+    save(); stats();
 
-    const abs=Math.abs(value-target);
-    const verdict=error<=0.03?'🔥 MÜKEMMEL!':error<=0.10?'🎯 Çok yakın!':error<=0.25?'👏 İyi tahmin!':error<=0.5?'🙂 Fena değil!':'😄 Bu biraz uzaktı!';
-
-    feedback.className='guess-feedback success';
+    let relation=error<=.03?'Neredeyse tam isabet!':error<=.10?'Gerçeğe çok yakınsın!':error<=.20?'Yaklaştın!':value<answer?'Daha büyük bir sayı gerekiyordu.':'Daha küçük bir sayı gerekiyordu.';
+    const formattedAnswer=answer.toLocaleString('tr-TR',{maximumFractionDigits:2});
+    const formattedValue=value.toLocaleString('tr-TR',{maximumFractionDigits:2});
+    const formattedDiff=diff.toLocaleString('tr-TR',{maximumFractionDigits:2});
     feedback.hidden=false;
+    feedback.className='guess-feedback success';
     feedback.innerHTML=
-      '<div class="guess-result-title">'+verdict+'</div>'+
-      '<div class="guess-result-answer">✅ Doğru cevap: <b>'+target.toLocaleString('tr-TR')+' '+current[4]+'</b></div>'+
-      '<div class="guess-result-your">Senin tahminin: <b>'+value.toLocaleString('tr-TR')+' '+current[4]+'</b> · Fark: <b>'+abs.toLocaleString('tr-TR')+' '+current[4]+'</b></div>'+
-      '<div class="guess-result-points">+'+gained+' PUAN</div>';
-
+      '<div class="guess-result-title">'+title+'</div>'+
+      '<div class="guess-result-relation">'+relation+'</div>'+
+      '<div class="guess-result-answer">Gerçek cevap: <b>'+formattedAnswer+' '+u+'</b></div>'+
+      '<div class="guess-result-your">Senin tahminin: '+formattedValue+' '+u+' • Fark: '+formattedDiff+' '+u+'</div>'+
+      '<div class="guess-result-points">+'+points+' PUAN</div>';
     next.hidden=false;
-    card.classList.remove('guess-pop');
-    void card.offsetWidth;
-    card.classList.add('guess-pop');
   };
-  // Use direct handlers as well as normal events so the game still works
-  // if another component rebinds buttons during page initialization.
-  // Robust delegation: the button remains functional even if another UI script
-  // replaces or re-renders part of the game card.
-  submit.onclick=submitGuess;
-  input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();submitGuess();}};
-  next.onclick=newQuestion;
-  document.addEventListener('click',e=>{
-    const btn=e.target.closest('#guessSubmit');
-    if(btn && !btn.disabled) submitGuess();
-  });
-  renderStats();
+
+  submit.addEventListener('click',submitGuess);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submitGuess();}});
+  next.addEventListener('click',newQuestion);
+  stats();
   newQuestion();
-})();
+})();)();
