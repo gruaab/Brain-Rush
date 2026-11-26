@@ -1114,11 +1114,23 @@ function bindSizeItUp(){
     .replace('<svg ','<svg fill="currentColor" ');
   const positionHandle=()=>{
     const h=$('#sizeHandle');
-    if(!h)return;
+    if(!h || !targetObj || !stage)return;
     const sr=stage.getBoundingClientRect();
     const tr=targetObj.getBoundingClientRect();
-    h.style.left=(tr.right-sr.left+10)+'px';
-    h.style.top=(tr.top-sr.top-12)+'px';
+    // Keep the control attached to the target's top-right corner.
+    let left=tr.right-sr.left+8;
+    let top=tr.top-sr.top-10;
+    const maxLeft=stage.clientWidth-46;
+    const maxTop=stage.clientHeight-46;
+    left=Math.max(4,Math.min(left,maxLeft));
+    top=Math.max(4,Math.min(top,maxTop));
+    h.style.setProperty('left',left+'px','important');
+    h.style.setProperty('top',top+'px','important');
+    h.style.setProperty('right','auto','important');
+    h.style.setProperty('bottom','auto','important');
+    h.style.display='grid';
+    h.style.visibility='visible';
+    h.style.opacity='1';
   };
 
   const setup=()=>{
@@ -1151,7 +1163,14 @@ function bindSizeItUp(){
       h.setAttribute('aria-label','Nesneyi boyutlandır');
       h.textContent='↗';
     }
+    // Always make the handle a direct child of the stage and reset stale inline state.
     stage.appendChild(h);
+    h.style.display='grid';
+    h.style.visibility='visible';
+    h.style.opacity='1';
+    h.style.position='absolute';
+    h.style.zIndex='100';
+    h.style.pointerEvents='auto';
 
     estimate.textContent='—';
     errorEl.textContent='';
@@ -1192,11 +1211,11 @@ function bindSizeItUp(){
     h.onpointermove=e=>{
       if(!resizeDrag || e.pointerId!==resizePointerId)return;
       e.preventDefault();
+      e.stopPropagation();
 
-      // No upper limit: the player can make the object as large as needed.
-      const delta=(e.clientX-startX)/220;
+      // Direct pointer-distance scaling. No maximum limit.
+      const delta=(e.clientX-startX)/180;
       const ratio=Math.max(0.01,startRatio+delta);
-
       targetObj.dataset.ratio=String(ratio);
       renderTarget();
     };
