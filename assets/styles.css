@@ -214,3 +214,9 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 /* Size Guessing: visible, easy-to-grab resize handle */
 .size-handle{width:34px!important;height:34px!important;right:-16px!important;top:-19px!important;z-index:20!important;pointer-events:auto!important}
 .size-reference-object,.size-target-object{pointer-events:auto}
+
+/* Final robust Size Guessing interaction */
+.size-handle{width:38px!important;height:38px!important;right:-18px!important;top:-22px!important;z-index:50!important;display:grid!important;place-items:center!important;pointer-events:auto!important;touch-action:none!important}
+.size-target-object{pointer-events:auto!important;touch-action:none!important}
+body.size-resizing{cursor:nwse-resize!important;user-select:none!important}
+body.size-resizing *{cursor:nwse-resize!important;user-select:none!important}
