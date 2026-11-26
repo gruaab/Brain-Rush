@@ -220,3 +220,49 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 .size-target-object{pointer-events:auto!important;touch-action:none!important}
 body.size-resizing{cursor:nwse-resize!important;user-select:none!important}
 body.size-resizing *{cursor:nwse-resize!important;user-select:none!important}
+
+
+/* Size Guessing — robust stage-level resize handle */
+.size-stage > .size-handle{
+  position:absolute;
+  width:42px;
+  height:42px;
+  right:auto;
+  bottom:auto;
+  z-index:50;
+  margin:0;
+  border:2px solid #71809b;
+  border-radius:11px;
+  background:#0b1222;
+  color:#e8f1ff;
+  display:grid;
+  place-items:center;
+  cursor:nwse-resize;
+  font-size:18px;
+  line-height:1;
+  box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 3px rgba(11,18,34,.55);
+  touch-action:none;
+  pointer-events:auto;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+}
+.size-stage > .size-handle:hover{
+  transform:scale(1.08);
+  border-color:#fff;
+  background:#101c33;
+}
+.size-stage > .size-handle.is-dragging{
+  transform:scale(1.12);
+  border-color:#2f8cff;
+  box-shadow:0 7px 22px rgba(0,0,0,.5),0 0 0 4px rgba(47,140,255,.16);
+  cursor:nwse-resize;
+}
+body.size-resizing{
+  cursor:nwse-resize!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
+}
+body.size-resizing *{
+  cursor:nwse-resize!important;
+}
