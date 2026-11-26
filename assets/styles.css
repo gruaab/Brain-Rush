@@ -210,3 +210,7 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 .size-instruction strong{display:block;font-size:13px;color:#e8eef8}
 .size-instruction small{display:block;margin-top:2px;color:var(--muted);font-size:10px}
 @media(max-width:700px){.size-controls{grid-template-columns:1fr!important}.size-lock{width:100%}}
+
+/* Size Guessing: visible, easy-to-grab resize handle */
+.size-handle{width:34px!important;height:34px!important;right:-16px!important;top:-19px!important;z-index:20!important;pointer-events:auto!important}
+.size-reference-object,.size-target-object{pointer-events:auto}
