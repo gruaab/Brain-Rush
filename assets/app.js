@@ -1145,7 +1145,7 @@ function bindSizeItUp(){
     h.addEventListener('pointermove',e=>{
       if(!resizeDrag) return;
       const delta=(e.clientX-startX)/260;
-      const ratio=Math.max(0.01,startRatio+delta);
+      const ratio=Math.max(Number.EPSILON,startRatio+delta);
       targetObj.dataset.ratio=ratio;
       renderTarget();
     });
