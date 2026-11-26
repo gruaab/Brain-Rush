@@ -1110,7 +1110,9 @@ function bindSizeItUp(){
   }
   let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null;
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  const svgFor=o=>o.svg;
+  const svgFor=o=>o.svg
+    .replace('<svg ','<svg fill="currentColor" ')
+    .replace(/#0b1020/gi,'currentColor');
   const setup=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
     current=shuffledRounds[round%shuffledRounds.length];
