@@ -1121,7 +1121,7 @@ function bindSizeItUp(){
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
     refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
-    const startingRatio=0.35;
+    const startingRatio=0.01;
     targetObj.dataset.ratio=String(startingRatio);
     slider.value=String(startingRatio); estimate.textContent='—'; errorEl.textContent='';
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
@@ -1145,7 +1145,7 @@ function bindSizeItUp(){
     h.addEventListener('pointermove',e=>{
       if(!resizeDrag) return;
       const delta=(e.clientX-startX)/260;
-      const ratio=Math.max(.35,Math.min(1.65,startRatio+delta));
+      const ratio=Math.max(0.01,startRatio+delta);
       targetObj.dataset.ratio=ratio;
       slider.value=ratio;
       renderTarget();
