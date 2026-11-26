@@ -1082,20 +1082,20 @@ function bindImageSize(){
 }
 
 function bindSizeItUp(){
-  const roundEl=$('#sizeRound'), scoreEl=$('#sizeScore'), refName=$('#sizeReferenceName'), refLen=$('#sizeReferenceLength'), targetName=$('#sizeTargetName'), refObj=$('#sizeReferenceObject'), targetObj=$('#sizeTargetObject'), handle=$('#sizeHandle'), stage=$('#sizeStage'), estimate=$('#sizeEstimate'), errorEl=$('#sizeError'), lock=$('#sizeLock'), result=$('#sizeResult'), resultIcon=$('#sizeResultIcon'), resultTitle=$('#sizeResultTitle'), resultText=$('#sizeResultText'), next=$('#sizeNext'), restart=$('#sizeRestart'), zoomIn=$('#sizeZoomIn'), zoomOut=$('#sizeZoomOut'), scaleLabel=$('#sizeScaleLabel');
+  const roundEl=$('#sizeRound'), scoreEl=$('#sizeScore'), refName=$('#sizeReferenceName'), refLen=$('#sizeReferenceLength'), targetName=$('#sizeTargetName'), refObj=$('#sizeReferenceObject'), targetObj=$('#sizeTargetObject'), handle=$('#sizeHandle'), stage=$('#sizeStage'), slider=$('#sizeSlider'), estimate=$('#sizeEstimate'), errorEl=$('#sizeError'), lock=$('#sizeLock'), result=$('#sizeResult'), resultIcon=$('#sizeResultIcon'), resultTitle=$('#sizeResultTitle'), resultText=$('#sizeResultText'), next=$('#sizeNext'), restart=$('#sizeRestart'), zoomIn=$('#sizeZoomIn'), zoomOut=$('#sizeZoomOut'), scaleLabel=$('#sizeScaleLabel');
   const objects={
     door:{name:'Kapı',len:2.00,svg:'<svg viewBox="0 0 200 420"><rect x="15" y="10" width="170" height="400" rx="5"/><rect x="35" y="35" width="105" height="145" rx="2" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="157" cy="220" r="7" fill="currentColor"/><path d="M35 200h105v180H35z" fill="none" stroke="currentColor" stroke-width="7"/></svg>'},
-    table:{name:'Masa',len:1.60,svg:'<svg viewBox="0 0 320 180"><rect x="18" y="35" width="284" height="48" rx="12"/><rect x="32" y="48" width="256" height="24" rx="8" fill="#0b1020" opacity=".28"/><path d="M42 83l18 82h28L82 83M238 83l-6 82h28l18-82" fill="currentColor"/><path d="M48 96l12 54M272 96l-12 54" stroke="#0b1020" stroke-width="6" opacity=".55"/></svg>'},
+    table:{name:'Masa',len:1.60,svg:'<svg viewBox="0 0 320 180"><rect x="18" y="35" width="284" height="48" rx="12"/><path d="M42 83l18 82h28L82 83M238 83l-6 82h28l18-82" fill="currentColor"/></svg>'},
     car:{name:'Otomobil',len:4.50,svg:'<svg viewBox="0 0 420 150"><path d="M35 103l35-51c9-13 23-21 39-23l124-14c23-3 45 5 61 22l49 52h35v37H35z"/><circle cx="105" cy="139" r="27" fill="#0b1020"/><circle cx="105" cy="139" r="12"/><circle cx="315" cy="139" r="27" fill="#0b1020"/><circle cx="315" cy="139" r="12"/><path d="M108 49h119l40 43H77z" fill="#0b1020" opacity=".25"/></svg>'},
     bus:{name:'Otobüs',len:12.00,svg:'<svg viewBox="0 0 560 180"><rect x="18" y="18" width="524" height="145" rx="28"/><rect x="42" y="42" width="476" height="62" rx="10" fill="#0b1020" opacity=".22"/><path d="M75 118h54v25H75zM190 118h54v25h-54zM305 118h54v25h-54zM420 118h54v25h-54z" fill="#0b1020"/></svg>'},
     person:{name:'İnsan',len:1.75,svg:'<svg viewBox="0 0 120 320"><circle cx="60" cy="38" r="30"/><path d="M32 82h56l16 108-26 6-7-67-4 67 38 99H72l-12-70-12 70H12l38-99-4-67-7 67-26-6z"/></svg>'},
     hoop:{name:'Basketbol Potası',len:3.05,svg:'<svg viewBox="0 0 260 360"><rect x="35" y="20" width="190" height="115" rx="6"/><rect x="92" y="116" width="76" height="10" fill="currentColor"/><circle cx="130" cy="156" r="33" fill="none" stroke="currentColor" stroke-width="9"/><path d="M35 135v205h18V135M207 135v205h18V135M35 330h190" fill="none" stroke="currentColor" stroke-width="12"/></svg>'},
-    fridge:{name:'Buzdolabı',len:1.80,svg:'<svg viewBox="0 0 180 330"><rect x="12" y="8" width="156" height="314" rx="15"/><rect x="22" y="20" width="136" height="126" rx="8" fill="#0b1020" opacity=".28"/><rect x="22" y="166" width="136" height="146" rx="8" fill="#0b1020" opacity=".20"/><path d="M12 158h156" stroke="#0b1020" stroke-width="8"/><rect x="35" y="55" width="9" height="65" rx="4" fill="#050812"/><rect x="35" y="190" width="9" height="75" rx="4" fill="#050812"/></svg>'},
-    sofa:{name:'Kanepe',len:2.10,svg:'<svg viewBox="0 0 360 180"><path d="M35 75c0-30 24-55 55-55h180c31 0 55 25 55 55v25h-28v45H63v-45H35z"/><rect x="55" y="100" width="250" height="50" rx="12"/><rect x="68" y="42" width="92" height="48" rx="14" fill="#0b1020" opacity=".30"/><rect x="200" y="42" width="92" height="48" rx="14" fill="#0b1020" opacity=".30"/><path d="M28 100v58h32v-58M300 100v58h32v-58" fill="currentColor"/><path d="M75 108h210" stroke="#0b1020" stroke-width="6" opacity=".45"/></svg>'},
+    fridge:{name:'Buzdolabı',len:1.80,svg:'<svg viewBox="0 0 180 330"><rect x="12" y="8" width="156" height="314" rx="15"/><path d="M12 158h156" stroke="currentColor" stroke-width="8"/><rect x="35" y="55" width="8" height="65" rx="4" fill="#0b1020"/><rect x="35" y="190" width="8" height="75" rx="4" fill="#0b1020"/></svg>'},
+    sofa:{name:'Kanepe',len:2.10,svg:'<svg viewBox="0 0 360 180"><path d="M35 75c0-30 24-55 55-55h180c31 0 55 25 55 55v25h-28v45H63v-45H35z"/><rect x="55" y="100" width="250" height="50" rx="12"/><path d="M28 100v58h32v-58M300 100v58h32v-58"/></svg>'},
     bicycle:{name:'Bisiklet',len:1.80,svg:'<svg viewBox="0 0 360 180"><circle cx="70" cy="130" r="42" fill="none" stroke="currentColor" stroke-width="8"/><circle cx="290" cy="130" r="42" fill="none" stroke="currentColor" stroke-width="8"/><path d="M70 130l70-60 45 60H70l60-90 35 90M140 70h48l35-35M180 130l50-50M230 80l28 50M240 55l30-18" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
     container:{name:'Konteyner',len:6.06,svg:'<svg viewBox="0 0 480 180"><rect x="12" y="12" width="456" height="156" rx="5"/><path d="M48 18v144M84 18v144M120 18v144M156 18v144M192 18v144M228 18v144M264 18v144M300 18v144M336 18v144M372 18v144M408 18v144M444 18v144" fill="none" stroke="currentColor" stroke-width="5"/></svg>'},
     shark:{name:'Köpekbalığı',len:4.50,svg:'<svg viewBox="0 0 520 180"><path d="M25 95c45-38 100-55 166-49 52 5 96 20 140 31l55-48 17 66 88 16-88 17-17 65-55-48c-45 11-88 27-140 32-66 6-121-11-166-49z"/><path d="M170 75l35-55 28 65M170 115l35 55 28-65" fill="currentColor"/><circle cx="423" cy="101" r="6" fill="#0b1020"/></svg>'},
-    laptop:{name:'Dizüstü Bilgisayar',len:0.35,svg:'<svg viewBox="0 0 300 190"><rect x="32" y="15" width="236" height="145" rx="9"/><rect x="50" y="32" width="200" height="110" rx="4" fill="#070b14"/><path d="M65 50h170M65 65h170M65 80h125" stroke="#2f3c55" stroke-width="5" opacity=".55"/><path d="M8 160h284l-20 22H28z"/><path d="M90 164h120" stroke="#0b1020" stroke-width="7"/></svg>'},
+    laptop:{name:'Dizüstü Bilgisayar',len:0.35,svg:'<svg viewBox="0 0 300 190"><rect x="32" y="15" width="236" height="145" rx="9"/><rect x="50" y="32" width="200" height="110" fill="#0b1020" opacity=".25"/><path d="M8 160h284l-20 22H28z"/></svg>'},
     keyboard:{name:'Klavye',len:0.44,svg:'<svg viewBox="0 0 360 120"><rect x="10" y="15" width="340" height="90" rx="12"/><path d="M30 38h18v14H30zm28 0h18v14H58zm28 0h18v14H86zm28 0h18v14h-18zm28 0h18v14h-18zm28 0h18v14h-18zm28 0h18v14h-18zm28 0h18v14h-18zm28 0h18v14h-18zM30 62h25v14H30zm35 0h25v14H65zm35 0h25v14h-25zm35 0h95v14h-95zm105 0h25v14h-25z" fill="currentColor"/></svg>'},
     ruler:{name:'Cetvel',len:0.30,svg:'<svg viewBox="0 0 360 80"><rect x="8" y="8" width="344" height="64" rx="6"/><path d="M25 8v22M48 8v14M71 8v22M94 8v14M117 8v22M140 8v14M163 8v22M186 8v14M209 8v22M232 8v14M255 8v22M278 8v14M301 8v22M324 8v14" stroke="#0b1020" stroke-width="5"/></svg>'},
     guitar:{name:'Gitar',len:1.00,svg:'<svg viewBox="0 0 150 420"><path d="M70 35c20 0 35 15 35 35v80c0 22 26 28 30 62 4 32-17 54-42 54s-46-22-42-54c4-34 30-40 30-62V70c0-20 9-35 29-35z"/><rect x="62" y="10" width="16" height="90" rx="5"/><circle cx="76" cy="182" r="14" fill="#0b1020"/><path d="M76 98v175" stroke="#0b1020" stroke-width="4"/></svg>'}
@@ -1108,154 +1108,92 @@ function bindSizeItUp(){
     const j=Math.floor(Math.random()*(i+1));
     [shuffledRounds[i],shuffledRounds[j]]=[shuffledRounds[j],shuffledRounds[i]];
   }
-  let round=0, score=0, zoom=1, resizeDrag=false, startX=0, startRatio=1, current=null, resizePointerId=null;
+  let round=0, score=0, zoom=1, resizeDrag=false, moveDrag=false, startX=0, startY=0, startRatio=1, startLeft=53, startTop=null, current=null;
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const svgFor=o=>o.svg
     .replace('<svg ','<svg fill="currentColor" ');
-  const positionHandle=()=>{
-    const h=$('#sizeHandle');
-    if(!h || !targetObj || !stage)return;
-    const sr=stage.getBoundingClientRect();
-    const tr=targetObj.getBoundingClientRect();
-    // Keep the control attached to the target's top-right corner.
-    let left=tr.right-sr.left+8;
-    let top=tr.top-sr.top-10;
-    const maxLeft=stage.clientWidth-46;
-    const maxTop=stage.clientHeight-46;
-    left=Math.max(4,Math.min(left,maxLeft));
-    top=Math.max(4,Math.min(top,maxTop));
-    h.style.setProperty('left',left+'px','important');
-    h.style.setProperty('top',top+'px','important');
-    h.style.setProperty('right','auto','important');
-    h.style.setProperty('bottom','auto','important');
-    h.style.display='grid';
-    h.style.visibility='visible';
-    h.style.opacity='1';
-  };
-
   const setup=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
     current=shuffledRounds[round%shuffledRounds.length];
     const r=objects[current[0]], target=objects[current[1]];
-    const basePx=Math.min(180/Math.max(r.len,target.len*.72),180);
-
-    refObj.innerHTML=svgFor(r);
-    targetObj.innerHTML=svgFor(target);
-
-    refObj.style.setProperty('--object-color','#2f8cff');
-    targetObj.style.setProperty('--object-color','#ff4d55');
-    refObj.style.width=(r.len*basePx)+'px';
-    targetObj.style.width=(target.len*basePx)+'px';
-    refObj.style.height='auto';
-    targetObj.style.height='auto';
-
-    targetObj.dataset.ratio='0.35';
-    targetObj.style.transformOrigin='center bottom';
-
-    // The resize handle belongs to the stage, not the object.
-    // This keeps it clickable and prevents it from moving with the object itself.
-    let h=$('#sizeHandle');
-    if(!h){
-      h=document.createElement('button');
-      h.id='sizeHandle';
-      h.className='size-handle';
-      h.type='button';
-      h.setAttribute('aria-label','Nesneyi boyutlandır');
-      h.textContent='↗';
-    }
-    // Always make the handle a direct child of the stage and reset stale inline state.
-    stage.appendChild(h);
-    h.style.display='grid';
-    h.style.visibility='visible';
-    h.style.opacity='1';
-    h.style.position='absolute';
-    h.style.zIndex='100';
-    h.style.pointerEvents='auto';
-
-    estimate.textContent='—';
-    errorEl.textContent='';
-    roundEl.textContent=(round+1)+' / 5';
-    scoreEl.textContent=score;
-    refName.replaceChildren(document.createTextNode(r.name));
-    targetName.replaceChildren(document.createTextNode(target.name));
-    refLen.textContent='';
-
-    result.hidden=true;
-    lock.disabled=false;
-    lock.textContent='Kilitle';
-    next.hidden=true;
-    stage.classList.remove('size-locked');
-
-    renderTarget();
+    const basePx=Math.min(360/Math.max(r.len,target.len*.72),120);
+    refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(target)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
+    refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
+    refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
+    refObj.style.height='auto'; targetObj.style.height='auto';
+    const startingRatio=0.35;
+    targetObj.dataset.ratio=String(startingRatio);
+    slider.value=String(startingRatio); estimate.textContent='—'; errorEl.textContent='';
+    roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
+    refName.textContent=r.name; refLen.textContent=''; targetName.textContent=target.name;
+    result.hidden=true; lock.disabled=false; lock.textContent='Kilitle'; next.hidden=true; stage.classList.remove('size-locked');
+    bindHandle();
   };
-
   const bindHandle=()=>{
-    const h=$('#sizeHandle');
-    if(!h)return;
+    const h=$('#sizeHandle'); if(!h)return;
 
-    h.onpointerdown=e=>{
-      if(stage.classList.contains('size-locked'))return;
+    // Resize from the corner handle.
+    h.addEventListener('pointerdown',e=>{
+      if(stage.classList.contains('size-locked')) return;
       e.preventDefault();
       e.stopPropagation();
-
       resizeDrag=true;
-      resizePointerId=e.pointerId;
       startX=e.clientX;
-      startRatio=Number(targetObj.dataset.ratio)||0.35;
-
-      try{h.setPointerCapture(e.pointerId);}catch(_){}
-      h.classList.add('is-dragging');
-      document.body.classList.add('size-resizing');
-    };
-
-    h.onpointermove=e=>{
-      if(!resizeDrag || e.pointerId!==resizePointerId)return;
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Direct pointer-distance scaling. No maximum limit.
-      const delta=(e.clientX-startX)/180;
-      const ratio=Math.max(0.01,startRatio+delta);
-      targetObj.dataset.ratio=String(ratio);
+      startRatio=Number(targetObj.dataset.ratio)||1;
+      h.setPointerCapture?.(e.pointerId);
+    });
+    h.addEventListener('pointermove',e=>{
+      if(!resizeDrag) return;
+      const delta=(e.clientX-startX)/260;
+      const ratio=Math.max(.35,Math.min(1.65,startRatio+delta));
+      targetObj.dataset.ratio=ratio;
+      slider.value=ratio;
       renderTarget();
-    };
+    });
+    const stopResize=()=>{resizeDrag=false;};
+    h.addEventListener('pointerup',stopResize);
+    h.addEventListener('pointercancel',stopResize);
 
-    const stop=()=>{
-      resizeDrag=false;
-      resizePointerId=null;
-      h.classList.remove('is-dragging');
-      document.body.classList.remove('size-resizing');
+    // Drag the whole red object anywhere inside the stage.
+    targetObj.addEventListener('pointerdown',e=>{
+      if(stage.classList.contains('size-locked') || e.target.closest('.size-handle')) return;
+      e.preventDefault();
+      moveDrag=true;
+      const rect=stage.getBoundingClientRect();
+      const objRect=targetObj.getBoundingClientRect();
+      startX=e.clientX;
+      startY=e.clientY;
+      startLeft=objRect.left-rect.left+objRect.width/2;
+      startTop=objRect.top-rect.top;
+      targetObj.style.transform='translateX(-50%)';
+      targetObj.setPointerCapture?.(e.pointerId);
+      targetObj.classList.add('size-active');
+    });
+    targetObj.addEventListener('pointermove',e=>{
+      if(!moveDrag) return;
+      const rect=stage.getBoundingClientRect();
+      const objRect=targetObj.getBoundingClientRect();
+      const x=Math.max(objRect.width/2,Math.min(rect.width-objRect.width/2,startLeft+(e.clientX-startX)));
+      const y=Math.max(8,Math.min(rect.height-objRect.height-8,startTop+(e.clientY-startY)));
+      targetObj.style.left=x+'px';
+      targetObj.style.top=y+'px';
+      targetObj.style.bottom='auto';
+      targetObj.style.transform='translateX(-50%)';
+    });
+    const stopMove=()=>{
+      moveDrag=false;
+      targetObj.classList.remove('size-active');
     };
-
-    h.onpointerup=e=>{
-      if(resizePointerId!==null && e.pointerId!==resizePointerId)return;
-      try{h.releasePointerCapture(e.pointerId);}catch(_){}
-      stop();
-    };
-    h.onpointercancel=stop;
-    h.onlostpointercapture=()=>{
-      if(resizeDrag)stop();
-    };
-    h.ondragstart=e=>e.preventDefault();
+    targetObj.addEventListener('pointerup',stopMove);
+    targetObj.addEventListener('pointercancel',stopMove);
   };
-
   const renderTarget=()=>{
-    if(!current)return;
-    const r=objects[current[0]], target=objects[current[1]];
-    const basePx=Math.min(180/Math.max(r.len,target.len*.72),180);
-    const ratio=Number(targetObj.dataset.ratio)||0.35;
-
-    // Resize the actual object. There is deliberately no maximum.
+    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,target.len*.72),120), ratio=Number(targetObj.dataset.ratio)||1;
     targetObj.style.width=(target.len*basePx*ratio)+'px';
-    targetObj.style.height='auto';
-
     estimate.textContent='—';
     errorEl.textContent='';
-
-    requestAnimationFrame(positionHandle);
   };
-
-  // + / − zooms the map and the objects together; the target is resized only from its handle.
+  // + / − zooms the map and the objects together; slider controls the target ratio.
   let zoomFxTimer=null;
   const updateZoom=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
@@ -1266,6 +1204,7 @@ function bindSizeItUp(){
     clearTimeout(zoomFxTimer);
     zoomFxTimer=setTimeout(()=>stage.classList.remove('size-zooming'),360);
   };
+  slider.addEventListener('input',()=>{targetObj.dataset.ratio=slider.value;renderTarget();});
   zoomIn.addEventListener('click',()=>{
     zoom*=1.25;
     updateZoom();
@@ -1282,6 +1221,7 @@ function bindSizeItUp(){
     const points=err<=.03?1000:err<=.07?850:err<=.12?700:err<=.2?500:err<=.3?300:100;
 
     resizeDrag=false;
+    moveDrag=false;
     score+=points;
     scoreEl.textContent=score;
     lock.disabled=true;
@@ -1309,7 +1249,6 @@ function bindSizeItUp(){
   next.addEventListener('click',()=>{if(round>=4){round=0;score=0;next.textContent=t('Next Round');setup();}else{round++;setup();}});
   restart.addEventListener('click',()=>{round=0;score=0;setup();});
   setup();
-  bindHandle();
 }
 
 /* =========================
