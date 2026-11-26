@@ -178,3 +178,22 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 .size-stage.size-zooming{box-shadow:inset 0 0 45px rgba(47,140,255,.08),0 0 24px rgba(47,140,255,.06)}
 .size-stage.size-zooming .size-object{filter:drop-shadow(0 0 12px rgba(47,140,255,.16))}
 .size-stage.size-zooming .size-target-object{filter:drop-shadow(0 0 15px rgba(255,77,85,.22))}
+
+/* Wide layout for the Size Guessing game */
+.modal:has(.size-game-shell){
+  width:min(1080px,96vw);
+  max-width:1080px;
+  padding:32px;
+}
+.modal:has(.size-game-shell) .size-stage{
+  height:500px;
+}
+@media(max-width:800px){
+  .modal:has(.size-game-shell){
+    width:96vw;
+    padding:20px;
+  }
+  .modal:has(.size-game-shell) .size-stage{
+    height:420px;
+  }
+}
