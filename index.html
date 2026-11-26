@@ -236,10 +236,8 @@
       </div>
     </div>
     <div class="size-controls">
-      <div class="size-instruction" aria-live="polite">
-        <span class="size-instruction-icon">↗</span>
-        <div><strong>Nesneyi ayarla</strong><small>Sağ üstteki tutamacı sürükleyerek boyutu tahmin et</small></div>
-      </div>
+      <div class="size-readout"><span data-i18n="Your estimate">Tahmininiz</span><strong id="sizeEstimate">—</strong><small id="sizeError">—</small></div>
+      <div class="size-slider-wrap"><input id="sizeSlider" type="range" min="0.01" max="10" step="0.001" value="0.01"><div><span data-i18n="Smaller">Küçült</span><span data-i18n="Larger">Büyüt</span></div></div>
       <button class="btn primary size-lock" id="sizeLock" type="button" data-i18n="Lock In">Kilitle</button>
     </div>
     <div class="size-result" id="sizeResult" hidden><div class="size-result-icon" id="sizeResultIcon">✓</div><div><strong id="sizeResultTitle">—</strong><p id="sizeResultText">—</p></div><button class="btn primary" id="sizeNext" type="button" data-i18n="Next Round">Sonraki Tur</button></div>
