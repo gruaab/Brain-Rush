@@ -1099,6 +1099,7 @@ function bindSizeItUp(){
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const svgFor=o=>o.svg;
   const setup=()=>{
+    stage.style.setProperty('--size-map-zoom',zoom);
     current=rounds[round%rounds.length];
     const r=objects[current[0]], target=objects[current[1]];
     const basePx=Math.min(360/Math.max(r.len,target.len*.72),120);
@@ -1179,7 +1180,11 @@ function bindSizeItUp(){
     const pct=Math.abs(ratio-1)*100;
     errorEl.textContent=(pct<0.05?'±'+pct.toFixed(1):pct.toFixed(1))+'% '+t('from the real size');
   };
-  const updateZoom=()=>{const ratio=Number(targetObj.dataset.ratio)||1; stage.style.setProperty('--size-zoom',zoom); setup(); targetObj.dataset.ratio=String(ratio); slider.value=String(ratio); renderTarget();};
+  // + / − zooms the map/grid only. It never changes the red object's size.
+  const updateZoom=()=>{
+    stage.style.setProperty('--size-map-zoom',zoom);
+    scaleLabel.textContent=(zoom.toFixed(1)+'× harita');
+  };
   slider.addEventListener('input',()=>{targetObj.dataset.ratio=slider.value;renderTarget();});
   zoomIn.addEventListener('click',()=>{zoom=Math.min(1.35,zoom+.1);updateZoom();});
   zoomOut.addEventListener('click',()=>{zoom=Math.max(.75,zoom-.1);updateZoom();});
@@ -1198,9 +1203,15 @@ function bindSizeItUp(){
     stage.classList.add('size-locked');
 
     result.hidden=false;
+    const real=objects[current[1]].len;
+    const estimateValue=real*ratio;
     resultIcon.textContent=err<=.1?'✓':'↗';
-    resultTitle.textContent=err<=.1?t('Great estimate!'):t('Nice try!');
-    resultText.textContent=t('Real size')+': '+objects[current[1]].len.toFixed(2)+' m • '+t('Your estimate')+': '+(objects[current[1]].len*ratio).toFixed(2)+' m • '+t('Error')+': '+(err*100).toFixed(1)+'% • '+points+' '+t('points');
+    resultTitle.textContent=err<=.03?'🎯 MÜKEMMEL TAHMİN!':err<=.10?'🔥 ÇOK YAKIN!':err<=.20?'👍 İYİ TAHMİN!':'📏 BİRAZ UZAK!';
+    resultText.innerHTML=
+      '<span class="size-result-answer">Gerçek uzunluk <b>'+real.toFixed(2)+' m</b></span>'+
+      '<span class="size-result-estimate">Senin ölçün <b>'+estimateValue.toFixed(2)+' m</b></span>'+
+      '<span class="size-result-error">Hata payın <b>%'+(err*100).toFixed(1)+'</b></span>'+
+      '<span class="size-result-points">+'+points+' PUAN</span>';
     next.hidden=false;
 
     // Make the result impossible to miss, even on smaller screens.
