@@ -1263,7 +1263,6 @@ function bindSizeItUp(){
     const points=err<=.03?1000:err<=.07?850:err<=.12?700:err<=.2?500:err<=.3?300:100;
 
     resizeDrag=false;
-    moveDrag=false;
     score+=points;
     scoreEl.textContent=score;
     lock.disabled=true;
@@ -1291,6 +1290,7 @@ function bindSizeItUp(){
   next.addEventListener('click',()=>{if(round>=4){round=0;score=0;next.textContent=t('Next Round');setup();}else{round++;setup();}});
   restart.addEventListener('click',()=>{round=0;score=0;setup();});
   setup();
+  bindHandle();
 }
 
 /* =========================
