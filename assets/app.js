@@ -1180,9 +1180,15 @@ function bindSizeItUp(){
     errorEl.textContent=(pct<0.05?'±'+pct.toFixed(1):pct.toFixed(1))+'% '+t('from the real size');
   };
   // + / − zooms the map and the objects together; slider controls the target ratio.
+  let zoomFxTimer=null;
   const updateZoom=()=>{
     stage.style.setProperty('--size-map-zoom',zoom);
     scaleLabel.textContent=(zoom.toFixed(1)+'× harita');
+    stage.classList.remove('size-zooming');
+    void stage.offsetWidth;
+    stage.classList.add('size-zooming');
+    clearTimeout(zoomFxTimer);
+    zoomFxTimer=setTimeout(()=>stage.classList.remove('size-zooming'),360);
   };
   slider.addEventListener('input',()=>{targetObj.dataset.ratio=slider.value;renderTarget();});
   zoomIn.addEventListener('click',()=>{
