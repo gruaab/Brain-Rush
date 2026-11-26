@@ -1105,7 +1105,9 @@ function bindSizeItUp(){
     const basePx=Math.min(360/Math.max(r.len,target.len*.72),120);
     refObj.innerHTML=svgFor(r); targetObj.innerHTML=svgFor(target)+'<button class="size-handle" id="sizeHandle" aria-label="Resize object">↗</button>';
     refObj.style.setProperty('--object-color','#2f8cff'); targetObj.style.setProperty('--object-color','#ff4d55');
-    refObj.style.width=(r.len*basePx*zoom)+'px'; targetObj.style.width=(target.len*basePx*zoom)+'px';
+    // Map zoom must NEVER resize the reference or target objects.
+    // Objects keep their physical on-screen size; only the grid/map scale changes.
+    refObj.style.width=(r.len*basePx)+'px'; targetObj.style.width=(target.len*basePx)+'px';
     refObj.style.height='auto'; targetObj.style.height='auto';
     targetObj.dataset.trueWidth=(target.len*basePx*zoom);
     targetObj.dataset.ratio='1';
@@ -1174,7 +1176,7 @@ function bindSizeItUp(){
     targetObj.addEventListener('pointercancel',stopMove);
   };
   const renderTarget=()=>{
-    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,target.len*.72),120)*zoom, ratio=Number(targetObj.dataset.ratio)||1;
+    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(360/Math.max(r.len,target.len*.72),120), ratio=Number(targetObj.dataset.ratio)||1;
     targetObj.style.width=(target.len*basePx*ratio)+'px';
     estimate.textContent=(target.len*ratio).toFixed(2)+' m';
     const pct=Math.abs(ratio-1)*100;
@@ -1186,8 +1188,15 @@ function bindSizeItUp(){
     scaleLabel.textContent=(zoom.toFixed(1)+'× harita');
   };
   slider.addEventListener('input',()=>{targetObj.dataset.ratio=slider.value;renderTarget();});
-  zoomIn.addEventListener('click',()=>{zoom=Math.min(1.35,zoom+.1);updateZoom();});
-  zoomOut.addEventListener('click',()=>{zoom=Math.max(.75,zoom-.1);updateZoom();});
+  zoomIn.addEventListener('click',()=>{
+    zoom*=1.25;
+    updateZoom();
+  });
+  zoomOut.addEventListener('click',()=>{
+    // No artificial minimum: the map can be zoomed out again and again.
+    zoom*=0.8;
+    updateZoom();
+  });
   lock.addEventListener('click',()=>{
     if(lock.disabled || stage.classList.contains('size-locked')) return;
     const ratio=Number(targetObj.dataset.ratio)||1;
