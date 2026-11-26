@@ -1530,8 +1530,12 @@ function bindSizeItUp(){
     void card.offsetWidth;
     card.classList.add('guess-pop');
   };
+  // Use direct handlers as well as normal events so the game still works
+  // if another component rebinds buttons during page initialization.
+  submit.onclick=submitGuess;
   submit.addEventListener('click',submitGuess);
-  input.addEventListener('keydown',e=>{if(e.key==='Enter') submitGuess();});
+  input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();submitGuess();}};
+  next.onclick=newQuestion;
   next.addEventListener('click',newQuestion);
   renderStats(); newQuestion();
 })();
