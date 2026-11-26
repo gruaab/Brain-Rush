@@ -1482,12 +1482,12 @@ function bindSizeItUp(){
   ]
 
   let pool=[], current=null, score=0, streak=0, best=0, locked=false, round=0;
-  try{score=Number(localStorage.getItem('br_guess_score'))||0;streak=Number(localStorage.getItem('br_guess_streak'))||0;best=Number(localStorage.getItem('br_guess_best'))||0}catch(_){}
+  try{score=Number(localStorage.getItem('br_guess_v2_score'))||0;streak=Number(localStorage.getItem('br_guess_v2_streak'))||0;best=Number(localStorage.getItem('br_guess_v2_best'))||0}catch(_){}
 
   const save=()=>{try{
-    localStorage.setItem('br_guess_score',String(score));
-    localStorage.setItem('br_guess_streak',String(streak));
-    localStorage.setItem('br_guess_best',String(best));
+    localStorage.setItem('br_guess_v2_score',String(score));
+    localStorage.setItem('br_guess_v2_streak',String(streak));
+    localStorage.setItem('br_guess_v2_best',String(best));
   }catch(_){}};
 
   const stats=()=>{
