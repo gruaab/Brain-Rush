@@ -1125,71 +1125,42 @@ function bindSizeItUp(){
     targetObj.dataset.ratio=String(startingRatio);
     estimate.textContent='—'; errorEl.textContent='';
     roundEl.textContent=(round+1)+' / 5'; scoreEl.textContent=score;
-    refName.textContent=String(r.name); refName.innerText=String(r.name); refLen.textContent=''; targetName.textContent=String(target.name); targetName.innerText=String(target.name);
+    refName.replaceChildren(document.createTextNode(r.name)); targetName.replaceChildren(document.createTextNode(target.name)); refLen.textContent='';
     result.hidden=true; lock.disabled=false; lock.textContent='Kilitle'; next.hidden=true; stage.classList.remove('size-locked');
     bindHandle();
   };
   const bindHandle=()=>{
     const h=$('#sizeHandle'); if(!h)return;
 
-    // Resize from the corner handle.
     h.addEventListener('pointerdown',e=>{
       if(stage.classList.contains('size-locked')) return;
       e.preventDefault();
       e.stopPropagation();
       resizeDrag=true;
       startX=e.clientX;
-      startRatio=Number(targetObj.dataset.ratio)||1;
-      h.setPointerCapture?.(e.pointerId);
+      startRatio=Number(targetObj.dataset.ratio)||0.35;
+      document.body.classList.add('size-resizing');
     });
+
+    // Use document-level listeners so the handle never loses the drag.
     const resizeMove=e=>{
-      if(!resizeDrag) return;
+      if(!resizeDrag)return;
       e.preventDefault();
-      const delta=(e.clientX-startX)/180;
-      const ratio=Math.max(0.01,startRatio+delta);
+      const delta=(e.clientX-startX)/220;
+      const ratio=Math.max(0.02,startRatio+delta);
       targetObj.dataset.ratio=String(ratio);
       renderTarget();
     };
-    const stopResize=()=>{resizeDrag=false;};
-    h.addEventListener('pointermove',resizeMove);
-    h.addEventListener('pointerup',stopResize);
-    h.addEventListener('pointercancel',stopResize);
-
-    // Drag the whole red object anywhere inside the stage.
-    targetObj.addEventListener('pointerdown',e=>{
-      if(stage.classList.contains('size-locked') || e.target.closest('.size-handle')) return;
-      e.preventDefault();
-      moveDrag=true;
-      const rect=stage.getBoundingClientRect();
-      const objRect=targetObj.getBoundingClientRect();
-      startX=e.clientX;
-      startY=e.clientY;
-      startLeft=objRect.left-rect.left+objRect.width/2;
-      startTop=objRect.top-rect.top;
-      targetObj.style.transform='translateX(-50%)';
-      targetObj.setPointerCapture?.(e.pointerId);
-      targetObj.classList.add('size-active');
-    });
-    targetObj.addEventListener('pointermove',e=>{
-      if(!moveDrag) return;
-      const rect=stage.getBoundingClientRect();
-      const objRect=targetObj.getBoundingClientRect();
-      const x=Math.max(objRect.width/2,Math.min(rect.width-objRect.width/2,startLeft+(e.clientX-startX)));
-      const y=Math.max(8,Math.min(rect.height-objRect.height-8,startTop+(e.clientY-startY)));
-      targetObj.style.left=x+'px';
-      targetObj.style.top=y+'px';
-      targetObj.style.bottom='auto';
-      targetObj.style.transform='translateX(-50%)';
-    });
-    const stopMove=()=>{
-      moveDrag=false;
-      targetObj.classList.remove('size-active');
+    const stopResize=()=>{
+      resizeDrag=false;
+      document.body.classList.remove('size-resizing');
     };
-    targetObj.addEventListener('pointerup',stopMove);
-    targetObj.addEventListener('pointercancel',stopMove);
+    document.addEventListener('pointermove',resizeMove,{passive:false});
+    document.addEventListener('pointerup',stopResize);
+    document.addEventListener('pointercancel',stopResize);
   };
   const renderTarget=()=>{
-    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(180/Math.max(r.len,target.len*.72),180), ratio=Number(targetObj.dataset.ratio)||1;
+    const r=objects[current[0]], target=objects[current[1]], basePx=Math.min(180/Math.max(r.len,target.len*.72),180), ratio=Number(targetObj.dataset.ratio)||0.35;
     targetObj.style.width=(target.len*basePx*ratio)+'px';
     estimate.textContent='—';
     errorEl.textContent='';
