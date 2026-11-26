@@ -114,3 +114,62 @@ h1{font-size:clamp(48px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:20p
 .size-result-error b{color:#ff7d84;font-size:15px}
 .size-result-points{display:inline-flex;align-items:center;padding:8px 13px;border-radius:10px;background:#ff4d55;color:#fff;font-size:14px;font-weight:950;box-shadow:0 0 18px rgba(255,77,85,.24)}
 @media(max-width:700px){.size-result{padding:18px;gap:12px}.size-result-icon{width:48px;height:48px;flex-basis:48px;font-size:24px}.size-result .btn{width:100%;margin-left:0}.size-result-text{width:100%}}
+
+/* How Many? estimation game — rebuilt */
+.estimate-game-section{padding-top:18px}
+.guess-game-shell{
+  --guess-color:#6c63ff;--guess-soft:#6c63ff22;--guess-glow:#6c63ff66;--guess-bg:#6c63ff;
+  position:relative;overflow:hidden;border:1px solid var(--guess-color);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--guess-bg) 24%,#0a0f1c),#0a0f1c 72%);
+  border-radius:28px;padding:28px;box-shadow:0 25px 80px var(--guess-soft);
+  transition:.35s ease;
+}
+.guess-game-header{display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+.guess-game-header h2{font-size:40px;letter-spacing:-1.8px;margin:7px 0 4px}
+.guess-game-header p{margin:0;color:var(--muted);max-width:600px}
+.guess-game-stats{display:flex;gap:8px}
+.guess-game-stats div{min-width:82px;padding:11px 13px;text-align:center;border:1px solid var(--line);border-radius:15px;background:#0d1320}
+.guess-game-stats b,.guess-game-stats small{display:block}.guess-game-stats b{font-size:20px}.guess-game-stats small{font-size:9px;color:var(--muted);letter-spacing:.12em;margin-top:2px}
+.guess-progress{height:5px;background:#111827;border-radius:99px;overflow:hidden;margin:22px 0 16px}
+.guess-progress span{display:block;width:10%;height:100%;background:var(--guess-color);box-shadow:0 0 16px var(--guess-glow);transition:width .3s}
+.guess-card{
+  position:relative;text-align:center;border:1px solid var(--guess-color);
+  background:color-mix(in srgb,var(--guess-bg) 16%,#101625);
+  border-radius:22px;padding:32px 24px;transition:.35s;
+}
+.guess-category{display:inline-flex;padding:7px 12px;border-radius:999px;background:var(--guess-soft);color:var(--guess-color);font-size:11px;font-weight:900}
+.guess-emoji{font-size:56px;line-height:1;margin:18px 0 12px;filter:drop-shadow(0 8px 18px var(--guess-glow))}
+.guess-card h3{font-size:clamp(23px,3vw,34px);line-height:1.15;letter-spacing:-1px;max-width:850px;margin:0 auto}
+.guess-hint{color:var(--muted);font-size:12px;margin:12px auto 20px}
+.guess-answer-row{display:flex;max-width:720px;margin:auto;gap:8px;align-items:center}
+.guess-answer-row input{min-width:0;flex:1;border:2px solid #283247;background:#090e17;color:#fff;border-radius:14px;padding:15px 16px;font-size:18px;font-weight:800;outline:0}
+.guess-answer-row input:focus{border-color:var(--guess-color);box-shadow:0 0 0 4px var(--guess-soft)}
+.guess-answer-row>span{font-weight:800;color:#9aa6b8;white-space:nowrap}
+.guess-answer-row .btn{white-space:nowrap;background:var(--guess-color);border-color:var(--guess-color);min-width:130px}
+.guess-feedback[hidden]{display:none}
+.guess-feedback{margin:20px auto 0}
+.guess-feedback.error{padding:12px;border-radius:12px;background:#3b1015;color:#ff8b91;font-weight:800}
+.guess-feedback.success{display:flex;flex-direction:column;align-items:center;gap:7px;padding:20px;border:2px solid var(--guess-color);border-radius:18px;background:color-mix(in srgb,var(--guess-bg) 20%,#0b111d);box-shadow:0 15px 45px var(--guess-soft);animation:guessResult .35s ease}
+.guess-result-title{font-size:22px;font-weight:950;color:var(--guess-color)}
+.guess-result-relation{font-size:14px;color:#d6deeb;font-weight:700}
+.guess-result-answer{font-size:19px;color:#fff;margin-top:4px}.guess-result-answer b{color:var(--guess-color)}
+.guess-result-your{font-size:12px;color:var(--muted)}
+.guess-result-points{margin-top:4px;padding:8px 16px;border-radius:999px;background:var(--guess-color);color:#fff;font-size:14px;font-weight:950}
+.guess-next{margin:14px auto 0;border:1px solid var(--guess-color);background:var(--guess-soft);color:var(--guess-color);padding:11px 18px;border-radius:12px;font-weight:900;cursor:pointer}
+.guess-footer{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:16px;color:var(--muted);font-size:11px}
+.guess-pop{animation:guessPop .35s ease}
+@keyframes guessPop{0%{transform:scale(.99);opacity:.7}100%{transform:none;opacity:1}}
+@keyframes guessResult{0%{transform:translateY(8px);opacity:0}100%{transform:none;opacity:1}}
+@media(max-width:700px){
+ .guess-game-shell{padding:20px}.guess-game-header{display:block}.guess-game-header h2{font-size:34px}
+ .guess-game-stats{margin-top:16px}.guess-game-stats div{flex:1}
+ .guess-answer-row{display:grid;grid-template-columns:1fr auto}.guess-answer-row .btn{grid-column:1/-1;width:100%}
+ .guess-answer-row>span{grid-column:2;grid-row:1;margin-left:-8px;padding-right:12px}
+ .guess-footer{gap:10px 16px}
+}
+.size-result-text{display:flex;flex-wrap:wrap;gap:8px 16px}
+.size-result-answer,.size-result-estimate,.size-result-error{display:inline-flex;align-items:center;gap:5px;padding:8px 11px;border-radius:10px;background:rgba(7,14,27,.62);color:#c8d8ee;font-size:12px}
+.size-result-answer b,.size-result-estimate b{color:#fff;font-size:15px}
+.size-result-error b{color:#ff7d84;font-size:15px}
+.size-result-points{display:inline-flex;align-items:center;padding:8px 13px;border-radius:10px;background:#ff4d55;color:#fff;font-size:14px;font-weight:950;box-shadow:0 0 18px rgba(255,77,85,.24)}
+@media(max-width:700px){.size-result{padding:18px;gap:12px}.size-result-icon{width:48px;height:48px;flex-basis:48px;font-size:24px}.size-result .btn{width:100%;margin-left:0}.size-result-text{width:100%}}
